@@ -54,12 +54,6 @@
     return Math.round(value).toString();
   }
 
-  /**
-   * Check if a value is negative
-   */
-  function isNegative(value) {
-    return typeof value === 'number' && value < 0;
-  }
 
   // ============================================================================
   // 2. UTILITIES - dom.js
@@ -322,10 +316,6 @@
         }
 
         valueEl.textContent = formatNumber(value);
-        if (isNegative(value)) {
-          valueEl.classList.add('text-negative');
-        }
-
         valuesEl.appendChild(valueEl);
       });
     } else {
@@ -335,13 +325,11 @@
       var value1 = firstPeriod ? firstPeriod.metrics[row.key] || 0 : 0;
       var valueEl1 = createElement('span', 'table-row__value');
       valueEl1.textContent = formatNumber(value1);
-      if (isNegative(value1)) valueEl1.classList.add('text-negative');
       valuesEl.appendChild(valueEl1);
 
       var value2 = currentPeriod ? currentPeriod.metrics[row.key] || 0 : 0;
       var valueEl2 = createElement('span', 'table-row__value table-row__value--wide');
       valueEl2.textContent = formatNumber(value2);
-      if (isNegative(value2)) valueEl2.classList.add('text-negative');
       valuesEl.appendChild(valueEl2);
 
       var delta = calculateDelta(value2, value1);
@@ -436,10 +424,6 @@
         }
 
         valueEl.textContent = formatNumber(value);
-        if (isNegative(value)) {
-          valueEl.classList.add('text-negative');
-        }
-
         valuesEl.appendChild(valueEl);
       });
     } else {
@@ -449,13 +433,11 @@
       var value1 = firstPeriod ? firstPeriod.metrics[row.key] || 0 : 0;
       var valueEl1 = createElement('span', 'table-row__value');
       valueEl1.textContent = formatNumber(value1);
-      if (isNegative(value1)) valueEl1.classList.add('text-negative');
       valuesEl.appendChild(valueEl1);
 
       var value2 = currentPeriod ? currentPeriod.metrics[row.key] || 0 : 0;
       var valueEl2 = createElement('span', 'table-row__value table-row__value--wide');
       valueEl2.textContent = formatNumber(value2);
-      if (isNegative(value2)) valueEl2.classList.add('text-negative');
       valuesEl.appendChild(valueEl2);
 
       var delta = calculateDelta(value2, value1);
@@ -615,7 +597,7 @@
   }
 
   function renderBarChart(config, data) {
-    var scale = config.scale || { min: 0, max: 1000, step: 100 };
+    var scale = config.scale || { min: 100, max: 1000, step: 100 };
     var customValues = config.customValues || null;
     var colors = config.colors || { fact: '#9DBCE0', plan: '#D9D9D9' };
 
@@ -995,7 +977,7 @@
       this.state.chartConfig = config.chartConfig || {
         title: 'Выплата дохода акционерам (пайщикам), тыс. ₽',
         metric: METRIC_KEYS.INVESTMENT_DIVIDENDS,
-        scale: { min: 0, max: 1000, step: 100 },
+        scale: { min: 100, max: 1000, step: 100 },
         customValues: [390, 670, 860, 980]
       };
 

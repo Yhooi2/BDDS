@@ -54,15 +54,9 @@
           </div>
         </div>
 
-        <!-- View Toggle -->
-        <button class="view-toggle" id="viewToggle" aria-label="Переключить режим отображения">
-          <span id="viewToggleText">Детали за текущий год</span>
-          <span class="view-toggle__arrow">
-            <svg viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 4h5M4 1l3 3-3 3" stroke="currentColor" stroke-width="1.5" fill="none"/>
-            </svg>
-          </span>
-        </button>
+        <div class="header__right">
+          <h2 class="chart__title" id="chartTitle">Выплата дохода акционерам (пайщикам), тыс. &#8381;</h2>
+        </div>
       </header>
 
       <!-- Main Content -->
@@ -70,8 +64,17 @@
         <!-- Left: Budget Table -->
         <section class="content__table" aria-label="Таблица бюджета">
 
-          <!-- Column Headers -->
+          <!-- View Toggle + Column Headers -->
           <div class="table-header" id="tableHeader">
+            <!-- View Toggle -->
+            <button class="view-toggle" id="viewToggle" aria-label="Переключить режим отображения">
+              <span id="viewToggleText">Детали за текущий год</span>
+              <span class="view-toggle__arrow">
+                <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </span>
+            </button>
             <div class="table-header__columns" id="tableHeaderColumns">
               <!-- Headers will be rendered by JS -->
             </div>
@@ -87,7 +90,6 @@
         <!-- Right: Dividend Chart -->
         <section class="content__chart" aria-label="График дивидендов">
           <div class="chart">
-            <h2 class="chart__title" id="chartTitle">Выплата дохода акционерам (пайщикам), тыс. &#8381;</h2>
             <div id="chartContainer">
               <!-- SVG Chart will be rendered by JS -->
             </div>
@@ -116,7 +118,7 @@
         metric: "Выплата дохода акционерам (пайщикам)",
         unit: "тыс. ₽",
         scale: {
-          min: 0,
+          min: 100,
           max: 1000,
           step: 100
         },

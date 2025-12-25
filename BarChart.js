@@ -114,7 +114,7 @@ function generateGridLines(scale, chartTop, chartBottom, chartLeft, chartRight) 
  */
 function renderBarChart(config, data) {
   const {
-    scale = { min: 0, max: 1000, step: 100 },
+    scale = { min: 100, max: 1000, step: 100 },
     customValues = null,
     colors = { fact: '#9DBCE0', plan: '#D9D9D9' }
   } = config;
