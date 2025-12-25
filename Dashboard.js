@@ -19,6 +19,7 @@ const Dashboard = {
 
   // DOM references
   elements: {
+    tableContainer: null,
     tableHeaders: null,
     tableSections: null,
     chartContainer: null,
@@ -43,6 +44,7 @@ const Dashboard = {
     };
 
     // Get DOM elements
+    this.elements.tableContainer = $('.content__table');
     this.elements.tableHeaders = $('#tableHeaderColumns');
     this.elements.tableSections = $('#tableSections');
     this.elements.chartContainer = $('#chartContainer');
@@ -90,6 +92,14 @@ const Dashboard = {
    * Render the entire dashboard
    */
   render() {
+    // Toggle view mode class on table container
+    if (this.elements.tableContainer) {
+      this.elements.tableContainer.classList.toggle(
+        'content__table--dynamics',
+        this.state.viewMode === 'dynamics'
+      );
+    }
+
     this.renderTableHeaders();
     this.renderTableSections();
     this.renderChart();

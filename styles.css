@@ -344,7 +344,7 @@ body {
 }
 
 .table-header__column {
-  width: 70px;
+  width: 71px;
   text-align: center;
   font-size: 12px;
   font-weight: var(--font-weight-bold);
@@ -417,7 +417,7 @@ body {
 }
 
 .table-row__value {
-  width: 70px;
+  width: 74px;
   text-align: right;
   font-size: var(--font-size-cell);
   font-variant-numeric: tabular-nums;
@@ -429,6 +429,31 @@ body {
 
 .table-row--header .table-row__value {
   font-weight: var(--font-weight-semibold);
+}
+
+/* ========================================
+   11.1 DYNAMICS VIEW MODE
+   ======================================== */
+.content__table--dynamics .table-header__column {
+  width: auto;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.content__table--dynamics .table-header__column--wide {
+  width: auto;
+  min-width: 100px;
+}
+
+.content__table--dynamics .table-row__value {
+  width: auto;
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+.content__table--dynamics .table-row__value--wide {
+  width: auto;
+  min-width: 80px;
 }
 
 /* ========================================

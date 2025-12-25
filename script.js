@@ -1169,6 +1169,7 @@
     },
 
     elements: {
+      tableContainer: null,
       tableHeaders: null,
       tableSections: null,
       chartContainer: null,
@@ -1188,6 +1189,7 @@
         customValues: [390, 670, 860, 980],
       };
 
+      this.elements.tableContainer = $(".content__table");
       this.elements.tableHeaders = $("#tableHeaderColumns");
       this.elements.tableSections = $("#tableSections");
       this.elements.chartContainer = $("#chartContainer");
@@ -1237,6 +1239,14 @@
     },
 
     render: function () {
+      // Toggle view mode class on table container
+      if (this.elements.tableContainer) {
+        this.elements.tableContainer.classList.toggle(
+          "content__table--dynamics",
+          this.state.viewMode === "dynamics"
+        );
+      }
+
       this.renderTableHeaders();
       this.renderTableSections();
       this.renderChart();
