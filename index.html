@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бюджет по фондам - БДДС</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="dashboard">
+        <article class="card">
+            <!-- Header -->
+            <header class="card__header">
+                <h1 class="card__title">Бюджет по фондам, тыс. <span class="currency">₽</span></h1>
+
+                <div class="fund-selector">
+                    <button class="fund-selector__button" aria-expanded="false" aria-haspopup="listbox" aria-controls="fund-dropdown">
+                        <svg class="fund-selector__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 2L2 7V10H22V7L12 2Z" fill="currentColor"/>
+                            <path d="M4 11V19H6V11H4Z" fill="currentColor"/>
+                            <path d="M9 11V19H11V11H9Z" fill="currentColor"/>
+                            <path d="M13 11V19H15V11H13Z" fill="currentColor"/>
+                            <path d="M18 11V19H20V11H18Z" fill="currentColor"/>
+                            <path d="M2 20V22H22V20H2Z" fill="currentColor"/>
+                        </svg>
+                        <span class="fund-selector__name" id="selected-fund">ДВН</span>
+                        <svg class="fund-selector__arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <div class="fund-selector__dropdown" id="fund-dropdown" role="listbox" aria-labelledby="selected-fund" hidden>
+                        <div class="fund-selector__grid" id="fund-options">
+                            <!-- Заполняется через JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="card__link">
+                    Детали за текущий год
+                    <svg class="card__link-arrow" width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+                        <path d="M1 7L7 1M7 1H2M7 1V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </header>
+
+            <!-- Table Section -->
+            <section class="card__table">
+                <!-- Операционная часть -->
+                <div class="table-section" data-section="operation">
+                    <h2 class="table-section__title">Операционная часть</h2>
+                    <div class="table-section__content">
+                        <table class="budget-table">
+                            <thead class="budget-table__head">
+                                <tr>
+                                    <th class="budget-table__th budget-table__th--label"></th>
+                                    <th class="budget-table__th" id="col-header-0"></th>
+                                    <th class="budget-table__th" id="col-header-1"></th>
+                                    <th class="budget-table__th budget-table__th--mixed" id="col-header-2"></th>
+                                    <th class="budget-table__th" id="col-header-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="budget-table__body" id="operation-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Инвестиционная часть -->
+                <div class="table-section" data-section="investment">
+                    <h2 class="table-section__title">Инвестиционная часть</h2>
+                    <div class="table-section__content">
+                        <table class="budget-table">
+                            <tbody class="budget-table__body" id="investment-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Финансовая часть -->
+                <div class="table-section" data-section="finance">
+                    <h2 class="table-section__title">Финансовая часть</h2>
+                    <div class="table-section__content">
+                        <table class="budget-table">
+                            <tbody class="budget-table__body" id="finance-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Блок остатков по кредиту -->
+                <div class="highlight-block" id="credit-balance"></div>
+
+                <!-- Движение за период по Д/С -->
+                <div class="table-section table-section--movement" data-section="movement">
+                    <h2 class="table-section__title">Движение за период по Д/С</h2>
+                    <div class="table-section__content">
+                        <table class="budget-table">
+                            <tbody class="budget-table__body" id="movement-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Блок остатков Д/С -->
+                <div class="highlight-block" id="cash-balance"></div>
+            </section>
+
+            <!-- Chart Section -->
+            <aside class="card__chart">
+                <h2 class="chart__title" id="chart-title">Выплата дохода акционерам (пайщикам), тыс. ₽</h2>
+
+                <div class="chart" role="img" aria-label="График дивидендов">
+                    <div class="chart__y-axis" id="chart-y-axis"></div>
+
+                    <div class="chart__content">
+                        <div class="chart__grid" id="chart-grid"></div>
+                        <div class="chart__bars" id="chart-bars"></div>
+                    </div>
+
+                    <div class="chart__x-axis" id="chart-x-axis"></div>
+                </div>
+            </aside>
+        </article>
+    </main>
+
+    <!-- Данные инжектируются здесь -->
+    <script>
+        window.DATA = {
+            funds: [
+                { id: "DVN", name: "ДВН" },
+                { id: "GOLD", name: "ЗОЛЯ" },
+                { id: "KRAS", name: "КРАС" },
+                { id: "LOG", name: "ЛОГ" },
+                { id: "NOR", name: "НОР" },
+                { id: "OZN", name: "ОЗН" },
+                { id: "TRM", name: "ТРМ" }
+            ],
+            currentFund: "DVN",
+            periods: [
+                { id: "fact-23", title: "Факт '23", type: "fact" },
+                { id: "fact-24", title: "Факт '24", type: "fact" },
+                { id: "mixed-25", title: "Факт (I-III кв. '25) / План (IV кв. '25)", type: "mixed" },
+                { id: "plan-26", title: "План '26", type: "plan" }
+            ],
+            sections: {
+                operation: {
+                    title: "Операционная часть",
+                    rows: [
+                        { label: "Движение Д/С по операционной деятельности ООО", isHeader: true, key: "cf_operations_total" },
+                        { label: "Поступления по операционной деятельности", key: "income_operations" },
+                        { label: "Расходы по основной деятельности", key: "expenses_operations" },
+                        { label: "Обеспечительные платежи", key: "security_payments" }
+                    ]
+                },
+                investment: {
+                    title: "Инвестиционная часть",
+                    rows: [
+                        { label: "Движение Д/С по инвестиционной деятельности", isHeader: true, key: "cf_investment_total" },
+                        { label: "Выплата дохода акционерам (пайщикам)", key: "dividend_payout" },
+                        { label: "Расходы на капитальный ремонт", key: "capex" }
+                    ]
+                },
+                finance: {
+                    title: "Финансовая часть",
+                    rows: [
+                        { label: "Движение Д/С по финансовой деятельности", isHeader: true, key: "cf_finance_total" },
+                        { label: "Расчеты по кредитам", key: "loan_payments" },
+                        { label: "Прочие доходы и расходы по финансовой деятельности", key: "other_finance", isMultiline: true },
+                        { label: "Расходы на УК Парус", key: "management_fee" }
+                    ]
+                },
+                movement: {
+                    title: "Движение за период по Д/С",
+                    rows: [
+                        { label: "Сформированные резервы (нарастающим итогом)", key: "reserves_cumulative" },
+                        { label: "Накопленные резервы на ремонт, непредвиденные расходы и вакансию", key: "reserves_accumulated", isMultiline: true }
+                    ]
+                }
+            },
+            highlightBlocks: {
+                credit: {
+                    rows: [
+                        { label: "Остаток по кредиту на начало периода", key: "loan_balance_start" },
+                        { label: "Остаток по кредиту на конец периода", key: "loan_balance_end" }
+                    ]
+                },
+                cash: {
+                    rows: [
+                        { label: "Остаток Д/С на начало периода", key: "cash_balance_start" },
+                        { label: "Остаток Д/С на конец периода", key: "cash_balance_end" },
+                        { label: "Д/С на конец периода (с учетом резерва)", key: "cash_with_reserves" }
+                    ]
+                }
+            },
+            data: {
+                "DVN": {
+                    "fact-23": {
+                        "cf_operations_total": 1366339,
+                        "income_operations": 1500000,
+                        "expenses_operations": -120000,
+                        "security_payments": -13661,
+                        "cf_investment_total": -523000,
+                        "dividend_payout": -390000,
+                        "capex": -133000,
+                        "cf_finance_total": -180000,
+                        "loan_payments": -150000,
+                        "other_finance": -10000,
+                        "management_fee": -20000,
+                        "reserves_cumulative": 250000,
+                        "reserves_accumulated": 180000,
+                        "loan_balance_start": 1200000,
+                        "loan_balance_end": 1050000,
+                        "cash_balance_start": 320000,
+                        "cash_balance_end": 663339,
+                        "cash_with_reserves": 843339
+                    },
+                    "fact-24": {
+                        "cf_operations_total": 1420000,
+                        "income_operations": 1620000,
+                        "expenses_operations": -180000,
+                        "security_payments": -20000,
+                        "cf_investment_total": -820000,
+                        "dividend_payout": -670000,
+                        "capex": -150000,
+                        "cf_finance_total": -200000,
+                        "loan_payments": -170000,
+                        "other_finance": -10000,
+                        "management_fee": -20000,
+                        "reserves_cumulative": 320000,
+                        "reserves_accumulated": 240000,
+                        "loan_balance_start": 1050000,
+                        "loan_balance_end": 880000,
+                        "cash_balance_start": 663339,
+                        "cash_balance_end": 1063339,
+                        "cash_with_reserves": 1303339
+                    },
+                    "mixed-25": {
+                        "cf_operations_total": 1480000,
+                        "income_operations": 1700000,
+                        "expenses_operations": -200000,
+                        "security_payments": -20000,
+                        "cf_investment_total": -1010000,
+                        "dividend_payout": -860000,
+                        "capex": -150000,
+                        "cf_finance_total": -180000,
+                        "loan_payments": -150000,
+                        "other_finance": -10000,
+                        "management_fee": -20000,
+                        "reserves_cumulative": 400000,
+                        "reserves_accumulated": 300000,
+                        "loan_balance_start": 880000,
+                        "loan_balance_end": 730000,
+                        "cash_balance_start": 1063339,
+                        "cash_balance_end": 1353339,
+                        "cash_with_reserves": 1653339
+                    },
+                    "plan-26": {
+                        "cf_operations_total": 1550000,
+                        "income_operations": 1800000,
+                        "expenses_operations": -230000,
+                        "security_payments": -20000,
+                        "cf_investment_total": -1130000,
+                        "dividend_payout": -980000,
+                        "capex": -150000,
+                        "cf_finance_total": -170000,
+                        "loan_payments": -140000,
+                        "other_finance": -10000,
+                        "management_fee": -20000,
+                        "reserves_cumulative": 480000,
+                        "reserves_accumulated": 360000,
+                        "loan_balance_start": 730000,
+                        "loan_balance_end": 590000,
+                        "cash_balance_start": 1353339,
+                        "cash_balance_end": 1603339,
+                        "cash_with_reserves": 1963339
+                    }
+                }
+            },
+            chartConfig: {
+                title: "Выплата дохода акционерам (пайщикам), тыс. ₽",
+                metric: "dividend_payout",
+                minValue: 100,
+                maxValue: 1000,
+                unit: "тыс. ₽",
+                divisor: 1000
+            }
+        };
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
