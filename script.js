@@ -536,16 +536,16 @@
 
   var CHART_CONFIG_DEFAULTS = {
     viewBoxWidth: 350,
-    viewBoxHeight: 500,
+    viewBoxHeight: 580,
     chartLeft: 50,
     chartRight: 340,
-    chartTop: 50,
-    chartBottom: 470,
+    chartTop: 20,
+    chartBottom: 540,
     barWidth: 50,
     barGap: 12,
     barRadius: 5,
     yAxisLabelX: 40,
-    xAxisLabelY: 490
+    xAxisLabelY: 565
   };
 
   function calculateBarHeight(value, scale, maxPixelHeight) {
