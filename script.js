@@ -387,6 +387,7 @@
   ];
 
   var CASH_MOVEMENT_ROWS = [
+    { id: 'cash-movement', key: METRIC_KEYS.CASH_MOVEMENT, label: 'Движение за период по Д/С', isHeader: true },
     { id: 'reserves-formed', key: METRIC_KEYS.RESERVES_FORMED, label: 'Сформированные резервы (нарастающим итогом)', isHeader: false },
     { id: 'reserves-accumulated', key: METRIC_KEYS.RESERVES_ACCUMULATED, label: 'Накопленные резервы на ремонт,\nнепредвиденные расходы и вакансию', isHeader: false, multiline: true }
   ];
@@ -512,20 +513,35 @@
 
     fragment.appendChild(renderTableSection(SECTIONS.operation, periodData, viewMode));
     fragment.appendChild(renderTableSection(SECTIONS.investment, periodData, viewMode));
-    fragment.appendChild(renderTableSection(SECTIONS.finance, periodData, viewMode));
 
-    fragment.appendChild(renderHighlightBlock(CREDIT_BALANCE_ROWS, periodData, viewMode));
+    // Finance section (includes credit balance, cash movement, cash balance)
+    var financeSection = createElement('section', 'table-section table-section--finance');
 
-    var movementSection = createElement('div', 'movement-section');
-    var movementTitle = createElement('h3', 'movement-section__title', 'Движение за период по Д/С');
-    movementSection.appendChild(movementTitle);
+    // Title with colored background
+    var financeTitleEl = createElement('h2', 'table-section__title', SECTIONS.finance.title);
+    financeSection.appendChild(financeTitleEl);
 
-    CASH_MOVEMENT_ROWS.forEach(function(row) {
-      movementSection.appendChild(renderTableRow(row, periodData, viewMode));
+    // Content container with border
+    var financeContentEl = createElement('div', 'table-section__content');
+
+    // Finance rows
+    SECTIONS.finance.rows.forEach(function(row) {
+      financeContentEl.appendChild(renderTableRow(row, periodData, viewMode));
     });
-    fragment.appendChild(movementSection);
 
-    fragment.appendChild(renderHighlightBlock(CASH_BALANCE_ROWS, periodData, viewMode));
+    // Credit balance highlight block (inside finance section)
+    financeContentEl.appendChild(renderHighlightBlock(CREDIT_BALANCE_ROWS, periodData, viewMode));
+
+    // Cash movement rows
+    CASH_MOVEMENT_ROWS.forEach(function(row) {
+      financeContentEl.appendChild(renderTableRow(row, periodData, viewMode));
+    });
+
+    // Cash balance highlight block (inside finance section)
+    financeContentEl.appendChild(renderHighlightBlock(CASH_BALANCE_ROWS, periodData, viewMode));
+
+    financeSection.appendChild(financeContentEl);
+    fragment.appendChild(financeSection);
 
     return fragment;
   }

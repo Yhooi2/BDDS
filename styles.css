@@ -12,19 +12,19 @@
    ======================================== */
 :root {
   /* Colors from Figma */
-  --color-primary-blue: #9DBCE0;
-  --color-light-gray: #D9D9D9;
+  --color-primary-blue: #9dbce0;
+  --color-light-gray: #d9d9d9;
   --color-highlight-bg: rgba(217, 217, 217, 0.46);
   --color-border: rgba(0, 0, 0, 0.14); /* 0.35 * 0.41 opacity */
   --color-text: #000000;
-  --color-white: #FFFFFF;
+  --color-white: #ffffff;
   --color-line: rgba(0, 0, 0, 0.1);
 
   /* Section header color - unified */
   --color-section-header: rgba(157, 188, 224, 0.41);
 
   /* Typography */
-  --font-family: 'Montserrat', Arial, sans-serif;
+  --font-family: "Montserrat", Arial, sans-serif;
   --font-weight-regular: 400;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
@@ -117,7 +117,6 @@ body {
   font-weight: var(--font-weight-semibold);
 }
 
-
 /* ========================================
    4. CARD CONTAINER
    ======================================== */
@@ -154,7 +153,6 @@ body {
   margin-bottom: 13px;
   line-height: 1.2;
 }
-
 
 /* ========================================
    6. FUND SELECTOR
@@ -382,7 +380,8 @@ body {
 
 .table-section__content {
   border: 1px solid var(--color-border);
-  border-radius: 0 var(--radius-section) var(--radius-section) var(--radius-section);
+  border-radius: 0 var(--radius-section) var(--radius-section)
+    var(--radius-section);
   padding: var(--spacing-xs) var(--spacing-sm);
 }
 
@@ -414,13 +413,14 @@ body {
 .table-row__values {
   display: flex;
   gap: 0;
+  justify-content: flex-end;
 }
 
 .table-row__value {
   width: 70px;
   text-align: right;
   font-size: var(--font-size-cell);
-  padding: 0 4px;
+  font-variant-numeric: tabular-nums;
 }
 
 .table-row__value--wide {
@@ -437,7 +437,6 @@ body {
 .highlight-block {
   background: var(--color-highlight-bg);
   border-radius: var(--radius-highlight);
-  padding: var(--spacing-xs) var(--spacing-sm);
   margin: var(--spacing-sm) 0;
 }
 
