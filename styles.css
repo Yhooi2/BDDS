@@ -122,12 +122,13 @@ body {
    ======================================== */
 .card {
   width: var(--card-width);
-  min-height: var(--card-height);
+  height: var(--card-height);
   background: var(--color-white);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   padding: 31px 36px;
   position: relative;
+  overflow: hidden;
 }
 
 /* ========================================
@@ -136,7 +137,7 @@ body {
 .header {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 22px;
+  margin-bottom: 6px;
 }
 
 .header__left {
@@ -150,7 +151,7 @@ body {
 .header__title {
   font-size: var(--font-size-title);
   font-weight: var(--font-weight-bold);
-  margin-bottom: 13px;
+  margin-bottom: 6px;
   line-height: 1.2;
 }
 
@@ -298,7 +299,6 @@ body {
    ======================================== */
 .content {
   display: flex;
-  gap: var(--spacing-lg);
   align-items: stretch;
 }
 
@@ -309,11 +309,11 @@ body {
 }
 
 .content__chart {
-  width: 350px;
+  width: 300px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  min-height: 500px;
+  flex: 1;
 }
 
 /* ========================================
@@ -382,7 +382,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 0 var(--radius-section) var(--radius-section)
     var(--radius-section);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 0 var(--spacing-sm);
 }
 
 /* ========================================
@@ -437,7 +437,6 @@ body {
 .highlight-block {
   background: var(--color-highlight-bg);
   border-radius: var(--radius-highlight);
-  margin: var(--spacing-sm) 0;
 }
 
 .highlight-block .table-row {
@@ -479,19 +478,17 @@ body {
   font-size: var(--font-size-chart-title);
   font-weight: var(--font-weight-bold);
   line-height: 24px;
-  margin-bottom: var(--spacing-md);
-  width: 342px;
+  width: 300px;
 }
 
 #chartContainer {
   flex: 1;
   display: flex;
-  min-height: 520px;
 }
 
 .chart__svg {
   width: 100%;
-  height: 100%;
+  height: 87%;
 }
 
 /* SVG Chart Styles */
@@ -549,20 +546,12 @@ body {
     min-height: 100vh;
     padding: var(--spacing-lg);
   }
-
-  :root {
-    --card-width: 100%;
-    --card-height: auto;
-  }
-
-  .card {
-    max-width: 1024px;
-    padding: var(--spacing-lg);
-  }
 }
 
 @media (max-width: 1024px) {
   .card {
+    width: 100%;
+    height: auto;
     max-width: 768px;
   }
 
