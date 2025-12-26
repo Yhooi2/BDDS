@@ -400,6 +400,11 @@ body {
   padding: 0 var(--spacing-sm);
 }
 
+/* Section column headers (hidden on desktop, visible on mobile) */
+.table-section__headers {
+  display: none;
+}
+
 /* ========================================
    11. TABLE ROWS
    ======================================== */
@@ -689,20 +694,34 @@ body {
     border-top: 1px solid var(--color-border);
   }
 
-  /* Table header - positioned below first section title (per Figma top: 126px) */
-  .table-header {
-    position: absolute;
-    top: 126px;
-    left: 13px;
-    right: 13px;
-    padding: 0;
-    display: flex;
-    justify-content: flex-end;
+  /* Hide global table header in mobile - use section headers instead */
+  .table-header__columns {
+    display: none;
   }
 
-  .table-header__columns {
+  /* Section column headers (visible on mobile) */
+  .table-section__headers {
     display: flex;
+    justify-content: flex-end;
+    margin-top: 7px;
     gap: 0;
+  }
+
+  .table-section__headers .table-header__column {
+    width: 46px;
+    font-size: 8px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.1;
+    align-self: center;
+  }
+
+  .table-section__headers .table-header__column--wide {
+    width: 52px;
+    font-size: 6px;
+    line-height: 1.1;
+    white-space: normal;
+    align-self: center;
   }
 
   .table-header__column {

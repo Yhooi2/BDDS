@@ -129,7 +129,8 @@ const Dashboard = {
 
     const sections = renderAllTableSections(
       this.state.periodData,
-      this.state.viewMode
+      this.state.viewMode,
+      this.state.periods
     );
 
     this.elements.tableSections.appendChild(sections);

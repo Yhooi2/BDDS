@@ -574,7 +574,7 @@
     return rowEl;
   }
 
-  function renderTableSection(section, periodData, viewMode) {
+  function renderTableSection(section, periodData, viewMode, periods) {
     var sectionEl = createElement(
       "section",
       "table-section " + section.cssClass
@@ -582,6 +582,13 @@
 
     var titleEl = createElement("h2", "table-section__title", section.title);
     sectionEl.appendChild(titleEl);
+
+    // Column headers for mobile (hidden on desktop via CSS)
+    if (periods) {
+      var columnHeaders = renderTableHeaders(periods, viewMode);
+      columnHeaders.classList.add("table-section__headers");
+      sectionEl.appendChild(columnHeaders);
+    }
 
     var contentEl = createElement("div", "table-section__content");
 
@@ -634,14 +641,14 @@
     return container;
   }
 
-  function renderAllTableSections(periodData, viewMode) {
+  function renderAllTableSections(periodData, viewMode, periods) {
     var fragment = document.createDocumentFragment();
 
     fragment.appendChild(
-      renderTableSection(SECTIONS.operation, periodData, viewMode)
+      renderTableSection(SECTIONS.operation, periodData, viewMode, periods)
     );
     fragment.appendChild(
-      renderTableSection(SECTIONS.investment, periodData, viewMode)
+      renderTableSection(SECTIONS.investment, periodData, viewMode, periods)
     );
 
     // Finance section (includes credit balance, cash movement, cash balance)
@@ -657,6 +664,13 @@
       SECTIONS.finance.title
     );
     financeSection.appendChild(financeTitleEl);
+
+    // Column headers for mobile (hidden on desktop via CSS)
+    if (periods) {
+      var columnHeaders = renderTableHeaders(periods, viewMode);
+      columnHeaders.classList.add("table-section__headers");
+      financeSection.appendChild(columnHeaders);
+    }
 
     // Content container with border
     var financeContentEl = createElement("div", "table-section__content");
@@ -1314,7 +1328,8 @@
 
       var sections = renderAllTableSections(
         this.state.periodData,
-        this.state.viewMode
+        this.state.viewMode,
+        this.state.periods
       );
 
       this.elements.tableSections.appendChild(sections);

@@ -148,14 +148,22 @@ function renderTableRow(row, periodData, viewMode) {
  * @param {Object} section - Section definition
  * @param {Array} periodData - Period data array
  * @param {string} viewMode - Current view mode
+ * @param {Array} periods - Period definitions for column headers
  * @returns {HTMLElement} Section element
  */
-function renderTableSection(section, periodData, viewMode) {
+function renderTableSection(section, periodData, viewMode, periods) {
   const sectionEl = createElement('section', `table-section ${section.cssClass}`);
 
   // Title with colored background
   const titleEl = createElement('h2', 'table-section__title', section.title);
   sectionEl.appendChild(titleEl);
+
+  // Column headers for mobile (hidden on desktop via CSS)
+  if (periods) {
+    const columnHeaders = renderTableHeaders(periods, viewMode);
+    columnHeaders.classList.add('table-section__headers');
+    sectionEl.appendChild(columnHeaders);
+  }
 
   // Content container with border
   const contentEl = createElement('div', 'table-section__content');
@@ -222,16 +230,17 @@ function renderTableHeaders(periods, viewMode) {
  * Render all table sections including highlight blocks
  * @param {Array} periodData - Period data array
  * @param {string} viewMode - Current view mode
+ * @param {Array} periods - Period definitions for column headers
  * @returns {DocumentFragment} All sections
  */
-function renderAllTableSections(periodData, viewMode) {
+function renderAllTableSections(periodData, viewMode, periods) {
   const fragment = document.createDocumentFragment();
 
   // Operation section
-  fragment.appendChild(renderTableSection(SECTIONS.operation, periodData, viewMode));
+  fragment.appendChild(renderTableSection(SECTIONS.operation, periodData, viewMode, periods));
 
   // Investment section
-  fragment.appendChild(renderTableSection(SECTIONS.investment, periodData, viewMode));
+  fragment.appendChild(renderTableSection(SECTIONS.investment, periodData, viewMode, periods));
 
   // Finance section (includes credit balance, cash movement, cash balance)
   const financeSection = createElement('section', 'table-section table-section--finance');
@@ -239,6 +248,13 @@ function renderAllTableSections(periodData, viewMode) {
   // Title with colored background
   const financeTitleEl = createElement('h2', 'table-section__title', SECTIONS.finance.title);
   financeSection.appendChild(financeTitleEl);
+
+  // Column headers for mobile (hidden on desktop via CSS)
+  if (periods) {
+    const columnHeaders = renderTableHeaders(periods, viewMode);
+    columnHeaders.classList.add('table-section__headers');
+    financeSection.appendChild(columnHeaders);
+  }
 
   // Content container with border
   const financeContentEl = createElement('div', 'table-section__content');
