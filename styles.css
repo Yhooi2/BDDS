@@ -313,7 +313,6 @@ body {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
 /* ========================================
@@ -392,7 +391,7 @@ body {
   display: flex;
   align-items: center;
   padding: 2px 0;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px dashed var(--color-line);
 }
 
 .table-row:last-child {
@@ -575,11 +574,11 @@ body {
   :root {
     --font-size-title: 16px;
     --font-size-chart-title: 12px;
-    --font-size-fund-name: 18px;
+    --font-size-fund-name: 15px;
     --font-size-section-title: 12px;
-    --font-size-row-header: 8px;
-    --font-size-row: 8px;
-    --font-size-cell: 8px;
+    --font-size-row-header: 8.8px;
+    --font-size-row: 8.8px;
+    --font-size-cell: 8.3px;
     --font-size-column-header: 8px;
     --font-size-chart-label: 8px;
     --font-size-chart-value: 10px;
@@ -588,27 +587,52 @@ body {
   /* Dashboard container - FIXED 320px width */
   .dashboard {
     width: 320px;
-    min-height: auto;
+    min-height: 1360px;
     margin: 0 auto;
-    padding: var(--spacing-sm);
+    padding: 0;
   }
 
-  /* Card - per Figma 13px padding */
+  /* Card - full width of dashboard */
   .card {
     width: 100%;
     height: auto;
+    min-height: 1360px;
     padding: 13px;
     border-radius: var(--radius-section);
+    position: relative;
   }
 
-  /* Header - vertical layout */
+  /* Header - horizontal with fund selector and view toggle */
   .header {
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .header__left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .header__right {
     display: none;
+  }
+
+  /* View toggle - positioned next to fund selector (Figma: top: 64px, left: 150px) */
+  .view-toggle {
+    font-size: 12px;
+    position: absolute;
+    top: 64px;
+    left: 150px;
+  }
+
+  .table-header .view-toggle {
+    position: absolute;
+    top: 64px;
+    left: 150px;
   }
 
   /* Content - vertical layout */
@@ -619,41 +643,91 @@ body {
 
   .content__table {
     width: 100%;
+    position: relative;
   }
 
   .content__chart {
     width: 100%;
   }
 
-  /* Table header - keep absolute positioning, only adjust toggle */
-  .table-header .view-toggle {
-    top: -35px;
+  /* Table sections - NO borders in mobile! */
+  .table-section {
+    margin-bottom: 8px;
   }
 
-  /* Row labels - per Figma ~100px width */
-  .table-row__label {
-    font-size: 8px;
-    max-width: 100px;
+  /* First section needs extra top padding for column headers */
+  .table-section:first-child {
+    padding-top: 25px;
   }
 
-  /* Table columns - per Figma 37-39px width, 8px font */
+  .table-section__title {
+    font-size: var(--font-size-section-title);
+    padding: 3px 12px;
+  }
+
+  .table-section__content {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  /* Table header - positioned below first section title (per Figma top: 126px) */
+  .table-header {
+    position: absolute;
+    top: 126px;
+    left: 13px;
+    right: 13px;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .table-header__columns {
+    display: flex;
+    gap: 0;
+  }
+
   .table-header__column {
-    width: 39px;
+    width: 46px;
     font-size: 8px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.1;
   }
 
   .table-header__column--wide {
-    width: 50px;
-    font-size: 8px;
+    width: 52px;
+    font-size: 6px;
+    line-height: 1.1;
+    white-space: normal;
+  }
+
+  /* Table rows - dashed lines per Figma */
+  .table-row {
+    border-bottom: 1px dashed var(--color-line);
+  }
+
+  .table-row__label {
+    font-size: 8.8px;
+    line-height: 10px;
+    flex: 1;
   }
 
   .table-row__value {
-    width: 39px;
-    font-size: 8px;
+    width: 46px;
+    font-size: 8.3px;
+    text-align: right;
   }
 
   .table-row__value--wide {
-    width: 50px;
+    width: 52px;
+  }
+
+  /* Highlight blocks */
+  .highlight-block {
+    width: 100%;
+    padding: 4px 8px;
+    margin: 4px 0;
   }
 
   /* Fund selector */
@@ -671,25 +745,39 @@ body {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  /* Chart - shown below table */
+  /* Chart */
   .chart {
     margin-top: var(--spacing-sm);
   }
 
   .chart__title {
     font-size: var(--font-size-chart-title);
-    width: 100%;
   }
 
-  /* Show mobile chart title */
   .chart__title--mobile {
     display: block;
     margin-bottom: var(--spacing-sm);
   }
 
-  /* Section titles */
-  .table-section__title {
-    font-size: var(--font-size-section-title);
+  #chartContainer {
+    height: 340px;
+  }
+
+  /* Dynamics mode */
+  .content__table--dynamics .table-header__column {
+    width: 60px;
+  }
+
+  .content__table--dynamics .table-header__column--wide {
+    width: 70px;
+  }
+
+  .content__table--dynamics .table-row__value {
+    width: 60px;
+  }
+
+  .content__table--dynamics .table-row__value--wide {
+    width: 70px;
   }
 }
 

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>Бюджет по фондам</title>
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="styleguide.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="screen">
+      <header class="header">
+        <h1 class="header__title">
+          <span class="header__title-main">Бюджет по фондам, </span>
+          <span class="header__title-currency">тыс. ₽</span>
+        </h1>
+        <div class="header__controls">
+          <button class="header__button" type="button" aria-label="ДВН">
+            <img class="header__button-icon" src="img/mask-group.svg" alt="" />
+            <span class="header__button-text">ДВН</span>
+            <span class="header__button-dropdown">
+              <img
+                class="header__button-dropdown-icon"
+                src="img/rectangle-2258.svg"
+                alt=""
+              />
+            </span>
+          </button>
+          <a class="header__link" href="#details">Детали за текущий год</a>
+          <img class="header__arrow" src="img/rectangle-2259.svg" alt="" />
+        </div>
+      </header>
+      <section class="budget-section">
+        <div class="budget-section__header">
+          <img
+            class="budget-section__header-bg"
+            src="img/rectangle-2260.svg"
+            alt=""
+          />
+          <h2 class="budget-section__title">Операционная часть</h2>
+        </div>
+        <article class="budget-category">
+          <h3 class="budget-category__title">
+            Движение Д/С <br />по операционной <br />деятельности ООО
+          </h3>
+          <div class="budget-category__header">
+            <span class="budget-category__year">Факт '23</span>
+            <span class="budget-category__dynamics">Динамика</span>
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label"
+              >Поступления <br />по операционной деятельности</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339 (10%)</span
+            >
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label">Обеспечительные платежи</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339 (10%)</span>
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label"
+              >Расходы <br />по основной деятельности</span
+            >
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339 (10%)</span>
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label"
+              >Расходы <br />на капитальный <br />ремонт</span
+            >
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339 (10%)</span>
+          </div>
+        </article>
+      </section>
+      <section class="budget-section">
+        <div class="budget-section__header">
+          <img
+            class="budget-section__header-bg"
+            src="img/rectangle-4747.svg"
+            alt=""
+          />
+          <h2 class="budget-section__title">Инвестиционная часть</h2>
+        </div>
+        <article class="budget-category">
+          <h3 class="budget-category__title">
+            Движение Д/С <br />по инвестиционной <br />деятельности
+          </h3>
+          <div class="budget-category__header">
+            <span class="budget-category__year">Факт '23</span>
+            <span class="budget-category__year-detail"
+              >Факт (I-III кв. '25)<br />План (IV кв. '25)</span
+            >
+            <span class="budget-category__dynamics">Динамика</span>
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label">Выплата дохода акционерам</span>
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339 (10%)</span
+            >
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label"
+              >Расходы <br />на капитальный <br />ремонт</span
+            >
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339 (10%)</span>
+          </div>
+        </article>
+      </section>
+      <section class="budget-section">
+        <div class="budget-section__header">
+          <img
+            class="budget-section__header-bg"
+            src="img/rectangle-4749.svg"
+            alt=""
+          />
+          <h2 class="budget-section__title">Финансовая часть</h2>
+        </div>
+        <article class="budget-category">
+          <h3 class="budget-category__title">
+            Движение Д/С <br />по финансовой <br />деятельности
+          </h3>
+          <div class="budget-category__header">
+            <span class="budget-category__year">Факт '23</span>
+            <span class="budget-category__year-detail"
+              >Факт (I-III кв. '25)<br />План (IV кв. '25)</span
+            >
+            <span class="budget-category__dynamics">Динамика</span>
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label">Расчеты <br />по кредитам</span>
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="budget-item__value budget-item__value--bold"
+              >1 366 339 (10%)</span
+            >
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label"
+              >Прочие доходы <br />и расходы <br />по финансовой
+              <br />деятельности</span
+            >
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339 (10%)</span>
+          </div>
+          <div class="budget-item">
+            <span class="budget-item__label">Расходы на УК Парус</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339</span>
+            <span class="budget-item__value">1 366 339 (10%)</span>
+          </div>
+        </article>
+      </section>
+      <section class="summary-section">
+        <div class="summary-section__block">
+          <h3 class="summary-section__title">
+            Остаток по кредиту <br />на начало периода
+          </h3>
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+        <div class="summary-section__block">
+          <h3 class="summary-section__title">
+            Остаток по кредиту <br />на конец периода
+          </h3>
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+        <div class="summary-section__block">
+          <h3 class="summary-section__title">
+            Движение <br />за период по Д/С
+          </h3>
+          <div class="summary-section__values">
+            <span class="summary-section__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="summary-section__value budget-item__value--bold"
+              >1 366 339</span
+            >
+            <span class="summary-section__value budget-item__value--bold"
+              >1 366 339 (10%)</span
+            >
+          </div>
+        </div>
+        <div class="summary-section__block">
+          <span class="summary-section__label"
+            >Сформированные <br />резервы</span
+          >
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+        <div class="summary-section__block">
+          <span class="summary-section__label"
+            >Накопленные <br />резервы на ремонт, <br />непредвиденные
+            <br />расходы и вакансию</span
+          >
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+      </section>
+      <section class="summary-section summary-section--highlighted">
+        <div class="summary-section__block">
+          <h3 class="summary-section__title">
+            Остаток Д/С <br />на начало периода
+          </h3>
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+        <div class="summary-section__block">
+          <h3 class="summary-section__title">
+            Остаток Д/С <br />на конец периода
+          </h3>
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+        <div class="summary-section__block">
+          <h3 class="summary-section__title">
+            Д/С на конец <br />периода <br />(с учетом резерва)
+          </h3>
+          <div class="summary-section__values">
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339</span>
+            <span class="summary-section__value">1 366 339 (10%)</span>
+          </div>
+        </div>
+      </section>
+      <section class="chart-section" id="details">
+        <h2 class="chart-section__title">
+          <span class="chart-section__title-main"
+            >Выплата дохода акционерам (пайщикам),</span
+          >
+          <span class="chart-section__title-currency"> тыс. ₽</span>
+        </h2>
+        <div class="chart">
+          <div class="chart__y-axis">
+            <span class="chart__y-label">1 000</span>
+            <span class="chart__y-label">900</span>
+            <span class="chart__y-label">800</span>
+            <span class="chart__y-label">700</span>
+            <span class="chart__y-label">600</span>
+            <span class="chart__y-label">500</span>
+            <span class="chart__y-label">400</span>
+            <span class="chart__y-label">300</span>
+            <span class="chart__y-label">200</span>
+            <span class="chart__y-label">100</span>
+          </div>
+          <div class="chart__grid">
+            <img class="chart__grid-line" src="img/line-302.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-303.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-304.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-305.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-306.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-307.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-308.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-309.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-310.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-311.svg" alt="" />
+            <img class="chart__grid-line" src="img/line-312.svg" alt="" />
+          </div>
+          <div class="chart__bars">
+            <div class="chart__bar-group">
+              <div
+                class="chart__bar chart__bar--blue"
+                style="height: 103px"
+                aria-label="Факт '23: 390"
+              ></div>
+              <span class="chart__bar-value">390</span>
+              <span class="chart__bar-label">Факт '23</span>
+            </div>
+            <div class="chart__bar-group">
+              <div
+                class="chart__bar chart__bar--blue"
+                style="height: 189px"
+                aria-label="Факт '24: 670"
+              ></div>
+              <span class="chart__bar-value">670</span>
+              <span class="chart__bar-label">Факт '24</span>
+            </div>
+            <div class="chart__bar-group">
+              <div
+                class="chart__bar chart__bar--gray"
+                style="height: 248px"
+                aria-label="План '25: 860"
+              ></div>
+              <span class="chart__bar-value">860</span>
+              <span class="chart__bar-label">План '25</span>
+            </div>
+            <div class="chart__bar-group">
+              <div
+                class="chart__bar chart__bar--gray"
+                style="height: 291px"
+                aria-label="План '26: 980"
+              ></div>
+              <span class="chart__bar-value">980</span>
+              <span class="chart__bar-label">План '26</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <aside class="documents-panel">
+        <div class="document-card">
+          <div class="document-card__icon">TXT</div>
+          <div class="document-card__info">
+            <span class="document-card__title">Тестовый документ 1</span>
+            <span class="document-card__meta">TXT, NAN BYTES</span>
+          </div>
+          <img
+            class="document-card__preview"
+            src="img/screenshot-2025-01-28-at-10-23-10-2-5.png"
+            alt=""
+          />
+        </div>
+        <div class="document-card">
+          <div class="document-card__icon">TXT</div>
+          <div class="document-card__info">
+            <span class="document-card__title">Тестовый документ 1</span>
+            <span class="document-card__meta">TXT, NAN BYTES</span>
+          </div>
+          <img
+            class="document-card__preview"
+            src="img/screenshot-2025-01-28-at-10-23-10-2-6.png"
+            alt=""
+          />
+        </div>
+      </aside>
+      <img class="divider divider--1" src="img/line-323.svg" alt="" />
+      <img class="divider divider--2" src="img/line-324.svg" alt="" />
+      <img class="divider divider--3" src="img/line-325.svg" alt="" />
+      <img class="divider divider--4" src="img/line-331.svg" alt="" />
+      <img class="divider divider--5" src="img/line-338.svg" alt="" />
+      <img class="divider divider--6" src="img/line-332.svg" alt="" />
+      <img class="divider divider--7" src="img/line-320.svg" alt="" />
+      <img class="divider divider--8" src="img/line-326.svg" alt="" />
+      <img class="divider divider--9" src="img/line-327.svg" alt="" />
+      <img class="divider divider--10" src="img/line-328.svg" alt="" />
+      <img class="divider divider--11" src="img/line-329.svg" alt="" />
+      <img class="divider divider--12" src="img/line-333.svg" alt="" />
+      <img class="divider divider--13" src="img/line-334.svg" alt="" />
+      <img class="divider divider--14" src="img/line-335.svg" alt="" />
+      <img class="divider divider--15" src="img/line-336.svg" alt="" />
+      <img class="divider divider--16" src="img/line-337.svg" alt="" />
+    </main>
+  </body>
+</html>
