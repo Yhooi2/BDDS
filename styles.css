@@ -633,7 +633,7 @@ body {
     width: 100%;
     height: auto;
     min-height: 1360px;
-    padding: 13px;
+    padding: 13px 2px;
     padding-top: 31px;
     border-radius: var(--radius-section);
     position: relative;
