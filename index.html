@@ -200,19 +200,8 @@
       window.DATA = window.DATA || {
         currentFund: "ДВН",
         viewMode: "details",
-        funds: ["ДВН", "ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "ТРМ", "СБЛ"],
-        periods: [
-          { year: 2023, type: "fact", label: "Факт '23", shortLabel: "'23" },
-          { year: 2024, type: "fact", label: "Факт '24", shortLabel: "'24" },
-          {
-            year: 2025,
-            type: "mixed",
-            label: "Факт (I-III кв. '25)\nПлан (IV кв. '25)",
-            shortLabel: "'25",
-          },
-          { year: 2026, type: "plan", label: "План '26", shortLabel: "'26" },
-        ],
-        // chartConfig is now defined in generateData.js as DEFAULT_CHART_CONFIG
+        funds: ["ДВН", "ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "ТРМ", "СБЛ"]
+        // periods and chartConfig are now defined in generateData.js
       };
     </script>
 
