@@ -47,7 +47,9 @@
       return formattedValue;
     }
     const formattedDelta = Math.round(delta);
-    return `${formattedValue} (${formattedDelta}%)`;
+    // Add extra space before negative sign to align visually
+    const prefix = formattedDelta < 0 ? " " : "";
+    return `${formattedValue}${prefix} (${formattedDelta}%)`;
   }
 
   /**
