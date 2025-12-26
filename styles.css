@@ -676,7 +676,7 @@ body {
 
   /* Table sections - NO borders in mobile! */
   .table-section {
-    margin-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
   }
 
   /* First section needs extra top padding for column headers */
@@ -684,14 +684,13 @@ body {
   .table-section__title {
     font-size: var(--font-size-section-title);
     font-weight: var(--font-weight-bold);
-    padding: 3px 12px;
+    padding: 3px 24px 3px 8px;
   }
 
   .table-section__content {
     border: none;
     border-radius: 0;
     padding: 0;
-    border-top: 1px solid var(--color-border);
   }
 
   /* Hide global table header in mobile - use section headers instead */
@@ -703,8 +702,9 @@ body {
   .table-section__headers {
     display: flex;
     justify-content: flex-end;
-    margin-top: 7px;
+    padding: 7px 0 0 0;
     gap: 0;
+    border-top: 1px solid var(--color-border);
   }
 
   .table-section__headers .table-header__column {
