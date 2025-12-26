@@ -623,7 +623,7 @@ body {
   .header {
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 21px;
   }
 
   .header__left {
@@ -675,9 +675,6 @@ body {
   }
 
   /* First section needs extra top padding for column headers */
-  .table-section:first-child {
-    padding-top: 25px;
-  }
 
   .table-section__title {
     font-size: var(--font-size-section-title);
