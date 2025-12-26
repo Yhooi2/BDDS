@@ -21,7 +21,10 @@
    * @returns {string} Formatted number string (e.g., "1 366 339")
    */
   function formatNumber(value) {
-    if (value === null || value === undefined || isNaN(value)) {
+    if (value === null || value === undefined) {
+      return "-";
+    }
+    if (isNaN(value)) {
       return "0";
     }
 
@@ -40,6 +43,9 @@
    */
   function formatWithDelta(value, delta) {
     const formattedValue = formatNumber(value);
+    if (delta === null) {
+      return formattedValue;
+    }
     const formattedDelta = Math.round(delta);
     return `${formattedValue} (${formattedDelta}%)`;
   }
@@ -208,7 +214,7 @@
 
     if (viewMode === "details") {
       periodData.forEach(function (period) {
-        var value = period.metrics[row.key] || 0;
+        var value = period.metrics[row.key];
         var valueEl = createElement("span", "table-row__value");
 
         if (period.type === "mixed") {
@@ -219,15 +225,18 @@
         valuesEl.appendChild(valueEl);
       });
     } else {
+      // Dynamics mode: first period vs last period
       var firstPeriod = periodData[0];
-      var currentPeriod = periodData[2];
+      var lastPeriod = periodData[periodData.length - 1];
+      var isSinglePeriod = periodData.length === 1;
 
-      var value1 = firstPeriod ? firstPeriod.metrics[row.key] || 0 : 0;
+      var value1 = firstPeriod ? firstPeriod.metrics[row.key] : null;
       var valueEl1 = createElement("span", "table-row__value");
       valueEl1.textContent = formatNumber(value1);
       valuesEl.appendChild(valueEl1);
 
-      var value2 = currentPeriod ? currentPeriod.metrics[row.key] || 0 : 0;
+      // If single period, show same value; otherwise show last period
+      var value2 = isSinglePeriod ? value1 : (lastPeriod ? lastPeriod.metrics[row.key] : null);
       var valueEl2 = createElement(
         "span",
         "table-row__value table-row__value--wide"
@@ -235,7 +244,8 @@
       valueEl2.textContent = formatNumber(value2);
       valuesEl.appendChild(valueEl2);
 
-      var delta = calculateDelta(value2, value1);
+      // Delta: 0 if same period, otherwise calculate
+      var delta = isSinglePeriod ? 0 : calculateDelta(value2, value1);
       var deltaEl = createElement("span", "table-row__value");
       deltaEl.textContent = formatWithDelta(value2, delta);
       valuesEl.appendChild(deltaEl);
@@ -418,7 +428,7 @@
 
     if (viewMode === "details") {
       periodData.forEach(function (period) {
-        var value = period.metrics[row.key] || 0;
+        var value = period.metrics[row.key];
         var valueEl = createElement("span", "table-row__value");
 
         if (period.type === "mixed") {
@@ -429,15 +439,18 @@
         valuesEl.appendChild(valueEl);
       });
     } else {
+      // Dynamics mode: first period vs last period
       var firstPeriod = periodData[0];
-      var currentPeriod = periodData[2];
+      var lastPeriod = periodData[periodData.length - 1];
+      var isSinglePeriod = periodData.length === 1;
 
-      var value1 = firstPeriod ? firstPeriod.metrics[row.key] || 0 : 0;
+      var value1 = firstPeriod ? firstPeriod.metrics[row.key] : null;
       var valueEl1 = createElement("span", "table-row__value");
       valueEl1.textContent = formatNumber(value1);
       valuesEl.appendChild(valueEl1);
 
-      var value2 = currentPeriod ? currentPeriod.metrics[row.key] || 0 : 0;
+      // If single period, show same value; otherwise show last period
+      var value2 = isSinglePeriod ? value1 : (lastPeriod ? lastPeriod.metrics[row.key] : null);
       var valueEl2 = createElement(
         "span",
         "table-row__value table-row__value--wide"
@@ -445,7 +458,8 @@
       valueEl2.textContent = formatNumber(value2);
       valuesEl.appendChild(valueEl2);
 
-      var delta = calculateDelta(value2, value1);
+      // Delta: 0 if same period, otherwise calculate
+      var delta = isSinglePeriod ? 0 : calculateDelta(value2, value1);
       var deltaEl = createElement("span", "table-row__value");
       deltaEl.textContent = formatWithDelta(value2, delta);
       valuesEl.appendChild(deltaEl);
@@ -465,8 +479,8 @@
     sectionEl.appendChild(titleEl);
 
     // Column headers for mobile (hidden on desktop via CSS)
-    if (periods) {
-      var columnHeaders = renderTableHeaders(periods, viewMode);
+    if (periodData && periodData.length > 0) {
+      var columnHeaders = renderTableHeaders(periodData, viewMode);
       columnHeaders.classList.add("table-section__headers");
       sectionEl.appendChild(columnHeaders);
     }
@@ -482,27 +496,32 @@
     return sectionEl;
   }
 
-  function renderTableHeaders(periods, viewMode) {
+  function renderTableHeaders(periodData, viewMode) {
     var container = createElement("div", "table-header__columns");
 
     if (viewMode === "details") {
-      periods.forEach(function (period) {
+      periodData.forEach(function (period) {
         var headerEl = createElement("span", "table-header__column");
 
         if (period.type === "mixed") {
           headerEl.classList.add("table-header__column--wide");
-          var lines = period.label.split("\n");
+          var lines = period.title.split("\n");
           headerEl.innerHTML = lines.join("<br>");
         } else {
-          headerEl.textContent = period.label;
+          headerEl.textContent = period.title;
         }
 
         container.appendChild(headerEl);
       });
     } else {
+      // Dynamics mode: first period, last period, delta
+      var firstPeriod = periodData[0];
+      var lastPeriod = periodData[periodData.length - 1];
+      var isSinglePeriod = periodData.length === 1;
+
       var headers = [
-        { label: "Факт '23", wide: false },
-        { label: "Факт (I-III кв. '25)\nПлан (IV кв. '25)", wide: true },
+        { label: firstPeriod ? firstPeriod.title : "-", wide: firstPeriod && firstPeriod.type === "mixed" },
+        { label: isSinglePeriod ? firstPeriod.title : (lastPeriod ? lastPeriod.title : "-"), wide: lastPeriod && lastPeriod.type === "mixed" },
         { label: "Дельта", wide: false },
       ];
 
@@ -547,8 +566,8 @@
     financeSection.appendChild(financeTitleEl);
 
     // Column headers for mobile (hidden on desktop via CSS)
-    if (periods) {
-      var columnHeaders = renderTableHeaders(periods, viewMode);
+    if (periodData && periodData.length > 0) {
+      var columnHeaders = renderTableHeaders(periodData, viewMode);
       columnHeaders.classList.add("table-section__headers");
       financeSection.appendChild(columnHeaders);
     }
@@ -1117,6 +1136,7 @@
       periods: [],
       periodData: [],
       chartConfig: {},
+      rawApiData: null,
     },
 
     elements: {
@@ -1177,11 +1197,20 @@
     },
 
     generateData: function () {
-      var multiplier = getFundMultiplier(this.state.currentFund);
-      this.state.periodData = generatePeriodData(
-        this.state.periods,
-        multiplier
-      );
+      if (this.state.rawApiData) {
+        // Use real API data
+        this.state.periodData = transformRawApiData(
+          this.state.rawApiData,
+          this.state.currentFund
+        );
+      } else {
+        // Fallback to generated test data
+        var multiplier = getFundMultiplier(this.state.currentFund);
+        this.state.periodData = generatePeriodData(
+          this.state.periods,
+          multiplier
+        );
+      }
     },
 
     render: function () {
@@ -1203,7 +1232,7 @@
 
       clearElement(this.elements.tableHeaders);
 
-      var headers = renderTableHeaders(this.state.periods, this.state.viewMode);
+      var headers = renderTableHeaders(this.state.periodData, this.state.viewMode);
       while (headers.firstChild) {
         this.elements.tableHeaders.appendChild(headers.firstChild);
       }
@@ -1277,6 +1306,16 @@
         FundSelector.setSelected(newData.currentFund);
       }
 
+      this.generateData();
+      this.render();
+    },
+
+    /**
+     * Load raw API data and re-render dashboard
+     * @param {Object} rawApiData - Data from API in format { data: { fundName: { period: { metric: value } } } }
+     */
+    loadData: function (rawApiData) {
+      this.state.rawApiData = rawApiData;
       this.generateData();
       this.render();
     },

@@ -144,6 +144,9 @@ function getMetricValue(periodData, metricKey, periodIndex) {
  * @returns {number} Delta percentage
  */
 function calculateDelta(currentValue, previousValue) {
+  if (currentValue === null || previousValue === null) {
+    return null;
+  }
   if (previousValue === 0) {
     return currentValue === 0 ? 0 : 100;
   }
@@ -235,6 +238,58 @@ function transformRawData(rawData) {
 }
 
 /**
+ * Transform raw API data to Dashboard format
+ * @param {Object} rawData - Raw data from API in format { data: { fundName: { period: { metric: value } } } }
+ * @param {string} fundName - Fund name to extract data for
+ * @returns {Array} Array of period objects ready for Dashboard
+ *
+ * @example
+ * const rawData = {
+ *   data: {
+ *     "ДВН": {
+ *       "Факт '24": { "Остаток по кредиту на начало периода": 123456, ... },
+ *       "План '26": { ... }
+ *     }
+ *   }
+ * };
+ * const periodData = transformRawApiData(rawData, "ДВН");
+ */
+function transformRawApiData(rawData, fundName) {
+  if (!rawData || !rawData.data || !rawData.data[fundName]) {
+    return [];
+  }
+
+  const fundData = rawData.data[fundName];
+  const periodLabels = Object.keys(fundData);
+
+  // Sort periods by year
+  periodLabels.sort((a, b) => {
+    const yearA = parsePeriodInfo(a).year;
+    const yearB = parsePeriodInfo(b).year;
+    return yearA - yearB;
+  });
+
+  return periodLabels.map((label, index) => {
+    const info = parsePeriodInfo(label);
+    const rawMetrics = fundData[label];
+
+    // Build metrics object, null for missing values (will display as '-')
+    const metrics = {};
+    Object.values(METRIC_KEYS).forEach((metricLabel) => {
+      metrics[metricLabel] = rawMetrics[metricLabel] ?? null;
+    });
+
+    return {
+      id: `period-${index}`,
+      title: label,
+      type: info.type,
+      year: info.year,
+      metrics,
+    };
+  });
+}
+
+/**
  * Default periods configuration
  */
 const DEFAULT_PERIODS = [
@@ -306,6 +361,7 @@ if (typeof module !== "undefined" && module.exports) {
     generateChartData,
     parsePeriodInfo,
     transformRawData,
+    transformRawApiData,
     DEFAULT_PERIODS,
     FUND_MULTIPLIERS,
     getFundMultiplier,
@@ -324,6 +380,7 @@ if (typeof window !== "undefined") {
     generateChartData,
     parsePeriodInfo,
     transformRawData,
+    transformRawApiData,
     DEFAULT_PERIODS,
     FUND_MULTIPLIERS,
     getFundMultiplier,

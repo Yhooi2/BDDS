@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test API Data Loading</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+    pre { background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; }
+    .success { color: green; }
+    .error { color: red; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 5px; }
+    h2 { margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <h1>BDDS API Data Test</h1>
+
+  <h2>1. Test transformRawApiData</h2>
+  <button onclick="testTransform()">Run Test</button>
+  <pre id="transformResult"></pre>
+
+  <h2>2. Test Dashboard.loadData</h2>
+  <button onclick="testLoadData()">Load Sample Data</button>
+  <button onclick="window.open('index.html', '_blank')">Open Dashboard</button>
+  <pre id="loadResult"></pre>
+
+  <h2>Sample API Data Format</h2>
+  <pre id="sampleData"></pre>
+
+  <script src="generateData.js"></script>
+  <script>
+    // Sample API data
+    const sampleApiData = {
+      data: {
+        "ДВН": {
+          "Факт '23": {
+            "Движение Д/С по операционной деятельности ООО": 1500000,
+            "Поступления по операционной деятельности": 2000000,
+            "Расходы по основной деятельности": 1800000,
+            "Обеспечительные платежи": 100000,
+            "Движение Д/С по инвестиционной деятельности": 500000,
+            "Выплата дохода акционерам (пайщикам)": -850000,
+            "Расходы на капитальный ремонт": 150000,
+            "Движение Д/С по финансовой деятельности": 300000,
+            "Расчеты по кредитам": 200000,
+            "Прочие доходы и расходы по финансовой деятельности": 50000,
+            "Расходы на УК Парус": 120000,
+            "Остаток по кредиту на начало периода": 5000000,
+            "Остаток по кредиту на конец периода": 4800000,
+            "Движение за период по Д/С": 250000,
+            "Сформированные резервы (нарастающим итогом)": 300000,
+            "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 280000,
+            "Остаток Д/С на начало периода": 1000000,
+            "Остаток Д/С на конец периода": 1250000,
+            "Д/С на конец периода (с учетом резерва)": 1530000
+          },
+          "Факт '24": {
+            "Движение Д/С по операционной деятельности ООО": 1650000,
+            "Поступления по операционной деятельности": 2200000,
+            "Расходы по основной деятельности": 1900000,
+            "Обеспечительные платежи": 120000,
+            "Движение Д/С по инвестиционной деятельности": 550000,
+            "Выплата дохода акционерам (пайщикам)": -920000,
+            "Расходы на капитальный ремонт": 180000,
+            "Движение Д/С по финансовой деятельности": 350000,
+            "Расчеты по кредитам": 220000,
+            "Прочие доходы и расходы по финансовой деятельности": 60000,
+            "Расходы на УК Парус": 130000,
+            "Остаток по кредиту на начало периода": 4800000,
+            "Остаток по кредиту на конец периода": 4500000,
+            "Движение за период по Д/С": 300000,
+            "Сформированные резервы (нарастающим итогом)": 350000,
+            "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 320000,
+            "Остаток Д/С на начало периода": 1250000,
+            "Остаток Д/С на конец периода": 1550000,
+            "Д/С на конец периода (с учетом резерва)": 1870000
+          },
+          "План '26": {
+            "Поступления по операционной деятельности": 2500000,
+            "Выплата дохода акционерам (пайщикам)": -1000000
+            // Missing metrics will show as '-'
+          }
+        },
+        "ЗОЛЯ": {
+          "Факт '24": {
+            "Поступления по операционной деятельности": 1800000,
+            "Выплата дохода акционерам (пайщикам)": -700000
+          }
+        }
+      }
+    };
+
+    // Show sample data
+    document.getElementById('sampleData').textContent = JSON.stringify(sampleApiData, null, 2);
+
+    function testTransform() {
+      const resultEl = document.getElementById('transformResult');
+      try {
+        // Test for ДВН fund
+        const result = transformRawApiData(sampleApiData, "ДВН");
+
+        let output = "SUCCESS!\n\n";
+        output += "Periods found: " + result.length + "\n\n";
+
+        result.forEach((period, i) => {
+          output += `--- Period ${i}: ${period.title} ---\n`;
+          output += `Type: ${period.type}, Year: ${period.year}\n`;
+          output += `Metrics count: ${Object.keys(period.metrics).length}\n`;
+
+          // Show sample metrics
+          const sampleMetrics = [
+            "Поступления по операционной деятельности",
+            "Выплата дохода акционерам (пайщикам)",
+            "Расходы на капитальный ремонт"
+          ];
+          sampleMetrics.forEach(m => {
+            const val = period.metrics[m];
+            output += `  ${m}: ${val === null ? '-' : val}\n`;
+          });
+          output += "\n";
+        });
+
+        resultEl.textContent = output;
+        resultEl.className = 'success';
+      } catch (e) {
+        resultEl.textContent = "ERROR: " + e.message + "\n\n" + e.stack;
+        resultEl.className = 'error';
+      }
+    }
+
+    function testLoadData() {
+      const resultEl = document.getElementById('loadResult');
+      resultEl.textContent = "To test Dashboard.loadData:\n\n" +
+        "1. Open index.html in browser\n" +
+        "2. Open browser console (F12)\n" +
+        "3. Paste this code:\n\n" +
+        "window.BDDS.Dashboard.loadData(" + JSON.stringify(sampleApiData, null, 2).substring(0, 200) + "...);\n\n" +
+        "Or copy this one-liner:\n\n" +
+        `window.BDDS.Dashboard.loadData(${JSON.stringify(sampleApiData)});`;
+    }
+  </script>
+</body>
+</html>
