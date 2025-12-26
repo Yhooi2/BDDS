@@ -817,27 +817,27 @@
   // ============================================================================
 
   var FUND_ICONS = {
-    default:
-      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L4 9v12h16V9l-8-6zm6 16H6v-9l6-4.5 6 4.5v9z"/><rect x="8" y="13" width="3" height="3"/><rect x="13" y="13" width="3" height="3"/><rect x="8" y="17" width="3" height="2"/><rect x="13" y="17" width="3" height="2"/></svg>',
     warehouse:
-      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>',
-    office:
-      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>',
+      '<svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 10V19H3V10L11 4L19 10Z" fill="#A9DB21"/><rect x="5" y="12" width="4" height="5" fill="white"/><rect x="13" y="12" width="4" height="5" fill="white"/></svg>',
+    building:
+      '<svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 3H13V19H4V3Z" fill="#9DBCE0"/><path d="M13 8H18V19H13V8Z" fill="#9DBCE0"/><rect x="6" y="5" width="2" height="2" fill="white"/><rect x="9" y="5" width="2" height="2" fill="white"/><rect x="6" y="9" width="2" height="2" fill="white"/><rect x="9" y="9" width="2" height="2" fill="white"/><rect x="6" y="13" width="2" height="2" fill="white"/><rect x="9" y="13" width="2" height="2" fill="white"/><rect x="14" y="10" width="2" height="2" fill="white"/><rect x="14" y="14" width="2" height="2" fill="white"/></svg>',
+    briefcase:
+      '<svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="16" height="11" rx="1" fill="#C7A4C0"/><path d="M8 7V5C8 4.44772 8.44772 4 9 4H13C13.5523 4 14 4.44772 14 5V7" stroke="#C7A4C0" stroke-width="2"/><rect x="10" y="10" width="2" height="4" fill="white"/></svg>',
   };
 
   function getFundIcon(fundName) {
     var iconMap = {
-      ДВН: "default",
-      ЗОЛЯ: "office",
+      ДВН: "building",
+      ЗОЛЯ: "warehouse",
       КРАС: "warehouse",
       ЛОГ: "warehouse",
-      НОР: "default",
-      ОЗН: "office",
-      ТРМ: "warehouse",
-      СБЛ: "office",
+      НОР: "warehouse",
+      ОЗН: "warehouse",
+      СБЛ: "warehouse",
+      ТРМ: "briefcase",
     };
-    var iconType = iconMap[fundName] || "default";
-    return FUND_ICONS[iconType] || FUND_ICONS.default;
+    var iconType = iconMap[fundName] || "building";
+    return FUND_ICONS[iconType] || FUND_ICONS.building;
   }
 
   var FundSelector = {
