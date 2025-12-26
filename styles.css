@@ -506,6 +506,11 @@ body {
   width: 300px;
 }
 
+/* Mobile chart title - hidden on desktop */
+.chart__title--mobile {
+  display: none;
+}
+
 #chartContainer {
   flex: 1;
   display: flex;
@@ -562,27 +567,54 @@ body {
 }
 
 /* ========================================
-   15. RESPONSIVE - TABLET (< 1280px)
+   15. RESPONSIVE - MOBILE (320px fixed)
+   Single breakpoint at 767px
    ======================================== */
-@media (max-width: 1280px) {
-  .dashboard {
-    width: 100%;
-    height: auto;
-    min-height: 100vh;
-    padding: var(--spacing-lg);
+@media (max-width: 767px) {
+  /* Mobile font sizes */
+  :root {
+    --font-size-title: 16px;
+    --font-size-chart-title: 14px;
+    --font-size-fund-name: 18px;
+    --font-size-section-title: 12px;
+    --font-size-row-header: 10px;
+    --font-size-row: 10px;
+    --font-size-cell: 10px;
+    --font-size-column-header: 9px;
+    --font-size-chart-label: 9px;
+    --font-size-chart-value: 11px;
   }
-}
 
-@media (max-width: 1024px) {
+  /* Dashboard container - FIXED 320px width */
+  .dashboard {
+    width: 320px;
+    min-height: auto;
+    margin: 0 auto;
+    padding: var(--spacing-sm);
+  }
+
+  /* Card */
   .card {
     width: 100%;
     height: auto;
-    max-width: 768px;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-section);
   }
 
+  /* Header - vertical layout */
+  .header {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .header__right {
+    display: none;
+  }
+
+  /* Content - vertical layout */
   .content {
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
   }
 
   .content__table {
@@ -593,43 +625,39 @@ body {
     width: 100%;
   }
 
-  .header {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-}
-
-/* ========================================
-   16. RESPONSIVE - MOBILE (320px)
-   ======================================== */
-@media (max-width: 480px) {
-  :root {
-    --font-size-title: 16px;
-    --font-size-chart-title: 14px;
-    --font-size-fund-name: 18px;
-    --font-size-section-title: 12px;
-    --font-size-row-header: 10px;
-    --font-size-row: 10px;
-    --font-size-cell: 10px;
-    --font-size-column-header: 10px;
-    --font-size-chart-label: 9px;
-    --font-size-chart-value: 11px;
+  /* Table header - keep absolute positioning, only adjust toggle */
+  .table-header .view-toggle {
+    top: -35px;
   }
 
-  body {
-    padding: var(--spacing-sm);
+  /* Row labels - limit width to fit in 320px */
+  .table-row__label {
+    font-size: var(--font-size-row);
+    max-width: 120px;
   }
 
-  .card {
-    padding: var(--spacing-md);
-    border-radius: var(--radius-section);
+  /* Table columns - fixed sizes per Figma */
+  .table-header__column {
+    width: 39px;
+    font-size: 9px;
   }
 
-  .fund-selector__icon {
-    width: 16px;
-    height: 16px;
+  .table-header__column--wide {
+    width: 50px;
+    font-size: 8px;
   }
 
+  .table-row__value {
+    width: 39px;
+    font-size: 10px;
+  }
+
+  .table-row__value--wide {
+    width: 50px;
+  }
+
+  /* Fund selector */
+  .fund-selector__icon,
   .fund-selector__arrow {
     width: 16px;
     height: 16px;
@@ -643,61 +671,25 @@ body {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .table-header__column {
-    width: 50px;
-    font-size: 10px;
+  /* Chart - shown below table */
+  .chart {
+    margin-top: var(--spacing-sm);
   }
 
-  .table-header__column--wide {
-    width: 60px;
-    font-size: 9px;
+  .chart__title {
+    font-size: var(--font-size-chart-title);
+    width: 100%;
   }
 
-  .table-row__value {
-    width: 50px;
-    font-size: 10px;
+  /* Show mobile chart title */
+  .chart__title--mobile {
+    display: block;
+    margin-bottom: var(--spacing-sm);
   }
 
-  .table-row__value--wide {
-    width: 60px;
-  }
-
-  .content__chart {
-    max-width: 100%;
-  }
-}
-
-/* ========================================
-   16.1 RESPONSIVE - MOBILE (320px exact)
-   ======================================== */
-@media (max-width: 320px) {
-  .card {
-    padding: var(--spacing-sm);
-  }
-
-  .fund-selector__dropdown {
-    min-width: 100%;
-    left: -10px;
-    right: -10px;
-  }
-
-  .table-header__column {
-    width: 39px;
-    font-size: 9px;
-  }
-
-  .table-header__column--wide {
-    width: 50px;
-    font-size: 8px;
-  }
-
-  .table-row__value {
-    width: 39px;
-    font-size: 9px;
-  }
-
-  .table-row__value--wide {
-    width: 50px;
+  /* Section titles */
+  .table-section__title {
+    font-size: var(--font-size-section-title);
   }
 }
 

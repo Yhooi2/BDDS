@@ -691,7 +691,13 @@
   // 6. COMPONENTS - BarChart.js
   // ============================================================================
 
-  var CHART_CONFIG_DEFAULTS = {
+  // Mobile detection helper
+  function isMobile() {
+    return window.innerWidth < 768;
+  }
+
+  // Desktop chart config
+  var CHART_CONFIG_DESKTOP = {
     viewBoxWidth: 300,
     viewBoxHeight: 520,
     chartLeft: 50,
@@ -704,6 +710,26 @@
     yAxisLabelX: 40,
     xAxisLabelY: 505,
   };
+
+  // Mobile chart config (per Figma spec)
+  var CHART_CONFIG_MOBILE = {
+    viewBoxWidth: 260,
+    viewBoxHeight: 360,
+    chartLeft: 40,
+    chartRight: 250,
+    chartTop: 15,
+    chartBottom: 320,
+    barWidth: 34,
+    barGap: 8,
+    barRadius: 4,
+    yAxisLabelX: 35,
+    xAxisLabelY: 345,
+  };
+
+  // Get chart config based on viewport
+  function getChartConfig() {
+    return isMobile() ? CHART_CONFIG_MOBILE : CHART_CONFIG_DESKTOP;
+  }
 
   function calculateBarHeight(value, scale, maxPixelHeight) {
     var min = scale.min;
@@ -764,17 +790,20 @@
     var customValues = config.customValues || null;
     var colors = config.colors || { fact: "#9DBCE0", plan: "#D9D9D9" };
 
-    var viewBoxWidth = CHART_CONFIG_DEFAULTS.viewBoxWidth;
-    var viewBoxHeight = CHART_CONFIG_DEFAULTS.viewBoxHeight;
-    var chartLeft = CHART_CONFIG_DEFAULTS.chartLeft;
-    var chartRight = CHART_CONFIG_DEFAULTS.chartRight;
-    var chartTop = CHART_CONFIG_DEFAULTS.chartTop;
-    var chartBottom = CHART_CONFIG_DEFAULTS.chartBottom;
-    var barWidth = CHART_CONFIG_DEFAULTS.barWidth;
-    var barGap = CHART_CONFIG_DEFAULTS.barGap;
-    var barRadius = CHART_CONFIG_DEFAULTS.barRadius;
-    var yAxisLabelX = CHART_CONFIG_DEFAULTS.yAxisLabelX;
-    var xAxisLabelY = CHART_CONFIG_DEFAULTS.xAxisLabelY;
+    // Use responsive chart config based on viewport
+    var chartLayout = getChartConfig();
+
+    var viewBoxWidth = chartLayout.viewBoxWidth;
+    var viewBoxHeight = chartLayout.viewBoxHeight;
+    var chartLeft = chartLayout.chartLeft;
+    var chartRight = chartLayout.chartRight;
+    var chartTop = chartLayout.chartTop;
+    var chartBottom = chartLayout.chartBottom;
+    var barWidth = chartLayout.barWidth;
+    var barGap = chartLayout.barGap;
+    var barRadius = chartLayout.barRadius;
+    var yAxisLabelX = chartLayout.yAxisLabelX;
+    var xAxisLabelY = chartLayout.xAxisLabelY;
 
     var chartHeight = chartBottom - chartTop;
     var chartWidth = chartRight - chartLeft;
@@ -1345,6 +1374,22 @@
 
   function initDashboard() {
     Dashboard.init();
+
+    // Re-render chart on resize (debounced)
+    var resizeTimeout;
+    var lastIsMobile = isMobile();
+
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function () {
+        var currentIsMobile = isMobile();
+        // Only re-render if crossing the breakpoint
+        if (currentIsMobile !== lastIsMobile) {
+          lastIsMobile = currentIsMobile;
+          Dashboard.renderChart();
+        }
+      }, 150);
+    });
   }
 
   if (document.readyState === "loading") {
