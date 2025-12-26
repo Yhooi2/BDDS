@@ -571,18 +571,18 @@ body {
    Single breakpoint at 767px
    ======================================== */
 @media (max-width: 767px) {
-  /* Mobile font sizes */
+  /* Mobile font sizes - per Figma export (320px) */
   :root {
     --font-size-title: 16px;
-    --font-size-chart-title: 14px;
+    --font-size-chart-title: 12px;
     --font-size-fund-name: 18px;
     --font-size-section-title: 12px;
-    --font-size-row-header: 10px;
-    --font-size-row: 10px;
-    --font-size-cell: 10px;
-    --font-size-column-header: 9px;
-    --font-size-chart-label: 9px;
-    --font-size-chart-value: 11px;
+    --font-size-row-header: 8px;
+    --font-size-row: 8px;
+    --font-size-cell: 8px;
+    --font-size-column-header: 8px;
+    --font-size-chart-label: 8px;
+    --font-size-chart-value: 10px;
   }
 
   /* Dashboard container - FIXED 320px width */
@@ -593,11 +593,11 @@ body {
     padding: var(--spacing-sm);
   }
 
-  /* Card */
+  /* Card - per Figma 13px padding */
   .card {
     width: 100%;
     height: auto;
-    padding: var(--spacing-sm);
+    padding: 13px;
     border-radius: var(--radius-section);
   }
 
@@ -630,16 +630,16 @@ body {
     top: -35px;
   }
 
-  /* Row labels - limit width to fit in 320px */
+  /* Row labels - per Figma ~100px width */
   .table-row__label {
-    font-size: var(--font-size-row);
-    max-width: 120px;
+    font-size: 8px;
+    max-width: 100px;
   }
 
-  /* Table columns - fixed sizes per Figma */
+  /* Table columns - per Figma 37-39px width, 8px font */
   .table-header__column {
     width: 39px;
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .table-header__column--wide {
@@ -649,7 +649,7 @@ body {
 
   .table-row__value {
     width: 39px;
-    font-size: 10px;
+    font-size: 8px;
   }
 
   .table-row__value--wide {
