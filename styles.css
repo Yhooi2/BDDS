@@ -530,6 +530,7 @@ body {
 /* Mobile chart title - hidden on desktop */
 .chart__title--mobile {
   display: none;
+  padding: 0 16px;
 }
 
 #chartContainer {
