@@ -399,7 +399,7 @@ body {
   padding: 3px 12px 3px 12px;
   padding-right: 24px;
   margin-bottom: -1px;
-  border-radius: var(--radius-section) 0 0 0;
+  border-radius: var(--radius-section) 20px 0 0;
   position: relative;
   z-index: 1;
   background: var(--color-section-header);

@@ -35,7 +35,7 @@
     }).format(absValue);
 
     const withRegularSpace = formatted.replace(/\u00A0/g, " ");
-    return value < 0 ? `-${withRegularSpace}` : withRegularSpace;
+    return value < 0 ? `(${withRegularSpace})` : withRegularSpace;
   }
 
   /**
