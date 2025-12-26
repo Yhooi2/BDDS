@@ -866,7 +866,7 @@
   }
 
   var FundSelector = {
-    state: { isOpen: false, selected: "ДВН", funds: [], onChange: null },
+    state: { isOpen: false, selected: "ДВН", funds: [], onChange: null, initialized: false },
     elements: {
       container: null,
       trigger: null,
@@ -907,7 +907,39 @@
       }
 
       this.render();
-      this.attachEvents();
+      // Only attach events once
+      if (!this.state.initialized) {
+        this.attachEvents();
+        this.state.initialized = true;
+      }
+    },
+
+    buildDynamicGroups: function () {
+      var self = this;
+      var knownFunds = {};
+
+      // Map known funds to their icons
+      FUND_GROUPS.forEach(function (group) {
+        group.funds.forEach(function (fund) {
+          knownFunds[fund] = group.icon;
+        });
+      });
+
+      // Categorize available funds
+      var groups = {};
+      this.state.funds.forEach(function (fund) {
+        var icon = knownFunds[fund] || "building"; // default icon for unknown funds
+        if (!groups[icon]) {
+          groups[icon] = { icon: icon, funds: [] };
+        }
+        groups[icon].funds.push(fund);
+      });
+
+      // Convert to array and sort by icon type for consistent ordering
+      var iconOrder = ["warehouse", "building", "briefcase"];
+      return iconOrder
+        .filter(function (icon) { return groups[icon]; })
+        .map(function (icon) { return groups[icon]; });
     },
 
     render: function () {
@@ -916,7 +948,10 @@
 
       clearElement(this.elements.grid);
 
-      FUND_GROUPS.forEach(function (group) {
+      // Build dynamic groups based on available funds
+      var dynamicGroups = this.buildDynamicGroups();
+
+      dynamicGroups.forEach(function (group) {
         var groupEl = self.createFundGroup(group);
         self.elements.grid.appendChild(groupEl);
       });
