@@ -1130,9 +1130,10 @@
 
       this.elements.button = $("#viewToggle");
       this.elements.text = $("#viewToggleText");
+      this.elements.mobileButton = $("#viewToggleMobile");
 
-      if (!this.elements.button) {
-        console.error("ViewToggle: Button element not found");
+      if (!this.elements.button && !this.elements.mobileButton) {
+        console.error("ViewToggle: Button elements not found");
         return;
       }
 
@@ -1143,6 +1144,14 @@
     render: function () {
       if (this.elements.text) {
         this.elements.text.textContent = VIEW_LABELS[this.state.mode];
+      }
+
+      // Update mobile button text
+      if (this.elements.mobileButton) {
+        var mobileText = this.elements.mobileButton.querySelector("span");
+        if (mobileText) {
+          mobileText.textContent = VIEW_LABELS[this.state.mode];
+        }
       }
 
       if (this.elements.button) {
@@ -1158,6 +1167,12 @@
       var self = this;
       if (this.elements.button) {
         this.elements.button.addEventListener("click", function () {
+          self.toggle();
+        });
+      }
+      // Also bind mobile button
+      if (this.elements.mobileButton) {
+        this.elements.mobileButton.addEventListener("click", function () {
           self.toggle();
         });
       }

@@ -155,6 +155,10 @@ body {
   line-height: 1.2;
 }
 
+.header__title-unit {
+  font-weight: var(--font-weight-regular);
+}
+
 /* ========================================
    6. FUND SELECTOR
    ======================================== */
@@ -292,6 +296,18 @@ body {
   border-bottom: none;
   transform: rotate(45deg);
   margin-left: 2px;
+}
+
+/* Mobile view toggle - hidden on desktop */
+.view-toggle--mobile {
+  display: none;
+}
+
+/* Fund row - for mobile layout */
+.header__fund-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 /* ========================================
@@ -598,6 +614,7 @@ body {
     height: auto;
     min-height: 1360px;
     padding: 13px;
+    padding-top: 31px;
     border-radius: var(--radius-section);
     position: relative;
   }
@@ -611,9 +628,9 @@ body {
 
   .header__left {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
     width: 100%;
   }
 
@@ -621,18 +638,20 @@ body {
     display: none;
   }
 
-  /* View toggle - positioned next to fund selector (Figma: top: 64px, left: 150px) */
-  .view-toggle {
-    font-size: 12px;
-    position: absolute;
-    top: 64px;
-    left: 150px;
+  /* Fund row with view toggle on mobile */
+  .header__fund-row {
+    gap: 52px;
   }
 
+  /* Mobile view toggle - show on mobile */
+  .view-toggle--mobile {
+    display: inline-flex;
+    font-size: 12px;
+  }
+
+  /* Hide desktop view toggle in table header on mobile */
   .table-header .view-toggle {
-    position: absolute;
-    top: 64px;
-    left: 150px;
+    display: none;
   }
 
   /* Content - vertical layout */
