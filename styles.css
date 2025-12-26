@@ -805,19 +805,27 @@ body {
 
   /* Dynamics mode */
   .content__table--dynamics .table-header__column {
-    width: 60px;
+    width: auto;
+    min-width: 50px;
+    white-space: nowrap;
   }
 
   .content__table--dynamics .table-header__column--wide {
-    width: 70px;
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
   }
 
   .content__table--dynamics .table-row__value {
-    width: 60px;
+    width: auto;
+    min-width: 50px;
+    white-space: nowrap;
   }
 
   .content__table--dynamics .table-row__value--wide {
-    width: 70px;
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
   }
 }
 
