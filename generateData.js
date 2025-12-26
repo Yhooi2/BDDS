@@ -9,35 +9,36 @@
  */
 const METRIC_KEYS = {
   // Operational Activity Section
-  OPERATION_MOVEMENT: 'Движение Д/С по операционной деятельности ООО',
-  OPERATION_INCOME: 'Поступления по операционной деятельности',
-  OPERATION_EXPENSE: 'Расходы по основной деятельности',
-  OPERATION_DEPOSITS: 'Обеспечительные платежи',
+  OPERATION_MOVEMENT: "Движение Д/С по операционной деятельности ООО",
+  OPERATION_INCOME: "Поступления по операционной деятельности",
+  OPERATION_EXPENSE: "Расходы по основной деятельности",
+  OPERATION_DEPOSITS: "Обеспечительные платежи",
 
   // Investment Activity Section
-  INVESTMENT_MOVEMENT: 'Движение Д/С по инвестиционной деятельности',
-  INVESTMENT_DIVIDENDS: 'Выплата дохода акционерам (пайщикам)',
-  INVESTMENT_REPAIRS: 'Расходы на капитальный ремонт',
+  INVESTMENT_MOVEMENT: "Движение Д/С по инвестиционной деятельности",
+  INVESTMENT_DIVIDENDS: "Выплата дохода акционерам (пайщикам)",
+  INVESTMENT_REPAIRS: "Расходы на капитальный ремонт",
 
   // Financial Activity Section
-  FINANCE_MOVEMENT: 'Движение Д/С по финансовой деятельности',
-  FINANCE_CREDITS: 'Расчеты по кредитам',
-  FINANCE_OTHER: 'Прочие доходы и расходы по финансовой деятельности',
-  FINANCE_PARUS: 'Расходы на УК Парус',
+  FINANCE_MOVEMENT: "Движение Д/С по финансовой деятельности",
+  FINANCE_CREDITS: "Расчеты по кредитам",
+  FINANCE_OTHER: "Прочие доходы и расходы по финансовой деятельности",
+  FINANCE_PARUS: "Расходы на УК Парус",
 
   // Credit Balance Block
-  CREDIT_START: 'Остаток по кредиту на начало периода',
-  CREDIT_END: 'Остаток по кредиту на конец периода',
+  CREDIT_START: "Остаток по кредиту на начало периода",
+  CREDIT_END: "Остаток по кредиту на конец периода",
 
   // Cash Movement Section
-  CASH_MOVEMENT: 'Движение за период по Д/С',
-  RESERVES_FORMED: 'Сформированные резервы (нарастающим итогом)',
-  RESERVES_ACCUMULATED: 'Накопленные резервы на ремонт, непредвиденные расходы и вакансию',
+  CASH_MOVEMENT: "Движение за период по Д/С",
+  RESERVES_FORMED: "Сформированные резервы (нарастающим итогом)",
+  RESERVES_ACCUMULATED:
+    "Накопленные резервы на ремонт, непредвиденные расходы и вакансию",
 
   // Cash Balance Block
-  CASH_START: 'Остаток Д/С на начало периода',
-  CASH_END: 'Остаток Д/С на конец периода',
-  CASH_WITH_RESERVE: 'Д/С на конец периода (с учетом резерва)'
+  CASH_START: "Остаток Д/С на начало периода",
+  CASH_END: "Остаток Д/С на конец периода",
+  CASH_WITH_RESERVE: "Д/С на конец периода (с учетом резерва)",
 };
 
 /**
@@ -67,7 +68,7 @@ const BASE_VALUES = {
 
   [METRIC_KEYS.CASH_START]: 1366339,
   [METRIC_KEYS.CASH_END]: 1366339,
-  [METRIC_KEYS.CASH_WITH_RESERVE]: 1366339
+  [METRIC_KEYS.CASH_WITH_RESERVE]: 1366339,
 };
 
 /**
@@ -77,7 +78,7 @@ const BASE_VALUES = {
  * @returns {Object} Metrics object
  */
 function generateMetrics(index, fundMultiplier) {
-  const yearMultiplier = 1 + (index * 0.1);
+  const yearMultiplier = 1 + index * 0.1;
   const m = fundMultiplier;
 
   const metrics = {};
@@ -118,7 +119,7 @@ function generatePeriodData(periods, fundMultiplier = 1) {
     title: period.label,
     type: period.type,
     year: period.year,
-    metrics: generateMetrics(index, fundMultiplier)
+    metrics: generateMetrics(index, fundMultiplier),
   }));
 }
 
@@ -146,7 +147,9 @@ function calculateDelta(currentValue, previousValue) {
   if (previousValue === 0) {
     return currentValue === 0 ? 0 : 100;
   }
-  return Math.round(((currentValue - previousValue) / Math.abs(previousValue)) * 100);
+  return Math.round(
+    ((currentValue - previousValue) / Math.abs(previousValue)) * 100
+  );
 }
 
 /**
@@ -160,32 +163,103 @@ function generateChartData(periodData, metricKey) {
     label: period.title,
     value: Math.abs(period.metrics[metricKey] || 0),
     type: period.type,
-    year: period.year
+    year: period.year,
   }));
+}
+
+/**
+ * Parse period string to extract type and year
+ * @param {string} periodString - Period label (e.g., "Факт '23", "План '26")
+ * @returns {Object} { type: 'fact'|'plan'|'mixed', year: number }
+ *
+ * @example
+ * parsePeriodInfo("Факт '23")  // { type: 'fact', year: 2023 }
+ * parsePeriodInfo("План '26")  // { type: 'plan', year: 2026 }
+ * parsePeriodInfo("Факт (I-III кв. '25)\nПлан (IV кв. '25)")  // { type: 'mixed', year: 2025 }
+ */
+function parsePeriodInfo(periodString) {
+  const hasFact = /факт/i.test(periodString);
+  const hasPlan = /план/i.test(periodString);
+
+  let type = "fact";
+  if (hasFact && hasPlan) {
+    type = "mixed";
+  } else if (hasPlan) {
+    type = "plan";
+  }
+
+  // Extract year from patterns like '23, '24, '25, '26
+  const yearMatch = periodString.match(/'(\d{2})/);
+  let year = new Date().getFullYear();
+  if (yearMatch) {
+    year = 2000 + parseInt(yearMatch[1], 10);
+  }
+
+  return { type, year };
+}
+
+/**
+ * Transform raw data array to Dashboard format
+ * @param {Array} rawData - Array of objects with period and metrics
+ * @returns {Array} Array of period objects ready for Dashboard
+ *
+ * @example
+ * const rawData = [
+ *   { period: "Факт '23", "Выплата дохода акционерам (пайщикам)": -850000, ... },
+ *   { period: "Факт '24", "Выплата дохода акционерам (пайщикам)": -920000, ... },
+ * ];
+ * const periodData = transformRawData(rawData);
+ * // Returns:
+ * // [
+ * //   { id: 'period-0', title: "Факт '23", type: 'fact', year: 2023, metrics: {...} },
+ * //   { id: 'period-1', title: "Факт '24", type: 'fact', year: 2024, metrics: {...} },
+ * // ]
+ */
+function transformRawData(rawData) {
+  if (!Array.isArray(rawData) || rawData.length === 0) {
+    return [];
+  }
+
+  return rawData.map((item, index) => {
+    const { period, ...metrics } = item;
+    const { type, year } = parsePeriodInfo(period);
+
+    return {
+      id: `period-${index}`,
+      title: period,
+      type,
+      year,
+      metrics,
+    };
+  });
 }
 
 /**
  * Default periods configuration
  */
 const DEFAULT_PERIODS = [
-  { year: 2023, type: 'fact', label: "Факт '23" },
-  { year: 2024, type: 'fact', label: "Факт '24" },
-  { year: 2025, type: 'mixed', label: "Факт (I-III кв. '25)\nПлан (IV кв. '25)" },
-  { year: 2026, type: 'plan', label: "План '26" }
+  { year: 2023, type: "fact", label: "Факт '23" },
+  { year: 2024, type: "fact", label: "Факт '24" },
+  {
+    year: 2025,
+    type: "mixed",
+    label: "Факт (I-III кв. '25)\nПлан (IV кв. '25)",
+  },
+  { year: 2026, type: "plan", label: "План '26" },
 ];
 
 /**
  * Fund multipliers for different funds
  */
 const FUND_MULTIPLIERS = {
-  'ДВН': 1.0,
-  'ЗОЛЯ': 0.8,
-  'КРАС': 1.2,
-  'ЛОГ': 0.9,
-  'НОР': 1.1,
-  'ОЗН': 0.7,
-  'ТРМ': 1.3,
-  'СБЛ': 0.95
+  ДВН: 1.0,
+  ЗОЛЯ: 0.8,
+  КРАС: 1.2,
+  ЛОГ: 0.9,
+  НОР: 1.1,
+  ОЗН: 0.7,
+  ТРМ: 1.3,
+  СБЛ: 0.95,
 };
 
 /**
@@ -202,27 +276,27 @@ function getFundMultiplier(fundName) {
  * Customize scale (min/max/step), bar values, and colors
  */
 const DEFAULT_CHART_CONFIG = {
-  title: 'Выплата дохода акционерам (пайщикам), тыс. ₽',
+  title: "Выплата дохода акционерам (пайщикам), тыс. ₽",
   metric: METRIC_KEYS.INVESTMENT_DIVIDENDS,
-  unit: 'тыс. ₽',
+  unit: "тыс. ₽",
   // Scale settings for Y-axis
   scale: {
-    min: 100,   // Minimum value on Y-axis
-    max: 1000,  // Maximum value on Y-axis
-    step: 100   // Step between grid lines
+    min: 100, // Minimum value on Y-axis
+    max: 1000, // Maximum value on Y-axis
+    step: 100, // Step between grid lines
   },
   // Custom bar values (override calculated values)
   // Set to null to use calculated values from data
   customValues: [390, 670, 860, 980],
   // Bar colors
   colors: {
-    fact: '#9DBCE0',
-    plan: '#D9D9D9'
-  }
+    fact: "#9DBCE0",
+    plan: "#D9D9D9",
+  },
 };
 
 // Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     METRIC_KEYS,
     BASE_VALUES,
@@ -230,9 +304,29 @@ if (typeof module !== 'undefined' && module.exports) {
     getMetricValue,
     calculateDelta,
     generateChartData,
+    parsePeriodInfo,
+    transformRawData,
     DEFAULT_PERIODS,
     FUND_MULTIPLIERS,
     getFundMultiplier,
-    DEFAULT_CHART_CONFIG
+    DEFAULT_CHART_CONFIG,
+  };
+}
+
+// Export for browser usage
+if (typeof window !== "undefined") {
+  window.DataModule = {
+    METRIC_KEYS,
+    BASE_VALUES,
+    generatePeriodData,
+    getMetricValue,
+    calculateDelta,
+    generateChartData,
+    parsePeriodInfo,
+    transformRawData,
+    DEFAULT_PERIODS,
+    FUND_MULTIPLIERS,
+    getFundMultiplier,
+    DEFAULT_CHART_CONFIG,
   };
 }
