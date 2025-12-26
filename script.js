@@ -46,10 +46,9 @@
     if (delta === null) {
       return formattedValue;
     }
-    const formattedDelta = Math.round(delta);
-    // Add extra space before negative sign to align visually
-    const prefix = formattedDelta < 0 ? " " : "";
-    return `${formattedValue}${prefix} (${formattedDelta}%)`;
+    const deltaStr = `(${Math.round(delta)}%)`;
+    const padded = deltaStr.padStart(7).replace(/ /g, "\u00A0");
+    return `${formattedValue}\u00A0${padded}`;
   }
 
   /**
@@ -238,7 +237,11 @@
       valuesEl.appendChild(valueEl1);
 
       // If single period, show same value; otherwise show last period
-      var value2 = isSinglePeriod ? value1 : (lastPeriod ? lastPeriod.metrics[row.key] : null);
+      var value2 = isSinglePeriod
+        ? value1
+        : lastPeriod
+        ? lastPeriod.metrics[row.key]
+        : null;
       var valueEl2 = createElement(
         "span",
         "table-row__value table-row__value--wide"
@@ -452,7 +455,11 @@
       valuesEl.appendChild(valueEl1);
 
       // If single period, show same value; otherwise show last period
-      var value2 = isSinglePeriod ? value1 : (lastPeriod ? lastPeriod.metrics[row.key] : null);
+      var value2 = isSinglePeriod
+        ? value1
+        : lastPeriod
+        ? lastPeriod.metrics[row.key]
+        : null;
       var valueEl2 = createElement(
         "span",
         "table-row__value table-row__value--wide"
@@ -522,8 +529,18 @@
       var isSinglePeriod = periodData.length === 1;
 
       var headers = [
-        { label: firstPeriod ? firstPeriod.title : "-", wide: firstPeriod && firstPeriod.type === "mixed" },
-        { label: isSinglePeriod ? firstPeriod.title : (lastPeriod ? lastPeriod.title : "-"), wide: lastPeriod && lastPeriod.type === "mixed" },
+        {
+          label: firstPeriod ? firstPeriod.title : "-",
+          wide: firstPeriod && firstPeriod.type === "mixed",
+        },
+        {
+          label: isSinglePeriod
+            ? firstPeriod.title
+            : lastPeriod
+            ? lastPeriod.title
+            : "-",
+          wide: lastPeriod && lastPeriod.type === "mixed",
+        },
         { label: "Дельта", wide: false },
       ];
 
@@ -868,7 +885,13 @@
   }
 
   var FundSelector = {
-    state: { isOpen: false, selected: "ДВН", funds: [], onChange: null, initialized: false },
+    state: {
+      isOpen: false,
+      selected: "ДВН",
+      funds: [],
+      onChange: null,
+      initialized: false,
+    },
     elements: {
       container: null,
       trigger: null,
@@ -940,8 +963,12 @@
       // Convert to array and sort by icon type for consistent ordering
       var iconOrder = ["warehouse", "building", "briefcase"];
       return iconOrder
-        .filter(function (icon) { return groups[icon]; })
-        .map(function (icon) { return groups[icon]; });
+        .filter(function (icon) {
+          return groups[icon];
+        })
+        .map(function (icon) {
+          return groups[icon];
+        });
     },
 
     render: function () {
@@ -1266,7 +1293,10 @@
 
       clearElement(this.elements.tableHeaders);
 
-      var headers = renderTableHeaders(this.state.periodData, this.state.viewMode);
+      var headers = renderTableHeaders(
+        this.state.periodData,
+        this.state.viewMode
+      );
       while (headers.firstChild) {
         this.elements.tableHeaders.appendChild(headers.firstChild);
       }
@@ -1410,8 +1440,12 @@
 
       // Choose design dimensions based on viewport width
       var isMobileViewport = viewportWidth < 768;
-      var designWidth = isMobileViewport ? this.mobileDesignWidth : this.designWidth;
-      var designHeight = isMobileViewport ? this.mobileDesignHeight : this.designHeight;
+      var designWidth = isMobileViewport
+        ? this.mobileDesignWidth
+        : this.designWidth;
+      var designHeight = isMobileViewport
+        ? this.mobileDesignHeight
+        : this.designHeight;
 
       // Calculate scale to fit (contain behavior)
       var scaleX = viewportWidth / designWidth;
