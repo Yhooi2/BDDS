@@ -90,6 +90,7 @@ body {
   min-height: 100vh;
   padding: 0;
   overflow-x: auto;
+  letter-spacing: -0.3px;
 }
 
 /* ========================================
