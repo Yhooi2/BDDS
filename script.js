@@ -178,126 +178,7 @@
   }
 
   // ============================================================================
-  // 3. DATA - generateData.js
-  // ============================================================================
-
-  var METRIC_KEYS = {
-    OPERATION_MOVEMENT: "Движение Д/С по операционной деятельности ООО",
-    OPERATION_INCOME: "Поступления по операционной деятельности",
-    OPERATION_EXPENSE: "Расходы по основной деятельности",
-    OPERATION_DEPOSITS: "Обеспечительные платежи",
-    INVESTMENT_MOVEMENT: "Движение Д/С по инвестиционной деятельности",
-    INVESTMENT_DIVIDENDS: "Выплата дохода акционерам (пайщикам)",
-    INVESTMENT_REPAIRS: "Расходы на капитальный ремонт",
-    FINANCE_MOVEMENT: "Движение Д/С по финансовой деятельности",
-    FINANCE_CREDITS: "Расчеты по кредитам",
-    FINANCE_OTHER: "Прочие доходы и расходы по финансовой деятельности",
-    FINANCE_PARUS: "Расходы на УК Парус",
-    CREDIT_START: "Остаток по кредиту на начало периода",
-    CREDIT_END: "Остаток по кредиту на конец периода",
-    CASH_MOVEMENT: "Движение за период по Д/С",
-    RESERVES_FORMED: "Сформированные резервы (нарастающим итогом)",
-    RESERVES_ACCUMULATED:
-      "Накопленные резервы на ремонт, непредвиденные расходы и вакансию",
-    CASH_START: "Остаток Д/С на начало периода",
-    CASH_END: "Остаток Д/С на конец периода",
-    CASH_WITH_RESERVE: "Д/С на конец периода (с учетом резерва)",
-  };
-
-  var BASE_VALUES = {};
-  BASE_VALUES[METRIC_KEYS.OPERATION_MOVEMENT] = 1366339;
-  BASE_VALUES[METRIC_KEYS.OPERATION_INCOME] = 1366339;
-  BASE_VALUES[METRIC_KEYS.OPERATION_EXPENSE] = 1366339;
-  BASE_VALUES[METRIC_KEYS.OPERATION_DEPOSITS] = 1366339;
-  BASE_VALUES[METRIC_KEYS.INVESTMENT_MOVEMENT] = 1366339;
-  BASE_VALUES[METRIC_KEYS.INVESTMENT_DIVIDENDS] = -850000;
-  BASE_VALUES[METRIC_KEYS.INVESTMENT_REPAIRS] = 136633;
-  BASE_VALUES[METRIC_KEYS.FINANCE_MOVEMENT] = 1366339;
-  BASE_VALUES[METRIC_KEYS.FINANCE_CREDITS] = 1366339;
-  BASE_VALUES[METRIC_KEYS.FINANCE_OTHER] = 1366339;
-  BASE_VALUES[METRIC_KEYS.FINANCE_PARUS] = 1366339;
-  BASE_VALUES[METRIC_KEYS.CREDIT_START] = 1366339;
-  BASE_VALUES[METRIC_KEYS.CREDIT_END] = 1366339;
-  BASE_VALUES[METRIC_KEYS.CASH_MOVEMENT] = 1366339;
-  BASE_VALUES[METRIC_KEYS.RESERVES_FORMED] = 1366339;
-  BASE_VALUES[METRIC_KEYS.RESERVES_ACCUMULATED] = 1366339;
-  BASE_VALUES[METRIC_KEYS.CASH_START] = 1366339;
-  BASE_VALUES[METRIC_KEYS.CASH_END] = 1366339;
-  BASE_VALUES[METRIC_KEYS.CASH_WITH_RESERVE] = 1366339;
-
-  function generateMetrics(index, fundMultiplier) {
-    var yearMultiplier = 1 + index * 0.1;
-    var m = fundMultiplier;
-    var metrics = {};
-
-    Object.entries(BASE_VALUES).forEach(function (entry) {
-      var key = entry[0];
-      var baseValue = entry[1];
-      if (key === METRIC_KEYS.CREDIT_START || key === METRIC_KEYS.CREDIT_END) {
-        metrics[key] = Math.round(baseValue * m * (2 - index * 0.2));
-      } else {
-        metrics[key] = Math.round(baseValue * m * yearMultiplier);
-      }
-    });
-
-    return metrics;
-  }
-
-  function generatePeriodData(periods, fundMultiplier) {
-    fundMultiplier = fundMultiplier || 1;
-    if (!Array.isArray(periods) || periods.length === 0) {
-      return [];
-    }
-
-    return periods.map(function (period, index) {
-      return {
-        id: "period-" + index,
-        title: period.label,
-        type: period.type,
-        year: period.year,
-        metrics: generateMetrics(index, fundMultiplier),
-      };
-    });
-  }
-
-  function calculateDelta(currentValue, previousValue) {
-    if (previousValue === 0) {
-      return currentValue === 0 ? 0 : 100;
-    }
-    return Math.round(
-      ((currentValue - previousValue) / Math.abs(previousValue)) * 100
-    );
-  }
-
-  var DEFAULT_PERIODS = [
-    { year: 2023, type: "fact", label: "Факт '23", shortLabel: "'23" },
-    { year: 2024, type: "fact", label: "Факт '24", shortLabel: "'24" },
-    {
-      year: 2025,
-      type: "mixed",
-      label: "Факт (I-III кв. '25)\nПлан (IV кв. '25)",
-      shortLabel: "'25",
-    },
-    { year: 2026, type: "plan", label: "План '26", shortLabel: "'26" },
-  ];
-
-  var FUND_MULTIPLIERS = {
-    ДВН: 1.0,
-    ЗОЛЯ: 0.8,
-    КРАС: 1.2,
-    ЛОГ: 0.9,
-    НОР: 1.1,
-    ОЗН: 0.7,
-    ТРМ: 1.3,
-    СБЛ: 0.95,
-  };
-
-  function getFundMultiplier(fundName) {
-    return FUND_MULTIPLIERS[fundName] || 1.0;
-  }
-
-  // ============================================================================
-  // 4. COMPONENTS - HighlightBlock.js
+  // 3. COMPONENTS - HighlightBlock.js
   // ============================================================================
 
   function renderHighlightBlock(rows, periodData, viewMode) {
@@ -365,7 +246,7 @@
   }
 
   // ============================================================================
-  // 5. COMPONENTS - TableSection.js
+  // 4. COMPONENTS - TableSection.js
   // ============================================================================
 
   var SECTIONS = {
@@ -702,7 +583,7 @@
   }
 
   // ============================================================================
-  // 6. COMPONENTS - BarChart.js
+  // 5. COMPONENTS - BarChart.js
   // ============================================================================
 
   // Mobile detection helper
@@ -932,7 +813,7 @@
   }
 
   // ============================================================================
-  // 7. COMPONENTS - FundSelector.js
+  // 6. COMPONENTS - FundSelector.js
   // ============================================================================
 
   var FUND_ICONS = {
@@ -1124,7 +1005,7 @@
   };
 
   // ============================================================================
-  // 8. COMPONENTS - ViewToggle.js
+  // 7. COMPONENTS - ViewToggle.js
   // ============================================================================
 
   var VIEW_LABELS = {
@@ -1214,7 +1095,7 @@
   };
 
   // ============================================================================
-  // 9. MAIN - Dashboard.js
+  // 8. MAIN - Dashboard.js
   // ============================================================================
 
   var Dashboard = {
@@ -1240,12 +1121,7 @@
       this.state.currentFund = config.currentFund || "ДВН";
       this.state.viewMode = config.viewMode || "details";
       this.state.periods = config.periods || DEFAULT_PERIODS;
-      this.state.chartConfig = config.chartConfig || {
-        title: "Выплата дохода акционерам (пайщикам), тыс. ₽",
-        metric: METRIC_KEYS.INVESTMENT_DIVIDENDS,
-        scale: { min: 100, max: 1000, step: 100 },
-        customValues: [390, 670, 860, 980],
-      };
+      this.state.chartConfig = config.chartConfig || DEFAULT_CHART_CONFIG;
 
       this.elements.tableContainer = $(".content__table");
       this.elements.tableHeaders = $("#tableHeaderColumns");
@@ -1399,7 +1275,7 @@
   };
 
   // ============================================================================
-  // 10. INITIALIZATION
+  // 9. INITIALIZATION
   // ============================================================================
 
   function initDashboard() {

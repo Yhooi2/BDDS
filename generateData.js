@@ -197,6 +197,30 @@ function getFundMultiplier(fundName) {
   return FUND_MULTIPLIERS[fundName] || 1.0;
 }
 
+/**
+ * Default chart configuration
+ * Customize scale (min/max/step), bar values, and colors
+ */
+const DEFAULT_CHART_CONFIG = {
+  title: 'Выплата дохода акционерам (пайщикам), тыс. ₽',
+  metric: METRIC_KEYS.INVESTMENT_DIVIDENDS,
+  unit: 'тыс. ₽',
+  // Scale settings for Y-axis
+  scale: {
+    min: 100,   // Minimum value on Y-axis
+    max: 800,   // Maximum value on Y-axis (TEST: changed from 1000)
+    step: 100   // Step between grid lines
+  },
+  // Custom bar values (override calculated values)
+  // Set to null to use calculated values from data
+  customValues: [200, 400, 600, 750],  // TEST: changed values
+  // Bar colors
+  colors: {
+    fact: '#FF6B6B',  // TEST: changed to red
+    plan: '#4ECDC4'   // TEST: changed to teal
+  }
+};
+
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -208,6 +232,7 @@ if (typeof module !== 'undefined' && module.exports) {
     generateChartData,
     DEFAULT_PERIODS,
     FUND_MULTIPLIERS,
-    getFundMultiplier
+    getFundMultiplier,
+    DEFAULT_CHART_CONFIG
   };
 }
