@@ -825,6 +825,12 @@
       '<svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="16" height="11" rx="1" fill="#C7A4C0"/><path d="M8 7V5C8 4.44772 8.44772 4 9 4H13C13.5523 4 14 4.44772 14 5V7" stroke="#C7A4C0" stroke-width="2"/><rect x="10" y="10" width="2" height="4" fill="white"/></svg>',
   };
 
+  var FUND_GROUPS = [
+    { icon: "warehouse", funds: ["ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "СБЛ"] },
+    { icon: "building", funds: ["ДВН"] },
+    { icon: "briefcase", funds: ["ТРМ"] },
+  ];
+
   function getFundIcon(fundName) {
     var iconMap = {
       ДВН: "building",
@@ -891,9 +897,9 @@
 
       clearElement(this.elements.grid);
 
-      this.state.funds.forEach(function (fund) {
-        var item = self.createFundItem(fund);
-        self.elements.grid.appendChild(item);
+      FUND_GROUPS.forEach(function (group) {
+        var groupEl = self.createFundGroup(group);
+        self.elements.grid.appendChild(groupEl);
       });
 
       if (this.elements.value) {
@@ -906,30 +912,36 @@
       }
     },
 
-    createFundItem: function (fund) {
+    createFundGroup: function (group) {
       var self = this;
-      var isActive = fund === this.state.selected;
-      var classes = ["fund-selector__item"];
-      if (isActive) classes.push("fund-selector__item--active");
 
-      var item = createElement("div", classes.join(" "), "", {
-        role: "option",
-        "aria-selected": isActive.toString(),
-        data: { fund: fund },
+      var groupEl = createElement("div", "fund-selector__group");
+
+      var icon = createElement("span", "fund-selector__group-icon");
+      icon.innerHTML = FUND_ICONS[group.icon];
+      groupEl.appendChild(icon);
+
+      var separator = createElement("div", "fund-selector__group-separator");
+      groupEl.appendChild(separator);
+
+      var fundsContainer = createElement("div", "fund-selector__group-funds");
+
+      group.funds.forEach(function (fund) {
+        var isActive = fund === self.state.selected;
+        var fundEl = createElement(
+          "span",
+          "fund-selector__fund" +
+            (isActive ? " fund-selector__fund--active" : ""),
+          fund
+        );
+        fundEl.addEventListener("click", function () {
+          self.select(fund);
+        });
+        fundsContainer.appendChild(fundEl);
       });
 
-      var icon = createElement("span", "fund-selector__item-icon");
-      icon.innerHTML = getFundIcon(fund);
-      item.appendChild(icon);
-
-      var name = createElement("span", "fund-selector__item-name", fund);
-      item.appendChild(name);
-
-      item.addEventListener("click", function () {
-        self.select(fund);
-      });
-
-      return item;
+      groupEl.appendChild(fundsContainer);
+      return groupEl;
     },
 
     attachEvents: function () {
