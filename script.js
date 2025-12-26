@@ -1171,18 +1171,15 @@
     initComponents: function () {
       var self = this;
 
+      // Get funds list from rawApiData or use defaults
+      var funds = ["ДВН", "ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "ТРМ", "СБЛ"];
+      if (this.state.rawApiData && this.state.rawApiData.data) {
+        funds = Object.keys(this.state.rawApiData.data);
+      }
+
       FundSelector.init({
         selected: this.state.currentFund,
-        funds: (window.DATA && window.DATA.funds) || [
-          "ДВН",
-          "ЗОЛЯ",
-          "КРАС",
-          "ЛОГ",
-          "НОР",
-          "ОЗН",
-          "ТРМ",
-          "СБЛ",
-        ],
+        funds: funds,
         onChange: function (fund) {
           self.handleFundChange(fund);
         },
@@ -1316,6 +1313,24 @@
      */
     loadData: function (rawApiData) {
       this.state.rawApiData = rawApiData;
+
+      // Update funds list and current fund from new data
+      if (rawApiData && rawApiData.data) {
+        var funds = Object.keys(rawApiData.data);
+        if (funds.length > 0) {
+          // Set first fund as current if current is not in new list
+          if (funds.indexOf(this.state.currentFund) === -1) {
+            this.state.currentFund = funds[0];
+          }
+          // Re-initialize FundSelector with new funds list
+          FundSelector.init({
+            selected: this.state.currentFund,
+            funds: funds,
+            onChange: this.handleFundChange.bind(this),
+          });
+        }
+      }
+
       this.generateData();
       this.render();
     },
