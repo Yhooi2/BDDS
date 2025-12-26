@@ -681,6 +681,7 @@ body {
 
   .table-section__title {
     font-size: var(--font-size-section-title);
+    font-weight: var(--font-weight-bold);
     padding: 3px 12px;
   }
 
