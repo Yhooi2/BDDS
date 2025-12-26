@@ -100,8 +100,8 @@ body {
   width: 1280px;
   min-height: 720px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   margin: 0 auto;
   padding: var(--spacing-lg) 0;
   background: #f0f0f0;
@@ -633,7 +633,7 @@ body {
     width: 100%;
     height: auto;
     min-height: 1360px;
-    padding: 13px 2px;
+    padding: 13px 8px;
     padding-top: 31px;
     border-radius: var(--radius-section);
     position: relative;
