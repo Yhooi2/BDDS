@@ -212,21 +212,7 @@
           },
           { year: 2026, type: "plan", label: "План '26", shortLabel: "'26" },
         ],
-        chartConfig: {
-          title: "Выплата дохода акционерам (пайщикам), тыс. ₽",
-          metric: "Выплата дохода акционерам (пайщикам)",
-          unit: "тыс. ₽",
-          scale: {
-            min: 100,
-            max: 1000,
-            step: 100,
-          },
-          customValues: [390, 670, 860, 980], // Override calculated values
-          colors: {
-            fact: "#9DBCE0",
-            plan: "#D9D9D9",
-          },
-        },
+        // chartConfig is now defined in generateData.js as DEFAULT_CHART_CONFIG
       };
     </script>
 

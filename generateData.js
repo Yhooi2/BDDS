@@ -208,16 +208,16 @@ const DEFAULT_CHART_CONFIG = {
   // Scale settings for Y-axis
   scale: {
     min: 100,   // Minimum value on Y-axis
-    max: 800,   // Maximum value on Y-axis (TEST: changed from 1000)
+    max: 1000,  // Maximum value on Y-axis
     step: 100   // Step between grid lines
   },
   // Custom bar values (override calculated values)
   // Set to null to use calculated values from data
-  customValues: [200, 400, 600, 750],  // TEST: changed values
+  customValues: [390, 670, 860, 980],
   // Bar colors
   colors: {
-    fact: '#FF6B6B',  // TEST: changed to red
-    plan: '#4ECDC4'   // TEST: changed to teal
+    fact: '#9DBCE0',
+    plan: '#D9D9D9'
   }
 };
 
