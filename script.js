@@ -1376,11 +1376,70 @@
   };
 
   // ============================================================================
-  // 9. INITIALIZATION
+  // 9. CONTAIN-FIT SCALING
+  // ============================================================================
+
+  var ContainScale = {
+    viewport: null,
+    dashboard: null,
+    designWidth: 1280,
+    designHeight: 720,
+    mobileDesignWidth: 320,
+    mobileDesignHeight: 1360,
+
+    init: function () {
+      this.viewport = document.querySelector(".dashboard-viewport");
+      this.dashboard = document.querySelector(".dashboard");
+
+      if (!this.viewport || !this.dashboard) {
+        console.warn("ContainScale: Required elements not found");
+        return;
+      }
+
+      this.applyScale();
+      this.attachEvents();
+    },
+
+    applyScale: function () {
+      if (!this.viewport || !this.dashboard) return;
+
+      var viewportWidth = this.viewport.clientWidth;
+      var viewportHeight = this.viewport.clientHeight;
+
+      // Choose design dimensions based on viewport width
+      var isMobileViewport = viewportWidth < 768;
+      var designWidth = isMobileViewport ? this.mobileDesignWidth : this.designWidth;
+      var designHeight = isMobileViewport ? this.mobileDesignHeight : this.designHeight;
+
+      // Calculate scale to fit (contain behavior)
+      var scaleX = viewportWidth / designWidth;
+      var scaleY = viewportHeight / designHeight;
+      var scale = Math.min(scaleX, scaleY); // Scale to fit viewport
+
+      // Apply transform
+      this.dashboard.style.transform = "scale(" + scale + ")";
+    },
+
+    attachEvents: function () {
+      var self = this;
+      var resizeTimeout;
+
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+          self.applyScale();
+        }, 50);
+      });
+    },
+  };
+
+  // ============================================================================
+  // 10. INITIALIZATION
   // ============================================================================
 
   function initDashboard() {
     Dashboard.init();
+    ContainScale.init();
 
     // Re-render chart on resize (debounced)
     var resizeTimeout;
@@ -1410,6 +1469,7 @@
     Dashboard: Dashboard,
     FundSelector: FundSelector,
     ViewToggle: ViewToggle,
+    ContainScale: ContainScale,
     formatNumber: formatNumber,
     generatePeriodData: generatePeriodData,
   };
