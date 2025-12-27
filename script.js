@@ -162,6 +162,22 @@
     );
   }
 
+  function createSVGRoundedTopRect(x, y, width, height, radius, attrs) {
+    var r = Math.min(radius, height / 2, width / 2);
+    var d =
+      "M" + x + "," + (y + height) +
+      " L" + x + "," + (y + r) +
+      " A" + r + "," + r + " 0 0,1 " + (x + r) + "," + y +
+      " L" + (x + width - r) + "," + y +
+      " A" + r + "," + r + " 0 0,1 " + (x + width) + "," + (y + r) +
+      " L" + (x + width) + "," + (y + height) +
+      " Z";
+    return createSVGElement(
+      "path",
+      Object.assign({ d: d }, attrs || {})
+    );
+  }
+
   function createSVGLine(x1, y1, x2, y2, attrs) {
     return createSVGElement(
       "line",
@@ -812,9 +828,7 @@
 
       var actualFill = index < 2 ? colors.fact : colors.plan;
 
-      var rect = createSVGRect(x, y, barWidth, height, {
-        rx: barRadius,
-        ry: barRadius,
+      var rect = createSVGRoundedTopRect(x, y, barWidth, height, barRadius, {
         fill: actualFill,
         class: "chart__bar chart__bar--" + (index < 2 ? "fact" : "plan"),
       });
