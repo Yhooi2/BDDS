@@ -474,7 +474,7 @@ body {
 
 .table-row__delta {
   display: inline-block;
-  width: 32px;
+  width: 42px;
   text-align: right;
   font-variant-numeric: tabular-nums;
   margin-left: 2px;
@@ -804,7 +804,7 @@ body {
   }
 
   .table-row__delta {
-    width: 18px;
+    width: 28px;
   }
 
   /* Highlight blocks */
