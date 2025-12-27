@@ -647,6 +647,7 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     overflow: visible;
+    padding: 0;
   }
 
   /* Dashboard container - FIXED 320px width */
