@@ -853,6 +853,11 @@ body {
     height: 340px;
   }
 
+  /* Fix Safari mobile SVG sizing issue */
+  .chart__svg {
+    height: 440px; /* 87% of 340px */
+  }
+
   /* Dynamics mode */
   .content__table--dynamics .table-header__column {
     width: auto;
