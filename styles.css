@@ -114,9 +114,13 @@ body {
   justify-content: flex-start;
   align-items: flex-start;
   padding: 0;
+  margin: 0;
   background: #f0f0f0;
-  transform-origin: top left;
+  transform-origin: 0 0; /* Левый верхний угол */
   flex-shrink: 0;
+  position: relative;
+  left: 0;
+  top: 0;
 }
 
 /* ========================================
@@ -627,6 +631,13 @@ body {
    Single breakpoint at 767px
    ======================================== */
 @media (max-width: 767px) {
+  /* Body and HTML - align to top left */
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
   /* Mobile font sizes - per Figma export (320px) */
   :root {
     --font-size-title: 16px;
@@ -649,6 +660,7 @@ body {
     align-items: flex-start;
     overflow: visible;
     padding: 0;
+    margin: 0;
   }
 
   /* Dashboard container - FIXED 320px width */
@@ -656,7 +668,11 @@ body {
     width: 320px;
     min-height: 1360px;
     padding: 0;
-    transform-origin: top left;
+    margin: 0;
+    transform-origin: 0 0; /* Левый верхний угол */
+    position: relative;
+    left: 0;
+    top: 0;
   }
 
   /* Card - full width of dashboard */
@@ -876,7 +892,7 @@ body {
 
   .content__table--dynamics .table-row__value {
     width: auto;
-    min-width: 59px;
+    min-width: 60px;
     white-space: nowrap;
   }
 
