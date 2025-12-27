@@ -381,6 +381,7 @@ body {
   display: flex;
   gap: 0;
   align-items: flex-end;
+  min-height: 28px; /* Fixed height for 2-line headers to prevent layout shift */
 }
 
 .table-header__column {
@@ -750,6 +751,8 @@ body {
     padding: 7px 0 0 0;
     gap: 0;
     border-top: 1px solid var(--color-border);
+    min-height: 25px; /* Fixed height for 2-line headers */
+    align-items: flex-end;
   }
 
   .table-section__headers .table-header__column {
@@ -873,7 +876,7 @@ body {
 
   .content__table--dynamics .table-row__value {
     width: auto;
-    min-width: 64px;
+    min-width: 59px;
     white-space: nowrap;
   }
 
