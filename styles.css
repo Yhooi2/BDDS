@@ -472,6 +472,14 @@ body {
   width: 90px;
 }
 
+.table-row__delta {
+  display: inline-block;
+  width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
 .table-row--header .table-row__value {
   font-weight: var(--font-weight-semibold);
 }
@@ -793,6 +801,10 @@ body {
 
   .table-row__value--wide {
     width: 52px;
+  }
+
+  .table-row__delta {
+    width: 18px;
   }
 
   /* Highlight blocks */

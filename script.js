@@ -44,11 +44,10 @@
   function formatWithDelta(value, delta) {
     const formattedValue = formatNumber(value);
     if (delta === null) {
-      return formattedValue;
+      return { value: formattedValue, delta: null };
     }
     const deltaStr = `(${Math.round(delta)}%)`;
-    const padded = deltaStr.padStart(7).replace(/ /g, "\u00A0");
-    return `${formattedValue}\u00A0${padded}`;
+    return { value: formattedValue, delta: deltaStr };
   }
 
   /**
@@ -251,8 +250,14 @@
 
       // Delta: 0 if same period, otherwise calculate
       var delta = isSinglePeriod ? 0 : calculateDelta(value2, value1);
+      var formatted = formatWithDelta(value2, delta);
       var deltaEl = createElement("span", "table-row__value");
-      deltaEl.textContent = formatWithDelta(value2, delta);
+      deltaEl.textContent = formatted.value;
+      if (formatted.delta !== null) {
+        var deltaSpan = createElement("span", "table-row__delta");
+        deltaSpan.textContent = formatted.delta;
+        deltaEl.appendChild(deltaSpan);
+      }
       valuesEl.appendChild(deltaEl);
     }
 
@@ -469,8 +474,14 @@
 
       // Delta: 0 if same period, otherwise calculate
       var delta = isSinglePeriod ? 0 : calculateDelta(value2, value1);
+      var formatted = formatWithDelta(value2, delta);
       var deltaEl = createElement("span", "table-row__value");
-      deltaEl.textContent = formatWithDelta(value2, delta);
+      deltaEl.textContent = formatted.value;
+      if (formatted.delta !== null) {
+        var deltaSpan = createElement("span", "table-row__delta");
+        deltaSpan.textContent = formatted.delta;
+        deltaEl.appendChild(deltaSpan);
+      }
       valuesEl.appendChild(deltaEl);
     }
 
