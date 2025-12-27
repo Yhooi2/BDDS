@@ -1446,8 +1446,11 @@
     applyScale: function () {
       if (!this.viewport || !this.dashboard) return;
 
+      // Reset height to get actual viewport dimensions
+      this.viewport.style.height = '';
+
       var viewportWidth = this.viewport.clientWidth;
-      var viewportHeight = this.viewport.clientHeight;
+      var viewportHeight = window.innerHeight;
 
       // Choose design dimensions based on viewport width
       var isMobileViewport = viewportWidth < 768;
@@ -1461,10 +1464,14 @@
       // Calculate scale to fit (contain behavior)
       var scaleX = viewportWidth / designWidth;
       var scaleY = viewportHeight / designHeight;
-      var scale = Math.min(scaleX, scaleY); // Scale to fit viewport
+      var scale = Math.min(scaleX, scaleY);
 
       // Apply transform
       this.dashboard.style.transform = "scale(" + scale + ")";
+
+      // Set viewport height to match scaled content
+      var scaledHeight = designHeight * scale;
+      this.viewport.style.height = scaledHeight + "px";
     },
 
     attachEvents: function () {
