@@ -873,7 +873,7 @@ body {
 
   .content__table--dynamics .table-row__value {
     width: auto;
-    min-width: 72px;
+    min-width: 64px;
     white-space: nowrap;
   }
 
