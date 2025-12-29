@@ -85,7 +85,8 @@ function App() {
     }
   }, [currentFund, viewMode, periodData])
 
-  const tableContentClass = `content__table ${viewMode === 'dynamics' ? 'content__table--dynamics' : ''}`
+  const isSinglePeriod = periodData.length === 1
+  const tableContentClass = `content__table ${viewMode === 'dynamics' ? 'content__table--dynamics' : ''} ${isSinglePeriod ? 'content__table--single' : ''}`
 
   return (
     <div className="dashboard-viewport" ref={viewportRef}>

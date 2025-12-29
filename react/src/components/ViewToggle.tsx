@@ -13,14 +13,16 @@ interface ViewToggleProps {
 
 export function ViewToggle({ mode, onModeChange, className = '' }: ViewToggleProps) {
   const nextMode: ViewMode = mode === 'details' ? 'dynamics' : 'details'
+  const arrowDirection = mode === 'dynamics' ? 'left' : 'right'
 
   return (
     <button
-      className={`view-toggle ${className}`}
+      className={`view-toggle view-toggle--${arrowDirection} ${className}`}
       onClick={() => onModeChange(nextMode)}
     >
-      {VIEW_LABELS[nextMode]}
-      <span className="view-toggle__arrow" />
+      {arrowDirection === 'left' && <span className="view-toggle__arrow" />}
+      {VIEW_LABELS[mode]}
+      {arrowDirection === 'right' && <span className="view-toggle__arrow" />}
     </button>
   )
 }

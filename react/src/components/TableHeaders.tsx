@@ -8,9 +8,11 @@ interface TableHeadersProps {
 
 export function TableHeaders({ periods, viewMode, className = '' }: TableHeadersProps) {
   if (viewMode === 'details') {
+    // Filter out pure 'plan' periods in details mode
+    const filteredPeriods = periods.filter((p) => p.type !== 'plan')
     return (
       <div className={`table-header__columns ${className}`}>
-        {periods.map((period) => {
+        {filteredPeriods.map((period) => {
           const isWide = period.type === 'mixed'
           const headerClass = `table-header__column ${isWide ? 'table-header__column--wide' : ''}`
           return (
@@ -30,9 +32,21 @@ export function TableHeaders({ periods, viewMode, className = '' }: TableHeaders
   const lastPeriod = periods[periods.length - 1]
   const isSinglePeriod = periods.length === 1
 
+  // Single period - nothing to compare, show just one column
+  if (isSinglePeriod) {
+    return (
+      <div className={`table-header__columns ${className}`}>
+        <span
+          className={`table-header__column ${firstPeriod?.type === 'mixed' ? 'table-header__column--wide' : ''}`}
+          dangerouslySetInnerHTML={{ __html: firstPeriod?.title.replace(/\n/g, '<br>') || '-' }}
+        />
+      </div>
+    )
+  }
+
   const headers = [
     { label: firstPeriod?.title || '-', wide: firstPeriod?.type === 'mixed' },
-    { label: isSinglePeriod ? firstPeriod.title : (lastPeriod?.title || '-'), wide: lastPeriod?.type === 'mixed' },
+    { label: lastPeriod?.title || '-', wide: lastPeriod?.type === 'mixed' },
     { label: 'Дельта', wide: false },
   ]
 
