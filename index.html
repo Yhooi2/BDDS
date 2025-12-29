@@ -22,346 +22,909 @@
   </head>
   <body>
     <div class="dashboard-viewport">
-    <main class="dashboard">
-      <article class="card" role="region" aria-label="Бюджет по фондам">
-        <!-- Header -->
-        <header class="header">
-          <div class="header__left">
-            <h1 class="header__title">
-              Бюджет по фондам,
-              <span class="header__title-unit">тыс. &#8381;</span>
-            </h1>
+      <main class="dashboard">
+        <article class="card" role="region" aria-label="Бюджет по фондам">
+          <!-- Header -->
+          <header class="header">
+            <div class="header__left">
+              <h1 class="header__title">
+                Бюджет по фондам,
+                <span class="header__title-unit">млн. &#8381;</span>
+              </h1>
 
-            <!-- Fund Selector Row (fund + view toggle on mobile) -->
-            <div class="header__fund-row">
-              <div
-                class="fund-selector"
-                id="fundSelector"
-                aria-expanded="false"
-              >
-                <button
-                  class="fund-selector__trigger"
-                  aria-haspopup="listbox"
-                  aria-label="Выбрать фонд"
+              <!-- Fund Selector Row (fund + view toggle on mobile) -->
+              <div class="header__fund-row">
+                <div
+                  class="fund-selector"
+                  id="fundSelector"
+                  aria-expanded="false"
                 >
-                  <span class="fund-selector__icon">
-                    <!-- Office building icon from Figma -->
-                    <svg
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <mask
-                        id="mask0_building"
-                        style="mask-type: alpha"
-                        maskUnits="userSpaceOnUse"
-                        x="0"
-                        y="0"
-                        width="16"
-                        height="16"
+                  <button
+                    class="fund-selector__trigger"
+                    aria-haspopup="listbox"
+                    aria-label="Выбрать фонд"
+                  >
+                    <span class="fund-selector__icon">
+                      <!-- Office building icon from Figma -->
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <rect
+                        <mask
+                          id="mask0_building"
+                          style="mask-type: alpha"
+                          maskUnits="userSpaceOnUse"
+                          x="0"
+                          y="0"
                           width="16"
                           height="16"
-                          fill="url(#pattern0_building)"
-                        />
-                      </mask>
-                      <g mask="url(#mask0_building)">
-                        <rect
-                          x="-1.8457"
-                          y="-2.46094"
-                          width="22.7692"
-                          height="20.9231"
-                          fill="#9DBCE0"
-                        />
-                      </g>
-                      <defs>
-                        <pattern
-                          id="pattern0_building"
-                          patternContentUnits="objectBoundingBox"
-                          width="1"
-                          height="1"
                         >
-                          <use
-                            href="#image0_building"
-                            transform="scale(0.00195312)"
+                          <rect
+                            width="16"
+                            height="16"
+                            fill="url(#pattern0_building)"
                           />
-                        </pattern>
-                        <image
-                          id="image0_building"
-                          width="512"
-                          height="512"
-                          preserveAspectRatio="none"
-                          href="data:image/png;base64,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"
-                        />
-                      </defs>
-                    </svg>
-                  </span>
-                  <span class="fund-selector__value" id="fundSelectorValue"
-                    >ДВН</span
-                  >
-                  <span class="fund-selector__arrow">
-                    <!-- Dropdown arrow - circle with chevron from Figma -->
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                        </mask>
+                        <g mask="url(#mask0_building)">
+                          <rect
+                            x="-1.8457"
+                            y="-2.46094"
+                            width="22.7692"
+                            height="20.9231"
+                            fill="#9DBCE0"
+                          />
+                        </g>
+                        <defs>
+                          <pattern
+                            id="pattern0_building"
+                            patternContentUnits="objectBoundingBox"
+                            width="1"
+                            height="1"
+                          >
+                            <use
+                              href="#image0_building"
+                              transform="scale(0.00195312)"
+                            />
+                          </pattern>
+                          <image
+                            id="image0_building"
+                            width="512"
+                            height="512"
+                            preserveAspectRatio="none"
+                            href="data:image/png;base64,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"
+                          />
+                        </defs>
+                      </svg>
+                    </span>
+                    <span class="fund-selector__value" id="fundSelectorValue"
+                      >ДВН</span
                     >
-                      <circle cx="8" cy="8" r="8" fill="#EDEDED" />
-                      <path
-                        d="M5 7L8 10L11 7"
-                        stroke="#000000"
-                        stroke-width="1"
+                    <span class="fund-selector__arrow">
+                      <!-- Dropdown arrow - circle with chevron from Figma -->
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
                         fill="none"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="8" cy="8" r="8" fill="#EDEDED" />
+                        <path
+                          d="M5 7L8 10L11 7"
+                          stroke="#000000"
+                          stroke-width="1"
+                          fill="none"
+                        />
+                      </svg>
+                    </span>
+                  </button>
 
-                <!-- Dropdown Menu -->
-                <div
-                  class="fund-selector__dropdown"
-                  id="fundDropdown"
-                  role="listbox"
-                  aria-label="Список фондов"
-                >
-                  <div class="fund-selector__grid" id="fundGrid">
-                    <!-- Fund items will be rendered by JS -->
+                  <!-- Dropdown Menu -->
+                  <div
+                    class="fund-selector__dropdown"
+                    id="fundDropdown"
+                    role="listbox"
+                    aria-label="Список фондов"
+                  >
+                    <div class="fund-selector__grid" id="fundGrid">
+                      <!-- Fund items will be rendered by JS -->
+                    </div>
                   </div>
                 </div>
+                <!-- Mobile view toggle (shown only on mobile) -->
+                <button
+                  class="view-toggle view-toggle--mobile"
+                  id="viewToggleMobile"
+                  aria-label="Переключить режим отображения"
+                >
+                  <span>Детали за текущий год</span>
+                  <span class="view-toggle__arrow"></span>
+                </button>
               </div>
-              <!-- Mobile view toggle (shown only on mobile) -->
-              <button
-                class="view-toggle view-toggle--mobile"
-                id="viewToggleMobile"
-                aria-label="Переключить режим отображения"
+            </div>
+
+            <div class="header__right">
+              <h2 class="chart__title" id="chartTitle">
+                Выплата дохода<br />акционерам (пайщикам),
+                <span class="header__title-unit">тыс. &#8381;</span>
+              </h2>
+            </div>
+          </header>
+
+          <!-- Main Content -->
+          <div class="content">
+            <!-- Left: Budget Table -->
+            <section class="content__table" aria-label="Таблица бюджета">
+              <!-- View Toggle + Column Headers -->
+              <div class="table-header" id="tableHeader">
+                <button
+                  class="view-toggle"
+                  id="viewToggle"
+                  aria-label="Переключить режим отображения"
+                >
+                  <span id="viewToggleText">Детали за текущий год</span>
+                  <span class="view-toggle__arrow"></span>
+                </button>
+                <div class="table-header__columns" id="tableHeaderColumns">
+                  <!-- Headers will be rendered by JS -->
+                </div>
+              </div>
+
+              <!-- Table Sections Container -->
+              <div id="tableSections">
+                <!-- Sections will be rendered by JS -->
+              </div>
+            </section>
+
+            <!-- Right: Dividend Chart -->
+            <section class="content__chart" aria-label="График дивидендов">
+              <!-- Mobile chart title (hidden on desktop) -->
+              <h2
+                class="chart__title chart__title--mobile"
+                id="chartTitleMobile"
               >
-                <span>Детали за текущий год</span>
-                <span class="view-toggle__arrow"></span>
-              </button>
-            </div>
-          </div>
-
-          <div class="header__right">
-            <h2 class="chart__title" id="chartTitle">
-              Выплата дохода<br />акционерам (пайщикам),
-              <span class="header__title-unit">тыс. &#8381;</span>
-            </h2>
-          </div>
-        </header>
-
-        <!-- Main Content -->
-        <div class="content">
-          <!-- Left: Budget Table -->
-          <section class="content__table" aria-label="Таблица бюджета">
-            <!-- View Toggle + Column Headers -->
-            <div class="table-header" id="tableHeader">
-              <button
-                class="view-toggle"
-                id="viewToggle"
-                aria-label="Переключить режим отображения"
-              >
-                <span id="viewToggleText">Детали за текущий год</span>
-                <span class="view-toggle__arrow"></span>
-              </button>
-              <div class="table-header__columns" id="tableHeaderColumns">
-                <!-- Headers will be rendered by JS -->
+                Выплата дохода <br />
+                акционерам (пайщикам),
+                <span class="header__title-unit">тыс. &#8381;</span>
+              </h2>
+              <div class="chart">
+                <div id="chartContainer">
+                  <!-- SVG Chart will be rendered by JS -->
+                </div>
               </div>
-            </div>
+            </section>
+          </div>
+        </article>
+      </main>
 
-            <!-- Table Sections Container -->
-            <div id="tableSections">
-              <!-- Sections will be rendered by JS -->
-            </div>
-          </section>
-
-          <!-- Right: Dividend Chart -->
-          <section class="content__chart" aria-label="График дивидендов">
-            <!-- Mobile chart title (hidden on desktop) -->
-            <h2 class="chart__title chart__title--mobile" id="chartTitleMobile">
-              Выплата дохода <br />
-              акционерам (пайщикам),
-              <span class="header__title-unit">тыс. &#8381;</span>
-            </h2>
-            <div class="chart">
-              <div id="chartContainer">
-                <!-- SVG Chart will be rendered by JS -->
-              </div>
-            </div>
-          </section>
-        </div>
-      </article>
-    </main>
-
-    <!-- Data Configuration (will be overridden by external data if provided) -->
-    <script>
-      // Default data configuration
-      // Новый формат: funds - объект с данными каждого фонда
-      window.DATA = window.DATA || {
-        currentFund: "ДВН",
-        viewMode: "details",
-        funds: {
-          "ДВН": {
-            type: "building",
-            periods: {
-              "Факт '23": {
-                "Движение Д/С по операционной деятельности ООО": 1366339,
-                "Поступления по операционной деятельности": 1366339,
-                "Расходы по основной деятельности": 1366339,
-                "Обеспечительные платежи": 1366339,
-                "Движение Д/С по инвестиционной деятельности": 1366339,
-                "Выплата дохода акционерам (пайщикам)": -850000,
-                "Расходы на капитальный ремонт": 136633,
-                "Движение Д/С по финансовой деятельности": 1366339,
-                "Расчеты по кредитам": 1366339,
-                "Прочие доходы и расходы по финансовой деятельности": 1366339,
-                "Расходы на УК Парус": 1366339,
-                "Остаток по кредиту на начало периода": 2732678,
-                "Остаток по кредиту на конец периода": 2732678,
-                "Движение за период по Д/С": 1366339,
-                "Сформированные резервы (нарастающим итогом)": 1366339,
-                "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1366339,
-                "Остаток Д/С на начало периода": 1366339,
-                "Остаток Д/С на конец периода": 1366339,
-                "Д/С на конец периода (с учетом резерва)": 1366339
+      <!-- Data Configuration (will be overridden by external data if provided) -->
+      <script>
+        // Default data configuration
+        // Новый формат: funds - объект с данными каждого фонда
+        window.DATA = window.DATA || {
+          currentFund: "ДВН",
+          viewMode: "details",
+          funds: {
+            ДВН: {
+              type: "building",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1366339,
+                  "Поступления по операционной деятельности": 1366339,
+                  "Расходы по основной деятельности": 1366339,
+                  "Обеспечительные платежи": 1366339,
+                  "Движение Д/С по инвестиционной деятельности": 1366339,
+                  "Выплата дохода акционерам (пайщикам)": -850000,
+                  "Расходы на капитальный ремонт": 136633,
+                  "Движение Д/С по финансовой деятельности": 1366339,
+                  "Расчеты по кредитам": 1366339,
+                  "Прочие доходы и расходы по финансовой деятельности": 1366339,
+                  "Расходы на УК Парус": 1366339,
+                  "Остаток по кредиту на начало периода": 2732678,
+                  "Остаток по кредиту на конец периода": 2732678,
+                  "Движение за период по Д/С": 1366339,
+                  "Сформированные резервы (нарастающим итогом)": 1366339,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1366339,
+                  "Остаток Д/С на начало периода": 1366339,
+                  "Остаток Д/С на конец периода": 1366339,
+                  "Д/С на конец периода (с учетом резерва)": 1366339,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1502972,
+                  "Поступления по операционной деятельности": 1502972,
+                  "Расходы по основной деятельности": 1502972,
+                  "Обеспечительные платежи": 1502972,
+                  "Движение Д/С по инвестиционной деятельности": 1502972,
+                  "Выплата дохода акционерам (пайщикам)": -935000,
+                  "Расходы на капитальный ремонт": 150297,
+                  "Движение Д/С по финансовой деятельности": 1502972,
+                  "Расчеты по кредитам": 1502972,
+                  "Прочие доходы и расходы по финансовой деятельности": 1502972,
+                  "Расходы на УК Парус": 1502972,
+                  "Остаток по кредиту на начало периода": 2459142,
+                  "Остаток по кредиту на конец периода": 2459142,
+                  "Движение за период по Д/С": 1502972,
+                  "Сформированные резервы (нарастающим итогом)": 1502972,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1502972,
+                  "Остаток Д/С на начало периода": 1502972,
+                  "Остаток Д/С на конец периода": 1502972,
+                  "Д/С на конец периода (с учетом резерва)": 1502972,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1639606,
+                  "Поступления по операционной деятельности": 1639606,
+                  "Расходы по основной деятельности": 1639606,
+                  "Обеспечительные платежи": 1639606,
+                  "Движение Д/С по инвестиционной деятельности": 1639606,
+                  "Выплата дохода акционерам (пайщикам)": -1020000,
+                  "Расходы на капитальный ремонт": 163960,
+                  "Движение Д/С по финансовой деятельности": 1639606,
+                  "Расчеты по кредитам": 1639606,
+                  "Прочие доходы и расходы по финансовой деятельности": 1639606,
+                  "Расходы на УК Парус": 1639606,
+                  "Остаток по кредиту на начало периода": 2185607,
+                  "Остаток по кредиту на конец периода": 2185607,
+                  "Движение за период по Д/С": 1639606,
+                  "Сформированные резервы (нарастающим итогом)": 1639606,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1639606,
+                  "Остаток Д/С на начало периода": 1639606,
+                  "Остаток Д/С на конец периода": 1639606,
+                  "Д/С на конец периода (с учетом резерва)": 1639606,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 1776239,
+                  "Поступления по операционной деятельности": 1776239,
+                  "Расходы по основной деятельности": 1776239,
+                  "Обеспечительные платежи": 1776239,
+                  "Движение Д/С по инвестиционной деятельности": 1776239,
+                  "Выплата дохода акционерам (пайщикам)": -1105000,
+                  "Расходы на капитальный ремонт": 177623,
+                  "Движение Д/С по финансовой деятельности": 1776239,
+                  "Расчеты по кредитам": 1776239,
+                  "Прочие доходы и расходы по финансовой деятельности": 1776239,
+                  "Расходы на УК Парус": 1776239,
+                  "Остаток по кредиту на начало периода": 1912071,
+                  "Остаток по кредиту на конец периода": 1912071,
+                  "Движение за период по Д/С": 1776239,
+                  "Сформированные резервы (нарастающим итогом)": 1776239,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1776239,
+                  "Остаток Д/С на начало периода": 1776239,
+                  "Остаток Д/С на конец периода": 1776239,
+                  "Д/С на конец периода (с учетом резерва)": 1776239,
+                },
               },
-              "Факт '24": {
-                "Движение Д/С по операционной деятельности ООО": 1502972,
-                "Поступления по операционной деятельности": 1502972,
-                "Расходы по основной деятельности": 1502972,
-                "Обеспечительные платежи": 1502972,
-                "Движение Д/С по инвестиционной деятельности": 1502972,
-                "Выплата дохода акционерам (пайщикам)": -935000,
-                "Расходы на капитальный ремонт": 150297,
-                "Движение Д/С по финансовой деятельности": 1502972,
-                "Расчеты по кредитам": 1502972,
-                "Прочие доходы и расходы по финансовой деятельности": 1502972,
-                "Расходы на УК Парус": 1502972,
-                "Остаток по кредиту на начало периода": 2459142,
-                "Остаток по кредиту на конец периода": 2459142,
-                "Движение за период по Д/С": 1502972,
-                "Сформированные резервы (нарастающим итогом)": 1502972,
-                "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1502972,
-                "Остаток Д/С на начало периода": 1502972,
-                "Остаток Д/С на конец периода": 1502972,
-                "Д/С на конец периода (с учетом резерва)": 1502972
+            },
+            ЗОЛЯ: {
+              type: "warehouse",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1093071,
+                  "Поступления по операционной деятельности": 1093071,
+                  "Расходы по основной деятельности": 1093071,
+                  "Обеспечительные платежи": 1093071,
+                  "Движение Д/С по инвестиционной деятельности": 1093071,
+                  "Выплата дохода акционерам (пайщикам)": -680000,
+                  "Расходы на капитальный ремонт": 109307,
+                  "Движение Д/С по финансовой деятельности": 1093071,
+                  "Расчеты по кредитам": 1093071,
+                  "Прочие доходы и расходы по финансовой деятельности": 1093071,
+                  "Расходы на УК Парус": 1093071,
+                  "Остаток по кредиту на начало периода": 2186142,
+                  "Остаток по кредиту на конец периода": 2186142,
+                  "Движение за период по Д/С": 1093071,
+                  "Сформированные резервы (нарастающим итогом)": 1093071,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1093071,
+                  "Остаток Д/С на начало периода": 1093071,
+                  "Остаток Д/С на конец периода": 1093071,
+                  "Д/С на конец периода (с учетом резерва)": 1093071,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1202378,
+                  "Поступления по операционной деятельности": 1202378,
+                  "Расходы по основной деятельности": 1202378,
+                  "Обеспечительные платежи": 1202378,
+                  "Движение Д/С по инвестиционной деятельности": 1202378,
+                  "Выплата дохода акционерам (пайщикам)": -748000,
+                  "Расходы на капитальный ремонт": 120237,
+                  "Движение Д/С по финансовой деятельности": 1202378,
+                  "Расчеты по кредитам": 1202378,
+                  "Прочие доходы и расходы по финансовой деятельности": 1202378,
+                  "Расходы на УК Парус": 1202378,
+                  "Остаток по кредиту на начало периода": 1967313,
+                  "Остаток по кредиту на конец периода": 1967313,
+                  "Движение за период по Д/С": 1202378,
+                  "Сформированные резервы (нарастающим итогом)": 1202378,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1202378,
+                  "Остаток Д/С на начало периода": 1202378,
+                  "Остаток Д/С на конец периода": 1202378,
+                  "Д/С на конец периода (с учетом резерва)": 1202378,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1311685,
+                  "Поступления по операционной деятельности": 1311685,
+                  "Расходы по основной деятельности": 1311685,
+                  "Обеспечительные платежи": 1311685,
+                  "Движение Д/С по инвестиционной деятельности": 1311685,
+                  "Выплата дохода акционерам (пайщикам)": -816000,
+                  "Расходы на капитальный ремонт": 131168,
+                  "Движение Д/С по финансовой деятельности": 1311685,
+                  "Расчеты по кредитам": 1311685,
+                  "Прочие доходы и расходы по финансовой деятельности": 1311685,
+                  "Расходы на УК Парус": 1311685,
+                  "Остаток по кредиту на начало периода": 1748485,
+                  "Остаток по кредиту на конец периода": 1748485,
+                  "Движение за период по Д/С": 1311685,
+                  "Сформированные резервы (нарастающим итогом)": 1311685,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1311685,
+                  "Остаток Д/С на начало периода": 1311685,
+                  "Остаток Д/С на конец периода": 1311685,
+                  "Д/С на конец периода (с учетом резерва)": 1311685,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 1420991,
+                  "Поступления по операционной деятельности": 1420991,
+                  "Расходы по основной деятельности": 1420991,
+                  "Обеспечительные платежи": 1420991,
+                  "Движение Д/С по инвестиционной деятельности": 1420991,
+                  "Выплата дохода акционерам (пайщикам)": -884000,
+                  "Расходы на капитальный ремонт": 142099,
+                  "Движение Д/С по финансовой деятельности": 1420991,
+                  "Расчеты по кредитам": 1420991,
+                  "Прочие доходы и расходы по финансовой деятельности": 1420991,
+                  "Расходы на УК Парус": 1420991,
+                  "Остаток по кредиту на начало периода": 1529657,
+                  "Остаток по кредиту на конец периода": 1529657,
+                  "Движение за период по Д/С": 1420991,
+                  "Сформированные резервы (нарастающим итогом)": 1420991,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1420991,
+                  "Остаток Д/С на начало периода": 1420991,
+                  "Остаток Д/С на конец периода": 1420991,
+                  "Д/С на конец периода (с учетом резерва)": 1420991,
+                },
               },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
-                "Движение Д/С по операционной деятельности ООО": 1639606,
-                "Поступления по операционной деятельности": 1639606,
-                "Расходы по основной деятельности": 1639606,
-                "Обеспечительные платежи": 1639606,
-                "Движение Д/С по инвестиционной деятельности": 1639606,
-                "Выплата дохода акционерам (пайщикам)": -1020000,
-                "Расходы на капитальный ремонт": 163960,
-                "Движение Д/С по финансовой деятельности": 1639606,
-                "Расчеты по кредитам": 1639606,
-                "Прочие доходы и расходы по финансовой деятельности": 1639606,
-                "Расходы на УК Парус": 1639606,
-                "Остаток по кредиту на начало периода": 2185607,
-                "Остаток по кредиту на конец периода": 2185607,
-                "Движение за период по Д/С": 1639606,
-                "Сформированные резервы (нарастающим итогом)": 1639606,
-                "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1639606,
-                "Остаток Д/С на начало периода": 1639606,
-                "Остаток Д/С на конец периода": 1639606,
-                "Д/С на конец периода (с учетом резерва)": 1639606
+            },
+            КРАС: {
+              type: "warehouse",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1639606,
+                  "Поступления по операционной деятельности": 1639606,
+                  "Расходы по основной деятельности": 1639606,
+                  "Обеспечительные платежи": 1639606,
+                  "Движение Д/С по инвестиционной деятельности": 1639606,
+                  "Выплата дохода акционерам (пайщикам)": -1020000,
+                  "Расходы на капитальный ремонт": 163960,
+                  "Движение Д/С по финансовой деятельности": 1639606,
+                  "Расчеты по кредитам": 1639606,
+                  "Прочие доходы и расходы по финансовой деятельности": 1639606,
+                  "Расходы на УК Парус": 1639606,
+                  "Остаток по кредиту на начало периода": 3279213,
+                  "Остаток по кредиту на конец периода": 3279213,
+                  "Движение за период по Д/С": 1639606,
+                  "Сформированные резервы (нарастающим итогом)": 1639606,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1639606,
+                  "Остаток Д/С на начало периода": 1639606,
+                  "Остаток Д/С на конец периода": 1639606,
+                  "Д/С на конец периода (с учетом резерва)": 1639606,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1803567,
+                  "Поступления по операционной деятельности": 1803567,
+                  "Расходы по основной деятельности": 1803567,
+                  "Обеспечительные платежи": 1803567,
+                  "Движение Д/С по инвестиционной деятельности": 1803567,
+                  "Выплата дохода акционерам (пайщикам)": -1122000,
+                  "Расходы на капитальный ремонт": 180356,
+                  "Движение Д/С по финансовой деятельности": 1803567,
+                  "Расчеты по кредитам": 1803567,
+                  "Прочие доходы и расходы по финансовой деятельности": 1803567,
+                  "Расходы на УК Парус": 1803567,
+                  "Остаток по кредиту на начало периода": 2950970,
+                  "Остаток по кредиту на конец периода": 2950970,
+                  "Движение за период по Д/С": 1803567,
+                  "Сформированные резервы (нарастающим итогом)": 1803567,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1803567,
+                  "Остаток Д/С на начало периода": 1803567,
+                  "Остаток Д/С на конец периода": 1803567,
+                  "Д/С на конец периода (с учетом резерва)": 1803567,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1967527,
+                  "Поступления по операционной деятельности": 1967527,
+                  "Расходы по основной деятельности": 1967527,
+                  "Обеспечительные платежи": 1967527,
+                  "Движение Д/С по инвестиционной деятельности": 1967527,
+                  "Выплата дохода акционерам (пайщикам)": -1224000,
+                  "Расходы на капитальный ремонт": 196752,
+                  "Движение Д/С по финансовой деятельности": 1967527,
+                  "Расчеты по кредитам": 1967527,
+                  "Прочие доходы и расходы по финансовой деятельности": 1967527,
+                  "Расходы на УК Парус": 1967527,
+                  "Остаток по кредиту на начало периода": 2622728,
+                  "Остаток по кредиту на конец периода": 2622728,
+                  "Движение за период по Д/С": 1967527,
+                  "Сформированные резервы (нарастающим итогом)": 1967527,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1967527,
+                  "Остаток Д/С на начало периода": 1967527,
+                  "Остаток Д/С на конец периода": 1967527,
+                  "Д/С на конец периода (с учетом резерва)": 1967527,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 2131487,
+                  "Поступления по операционной деятельности": 2131487,
+                  "Расходы по основной деятельности": 2131487,
+                  "Обеспечительные платежи": 2131487,
+                  "Движение Д/С по инвестиционной деятельности": 2131487,
+                  "Выплата дохода акционерам (пайщикам)": -1326000,
+                  "Расходы на капитальный ремонт": 213148,
+                  "Движение Д/С по финансовой деятельности": 2131487,
+                  "Расчеты по кредитам": 2131487,
+                  "Прочие доходы и расходы по финансовой деятельности": 2131487,
+                  "Расходы на УК Парус": 2131487,
+                  "Остаток по кредиту на начало периода": 2294485,
+                  "Остаток по кредиту на конец периода": 2294485,
+                  "Движение за период по Д/С": 2131487,
+                  "Сформированные резервы (нарастающим итогом)": 2131487,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 2131487,
+                  "Остаток Д/С на начало периода": 2131487,
+                  "Остаток Д/С на конец периода": 2131487,
+                  "Д/С на конец периода (с учетом резерва)": 2131487,
+                },
               },
-              "План '26": {
-                "Движение Д/С по операционной деятельности ООО": 1776239,
-                "Поступления по операционной деятельности": 1776239,
-                "Расходы по основной деятельности": 1776239,
-                "Обеспечительные платежи": 1776239,
-                "Движение Д/С по инвестиционной деятельности": 1776239,
-                "Выплата дохода акционерам (пайщикам)": -1105000,
-                "Расходы на капитальный ремонт": 177623,
-                "Движение Д/С по финансовой деятельности": 1776239,
-                "Расчеты по кредитам": 1776239,
-                "Прочие доходы и расходы по финансовой деятельности": 1776239,
-                "Расходы на УК Парус": 1776239,
-                "Остаток по кредиту на начало периода": 1912071,
-                "Остаток по кредиту на конец периода": 1912071,
-                "Движение за период по Д/С": 1776239,
-                "Сформированные резервы (нарастающим итогом)": 1776239,
-                "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1776239,
-                "Остаток Д/С на начало периода": 1776239,
-                "Остаток Д/С на конец периода": 1776239,
-                "Д/С на конец периода (с учетом резерва)": 1776239
-              }
-            }
+            },
+            ЛОГ: {
+              type: "warehouse",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1229705,
+                  "Поступления по операционной деятельности": 1229705,
+                  "Расходы по основной деятельности": 1229705,
+                  "Обеспечительные платежи": 1229705,
+                  "Движение Д/С по инвестиционной деятельности": 1229705,
+                  "Выплата дохода акционерам (пайщикам)": -765000,
+                  "Расходы на капитальный ремонт": 122970,
+                  "Движение Д/С по финансовой деятельности": 1229705,
+                  "Расчеты по кредитам": 1229705,
+                  "Прочие доходы и расходы по финансовой деятельности": 1229705,
+                  "Расходы на УК Парус": 1229705,
+                  "Остаток по кредиту на начало периода": 2459410,
+                  "Остаток по кредиту на конец периода": 2459410,
+                  "Движение за период по Д/С": 1229705,
+                  "Сформированные резервы (нарастающим итогом)": 1229705,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1229705,
+                  "Остаток Д/С на начало периода": 1229705,
+                  "Остаток Д/С на конец периода": 1229705,
+                  "Д/С на конец периода (с учетом резерва)": 1229705,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1352675,
+                  "Поступления по операционной деятельности": 1352675,
+                  "Расходы по основной деятельности": 1352675,
+                  "Обеспечительные платежи": 1352675,
+                  "Движение Д/С по инвестиционной деятельности": 1352675,
+                  "Выплата дохода акционерам (пайщикам)": -841500,
+                  "Расходы на капитальный ремонт": 135267,
+                  "Движение Д/С по финансовой деятельности": 1352675,
+                  "Расчеты по кредитам": 1352675,
+                  "Прочие доходы и расходы по финансовой деятельности": 1352675,
+                  "Расходы на УК Парус": 1352675,
+                  "Остаток по кредиту на начало периода": 2213227,
+                  "Остаток по кредиту на конец периода": 2213227,
+                  "Движение за период по Д/С": 1352675,
+                  "Сформированные резервы (нарастающим итогом)": 1352675,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1352675,
+                  "Остаток Д/С на начало периода": 1352675,
+                  "Остаток Д/С на конец периода": 1352675,
+                  "Д/С на конец периода (с учетом резерва)": 1352675,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1475645,
+                  "Поступления по операционной деятельности": 1475645,
+                  "Расходы по основной деятельности": 1475645,
+                  "Обеспечительные платежи": 1475645,
+                  "Движение Д/С по инвестиционной деятельности": 1475645,
+                  "Выплата дохода акционерам (пайщикам)": -918000,
+                  "Расходы на капитальный ремонт": 147564,
+                  "Движение Д/С по финансовой деятельности": 1475645,
+                  "Расчеты по кредитам": 1475645,
+                  "Прочие доходы и расходы по финансовой деятельности": 1475645,
+                  "Расходы на УК Парус": 1475645,
+                  "Остаток по кредиту на начало периода": 1967046,
+                  "Остаток по кредиту на конец периода": 1967046,
+                  "Движение за период по Д/С": 1475645,
+                  "Сформированные резервы (нарастающим итогом)": 1475645,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1475645,
+                  "Остаток Д/С на начало периода": 1475645,
+                  "Остаток Д/С на конец периода": 1475645,
+                  "Д/С на конец периода (с учетом резерва)": 1475645,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 1598615,
+                  "Поступления по операционной деятельности": 1598615,
+                  "Расходы по основной деятельности": 1598615,
+                  "Обеспечительные платежи": 1598615,
+                  "Движение Д/С по инвестиционной деятельности": 1598615,
+                  "Выплата дохода акционерам (пайщикам)": -994500,
+                  "Расходы на капитальный ремонт": 159861,
+                  "Движение Д/С по финансовой деятельности": 1598615,
+                  "Расчеты по кредитам": 1598615,
+                  "Прочие доходы и расходы по финансовой деятельности": 1598615,
+                  "Расходы на УК Парус": 1598615,
+                  "Остаток по кредиту на начало периода": 1720864,
+                  "Остаток по кредиту на конец периода": 1720864,
+                  "Движение за период по Д/С": 1598615,
+                  "Сформированные резервы (нарастающим итогом)": 1598615,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1598615,
+                  "Остаток Д/С на начало периода": 1598615,
+                  "Остаток Д/С на конец периода": 1598615,
+                  "Д/С на конец периода (с учетом резерва)": 1598615,
+                },
+              },
+            },
+            НОР: {
+              type: "warehouse",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1502972,
+                  "Поступления по операционной деятельности": 1502972,
+                  "Расходы по основной деятельности": 1502972,
+                  "Обеспечительные платежи": 1502972,
+                  "Движение Д/С по инвестиционной деятельности": 1502972,
+                  "Выплата дохода акционерам (пайщикам)": -935000,
+                  "Расходы на капитальный ремонт": 150297,
+                  "Движение Д/С по финансовой деятельности": 1502972,
+                  "Расчеты по кредитам": 1502972,
+                  "Прочие доходы и расходы по финансовой деятельности": 1502972,
+                  "Расходы на УК Парус": 1502972,
+                  "Остаток по кредиту на начало периода": 3005945,
+                  "Остаток по кредиту на конец периода": 3005945,
+                  "Движение за период по Д/С": 1502972,
+                  "Сформированные резервы (нарастающим итогом)": 1502972,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1502972,
+                  "Остаток Д/С на начало периода": 1502972,
+                  "Остаток Д/С на конец периода": 1502972,
+                  "Д/С на конец периода (с учетом резерва)": 1502972,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1653270,
+                  "Поступления по операционной деятельности": 1653270,
+                  "Расходы по основной деятельности": 1653270,
+                  "Обеспечительные платежи": 1653270,
+                  "Движение Д/С по инвестиционной деятельности": 1653270,
+                  "Выплата дохода акционерам (пайщикам)": -1028500,
+                  "Расходы на капитальный ремонт": 165327,
+                  "Движение Д/С по финансовой деятельности": 1653270,
+                  "Расчеты по кредитам": 1653270,
+                  "Прочие доходы и расходы по финансовой деятельности": 1653270,
+                  "Расходы на УК Парус": 1653270,
+                  "Остаток по кредиту на начало периода": 2705056,
+                  "Остаток по кредиту на конец периода": 2705056,
+                  "Движение за период по Д/С": 1653270,
+                  "Сформированные резервы (нарастающим итогом)": 1653270,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1653270,
+                  "Остаток Д/С на начало периода": 1653270,
+                  "Остаток Д/С на конец периода": 1653270,
+                  "Д/С на конец периода (с учетом резерва)": 1653270,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1803567,
+                  "Поступления по операционной деятельности": 1803567,
+                  "Расходы по основной деятельности": 1803567,
+                  "Обеспечительные платежи": 1803567,
+                  "Движение Д/С по инвестиционной деятельности": 1803567,
+                  "Выплата дохода акционерам (пайщикам)": -1122000,
+                  "Расходы на капитальный ремонт": 180356,
+                  "Движение Д/С по финансовой деятельности": 1803567,
+                  "Расчеты по кредитам": 1803567,
+                  "Прочие доходы и расходы по финансовой деятельности": 1803567,
+                  "Расходы на УК Парус": 1803567,
+                  "Остаток по кредиту на начало периода": 2404167,
+                  "Остаток по кредиту на конец периода": 2404167,
+                  "Движение за период по Д/С": 1803567,
+                  "Сформированные резервы (нарастающим итогом)": 1803567,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1803567,
+                  "Остаток Д/С на начало периода": 1803567,
+                  "Остаток Д/С на конец периода": 1803567,
+                  "Д/С на конец периода (с учетом резерва)": 1803567,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 1953863,
+                  "Поступления по операционной деятельности": 1953863,
+                  "Расходы по основной деятельности": 1953863,
+                  "Обеспечительные платежи": 1953863,
+                  "Движение Д/С по инвестиционной деятельности": 1953863,
+                  "Выплата дохода акционерам (пайщикам)": -1215500,
+                  "Расходы на капитальный ремонт": 195386,
+                  "Движение Д/С по финансовой деятельности": 1953863,
+                  "Расчеты по кредитам": 1953863,
+                  "Прочие доходы и расходы по финансовой деятельности": 1953863,
+                  "Расходы на УК Парус": 1953863,
+                  "Остаток по кредиту на начало периода": 2103278,
+                  "Остаток по кредиту на конец периода": 2103278,
+                  "Движение за период по Д/С": 1953863,
+                  "Сформированные резервы (нарастающим итогом)": 1953863,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1953863,
+                  "Остаток Д/С на начало периода": 1953863,
+                  "Остаток Д/С на конец периода": 1953863,
+                  "Д/С на конец периода (с учетом резерва)": 1953863,
+                },
+              },
+            },
+            ОЗН: {
+              type: "warehouse",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 956437,
+                  "Поступления по операционной деятельности": 956437,
+                  "Расходы по основной деятельности": 956437,
+                  "Обеспечительные платежи": 956437,
+                  "Движение Д/С по инвестиционной деятельности": 956437,
+                  "Выплата дохода акционерам (пайщикам)": -595000,
+                  "Расходы на капитальный ремонт": 95643,
+                  "Движение Д/С по финансовой деятельности": 956437,
+                  "Расчеты по кредитам": 956437,
+                  "Прочие доходы и расходы по финансовой деятельности": 956437,
+                  "Расходы на УК Парус": 956437,
+                  "Остаток по кредиту на начало периода": 1912874,
+                  "Остаток по кредиту на конец периода": 1912874,
+                  "Движение за период по Д/С": 956437,
+                  "Сформированные резервы (нарастающим итогом)": 956437,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 956437,
+                  "Остаток Д/С на начало периода": 956437,
+                  "Остаток Д/С на конец периода": 956437,
+                  "Д/С на конец периода (с учетом резерва)": 956437,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1052080,
+                  "Поступления по операционной деятельности": 1052080,
+                  "Расходы по основной деятельности": 1052080,
+                  "Обеспечительные платежи": 1052080,
+                  "Движение Д/С по инвестиционной деятельности": 1052080,
+                  "Выплата дохода акционерам (пайщикам)": -654500,
+                  "Расходы на капитальный ремонт": 105208,
+                  "Движение Д/С по финансовой деятельности": 1052080,
+                  "Расчеты по кредитам": 1052080,
+                  "Прочие доходы и расходы по финансовой деятельности": 1052080,
+                  "Расходы на УК Парус": 1052080,
+                  "Остаток по кредиту на начало периода": 1721399,
+                  "Остаток по кредиту на конец периода": 1721399,
+                  "Движение за период по Д/С": 1052080,
+                  "Сформированные резервы (нарастающим итогом)": 1052080,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1052080,
+                  "Остаток Д/С на начало периода": 1052080,
+                  "Остаток Д/С на конец периода": 1052080,
+                  "Д/С на конец периода (с учетом резерва)": 1052080,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1147724,
+                  "Поступления по операционной деятельности": 1147724,
+                  "Расходы по основной деятельности": 1147724,
+                  "Обеспечительные платежи": 1147724,
+                  "Движение Д/С по инвестиционной деятельности": 1147724,
+                  "Выплата дохода акционерам (пайщикам)": -714000,
+                  "Расходы на капитальный ремонт": 114772,
+                  "Движение Д/С по финансовой деятельности": 1147724,
+                  "Расчеты по кредитам": 1147724,
+                  "Прочие доходы и расходы по финансовой деятельности": 1147724,
+                  "Расходы на УК Парус": 1147724,
+                  "Остаток по кредиту на начало периода": 1529924,
+                  "Остаток по кредиту на конец периода": 1529924,
+                  "Движение за период по Д/С": 1147724,
+                  "Сформированные резервы (нарастающим итогом)": 1147724,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1147724,
+                  "Остаток Д/С на начало периода": 1147724,
+                  "Остаток Д/С на конец периода": 1147724,
+                  "Д/С на конец периода (с учетом резерва)": 1147724,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 1243367,
+                  "Поступления по операционной деятельности": 1243367,
+                  "Расходы по основной деятельности": 1243367,
+                  "Обеспечительные платежи": 1243367,
+                  "Движение Д/С по инвестиционной деятельности": 1243367,
+                  "Выплата дохода акционерам (пайщикам)": -773500,
+                  "Расходы на капитальный ремонт": 124336,
+                  "Движение Д/С по финансовой деятельности": 1243367,
+                  "Расчеты по кредитам": 1243367,
+                  "Прочие доходы и расходы по финансовой деятельности": 1243367,
+                  "Расходы на УК Парус": 1243367,
+                  "Остаток по кредиту на начало периода": 1338449,
+                  "Остаток по кредиту на конец периода": 1338449,
+                  "Движение за период по Д/С": 1243367,
+                  "Сформированные резервы (нарастающим итогом)": 1243367,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1243367,
+                  "Остаток Д/С на начало периода": 1243367,
+                  "Остаток Д/С на конец периода": 1243367,
+                  "Д/С на конец периода (с учетом резерва)": 1243367,
+                },
+              },
+            },
+            ТРМ: {
+              type: "briefcase",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1776239,
+                  "Поступления по операционной деятельности": 1776239,
+                  "Расходы по основной деятельности": 1776239,
+                  "Обеспечительные платежи": 1776239,
+                  "Движение Д/С по инвестиционной деятельности": 1776239,
+                  "Выплата дохода акционерам (пайщикам)": -1105000,
+                  "Расходы на капитальный ремонт": 177623,
+                  "Движение Д/С по финансовой деятельности": 1776239,
+                  "Расчеты по кредитам": 1776239,
+                  "Прочие доходы и расходы по финансовой деятельности": 1776239,
+                  "Расходы на УК Парус": 1776239,
+                  "Остаток по кредиту на начало периода": 3552479,
+                  "Остаток по кредиту на конец периода": 3552479,
+                  "Движение за период по Д/С": 1776239,
+                  "Сформированные резервы (нарастающим итогом)": 1776239,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1776239,
+                  "Остаток Д/С на начало периода": 1776239,
+                  "Остаток Д/С на конец периода": 1776239,
+                  "Д/С на конец периода (с учетом резерва)": 1776239,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1953863,
+                  "Поступления по операционной деятельности": 1953863,
+                  "Расходы по основной деятельности": 1953863,
+                  "Обеспечительные платежи": 1953863,
+                  "Движение Д/С по инвестиционной деятельности": 1953863,
+                  "Выплата дохода акционерам (пайщикам)": -1215500,
+                  "Расходы на капитальный ремонт": 195386,
+                  "Движение Д/С по финансовой деятельности": 1953863,
+                  "Расчеты по кредитам": 1953863,
+                  "Прочие доходы и расходы по финансовой деятельности": 1953863,
+                  "Расходы на УК Парус": 1953863,
+                  "Остаток по кредиту на начало периода": 3196983,
+                  "Остаток по кредиту на конец периода": 3196983,
+                  "Движение за период по Д/С": 1953863,
+                  "Сформированные резервы (нарастающим итогом)": 1953863,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1953863,
+                  "Остаток Д/С на начало периода": 1953863,
+                  "Остаток Д/С на конец периода": 1953863,
+                  "Д/С на конец периода (с учетом резерва)": 1953863,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 2131487,
+                  "Поступления по операционной деятельности": 2131487,
+                  "Расходы по основной деятельности": 2131487,
+                  "Обеспечительные платежи": 2131487,
+                  "Движение Д/С по инвестиционной деятельности": 2131487,
+                  "Выплата дохода акционерам (пайщикам)": -1326000,
+                  "Расходы на капитальный ремонт": 213148,
+                  "Движение Д/С по финансовой деятельности": 2131487,
+                  "Расчеты по кредитам": 2131487,
+                  "Прочие доходы и расходы по финансовой деятельности": 2131487,
+                  "Расходы на УК Парус": 2131487,
+                  "Остаток по кредиту на начало периода": 2841487,
+                  "Остаток по кредиту на конец периода": 2841487,
+                  "Движение за период по Д/С": 2131487,
+                  "Сформированные резервы (нарастающим итогом)": 2131487,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 2131487,
+                  "Остаток Д/С на начало периода": 2131487,
+                  "Остаток Д/С на конец периода": 2131487,
+                  "Д/С на конец периода (с учетом резерва)": 2131487,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 2309111,
+                  "Поступления по операционной деятельности": 2309111,
+                  "Расходы по основной деятельности": 2309111,
+                  "Обеспечительные платежи": 2309111,
+                  "Движение Д/С по инвестиционной деятельности": 2309111,
+                  "Выплата дохода акционерам (пайщикам)": -1436500,
+                  "Расходы на капитальный ремонт": 230911,
+                  "Движение Д/С по финансовой деятельности": 2309111,
+                  "Расчеты по кредитам": 2309111,
+                  "Прочие доходы и расходы по финансовой деятельности": 2309111,
+                  "Расходы на УК Парус": 2309111,
+                  "Остаток по кредиту на начало периода": 2485991,
+                  "Остаток по кредиту на конец периода": 2485991,
+                  "Движение за период по Д/С": 2309111,
+                  "Сформированные резервы (нарастающим итогом)": 2309111,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 2309111,
+                  "Остаток Д/С на начало периода": 2309111,
+                  "Остаток Д/С на конец периода": 2309111,
+                  "Д/С на конец периода (с учетом резерва)": 2309111,
+                },
+              },
+            },
+            СБЛ: {
+              type: "warehouse",
+              periods: {
+                "Факт '23": {
+                  "Движение Д/С по операционной деятельности ООО": 1298022,
+                  "Поступления по операционной деятельности": 1298022,
+                  "Расходы по основной деятельности": 1298022,
+                  "Обеспечительные платежи": 1298022,
+                  "Движение Д/С по инвестиционной деятельности": 1298022,
+                  "Выплата дохода акционерам (пайщикам)": -807500,
+                  "Расходы на капитальный ремонт": 129802,
+                  "Движение Д/С по финансовой деятельности": 1298022,
+                  "Расчеты по кредитам": 1298022,
+                  "Прочие доходы и расходы по финансовой деятельности": 1298022,
+                  "Расходы на УК Парус": 1298022,
+                  "Остаток по кредиту на начало периода": 2596044,
+                  "Остаток по кредиту на конец периода": 2596044,
+                  "Движение за период по Д/С": 1298022,
+                  "Сформированные резервы (нарастающим итогом)": 1298022,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1298022,
+                  "Остаток Д/С на начало периода": 1298022,
+                  "Остаток Д/С на конец периода": 1298022,
+                  "Д/С на конец периода (с учетом резерва)": 1298022,
+                },
+                "Факт '24": {
+                  "Движение Д/С по операционной деятельности ООО": 1427824,
+                  "Поступления по операционной деятельности": 1427824,
+                  "Расходы по основной деятельности": 1427824,
+                  "Обеспечительные платежи": 1427824,
+                  "Движение Д/С по инвестиционной деятельности": 1427824,
+                  "Выплата дохода акционерам (пайщикам)": -888250,
+                  "Расходы на капитальный ремонт": 142782,
+                  "Движение Д/С по финансовой деятельности": 1427824,
+                  "Расчеты по кредитам": 1427824,
+                  "Прочие доходы и расходы по финансовой деятельности": 1427824,
+                  "Расходы на УК Парус": 1427824,
+                  "Остаток по кредиту на начало периода": 2336839,
+                  "Остаток по кредиту на конец периода": 2336839,
+                  "Движение за период по Д/С": 1427824,
+                  "Сформированные резервы (нарастающим итогом)": 1427824,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1427824,
+                  "Остаток Д/С на начало периода": 1427824,
+                  "Остаток Д/С на конец периода": 1427824,
+                  "Д/С на конец периода (с учетом резерва)": 1427824,
+                },
+                "Факт (I-III кв. '25)\nПлан (IV кв. '25)": {
+                  "Движение Д/С по операционной деятельности ООО": 1557626,
+                  "Поступления по операционной деятельности": 1557626,
+                  "Расходы по основной деятельности": 1557626,
+                  "Обеспечительные платежи": 1557626,
+                  "Движение Д/С по инвестиционной деятельности": 1557626,
+                  "Выплата дохода акционерам (пайщикам)": -969000,
+                  "Расходы на капитальный ремонт": 155762,
+                  "Движение Д/С по финансовой деятельности": 1557626,
+                  "Расчеты по кредитам": 1557626,
+                  "Прочие доходы и расходы по финансовой деятельности": 1557626,
+                  "Расходы на УК Парус": 1557626,
+                  "Остаток по кредиту на начало периода": 2077635,
+                  "Остаток по кредиту на конец периода": 2077635,
+                  "Движение за период по Д/С": 1557626,
+                  "Сформированные резервы (нарастающим итогом)": 1557626,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1557626,
+                  "Остаток Д/С на начало периода": 1557626,
+                  "Остаток Д/С на конец периода": 1557626,
+                  "Д/С на конец периода (с учетом резерва)": 1557626,
+                },
+                "План '26": {
+                  "Движение Д/С по операционной деятельности ООО": 1687428,
+                  "Поступления по операционной деятельности": 1687428,
+                  "Расходы по основной деятельности": 1687428,
+                  "Обеспечительные платежи": 1687428,
+                  "Движение Д/С по инвестиционной деятельности": 1687428,
+                  "Выплата дохода акционерам (пайщикам)": -1049750,
+                  "Расходы на капитальный ремонт": 168742,
+                  "Движение Д/С по финансовой деятельности": 1687428,
+                  "Расчеты по кредитам": 1687428,
+                  "Прочие доходы и расходы по финансовой деятельности": 1687428,
+                  "Расходы на УК Парус": 1687428,
+                  "Остаток по кредиту на начало периода": 1818431,
+                  "Остаток по кредиту на конец периода": 1818431,
+                  "Движение за период по Д/С": 1687428,
+                  "Сформированные резервы (нарастающим итогом)": 1687428,
+                  "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1687428,
+                  "Остаток Д/С на начало периода": 1687428,
+                  "Остаток Д/С на конец периода": 1687428,
+                  "Д/С на конец периода (с учетом резерва)": 1687428,
+                },
+              },
+            },
           },
-          "ЗОЛЯ": {
-            type: "warehouse",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 1093071, "Поступления по операционной деятельности": 1093071, "Расходы по основной деятельности": 1093071, "Обеспечительные платежи": 1093071, "Движение Д/С по инвестиционной деятельности": 1093071, "Выплата дохода акционерам (пайщикам)": -680000, "Расходы на капитальный ремонт": 109307, "Движение Д/С по финансовой деятельности": 1093071, "Расчеты по кредитам": 1093071, "Прочие доходы и расходы по финансовой деятельности": 1093071, "Расходы на УК Парус": 1093071, "Остаток по кредиту на начало периода": 2186142, "Остаток по кредиту на конец периода": 2186142, "Движение за период по Д/С": 1093071, "Сформированные резервы (нарастающим итогом)": 1093071, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1093071, "Остаток Д/С на начало периода": 1093071, "Остаток Д/С на конец периода": 1093071, "Д/С на конец периода (с учетом резерва)": 1093071 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1202378, "Поступления по операционной деятельности": 1202378, "Расходы по основной деятельности": 1202378, "Обеспечительные платежи": 1202378, "Движение Д/С по инвестиционной деятельности": 1202378, "Выплата дохода акционерам (пайщикам)": -748000, "Расходы на капитальный ремонт": 120237, "Движение Д/С по финансовой деятельности": 1202378, "Расчеты по кредитам": 1202378, "Прочие доходы и расходы по финансовой деятельности": 1202378, "Расходы на УК Парус": 1202378, "Остаток по кредиту на начало периода": 1967313, "Остаток по кредиту на конец периода": 1967313, "Движение за период по Д/С": 1202378, "Сформированные резервы (нарастающим итогом)": 1202378, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1202378, "Остаток Д/С на начало периода": 1202378, "Остаток Д/С на конец периода": 1202378, "Д/С на конец периода (с учетом резерва)": 1202378 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 1311685, "Поступления по операционной деятельности": 1311685, "Расходы по основной деятельности": 1311685, "Обеспечительные платежи": 1311685, "Движение Д/С по инвестиционной деятельности": 1311685, "Выплата дохода акционерам (пайщикам)": -816000, "Расходы на капитальный ремонт": 131168, "Движение Д/С по финансовой деятельности": 1311685, "Расчеты по кредитам": 1311685, "Прочие доходы и расходы по финансовой деятельности": 1311685, "Расходы на УК Парус": 1311685, "Остаток по кредиту на начало периода": 1748485, "Остаток по кредиту на конец периода": 1748485, "Движение за период по Д/С": 1311685, "Сформированные резервы (нарастающим итогом)": 1311685, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1311685, "Остаток Д/С на начало периода": 1311685, "Остаток Д/С на конец периода": 1311685, "Д/С на конец периода (с учетом резерва)": 1311685 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 1420991, "Поступления по операционной деятельности": 1420991, "Расходы по основной деятельности": 1420991, "Обеспечительные платежи": 1420991, "Движение Д/С по инвестиционной деятельности": 1420991, "Выплата дохода акционерам (пайщикам)": -884000, "Расходы на капитальный ремонт": 142099, "Движение Д/С по финансовой деятельности": 1420991, "Расчеты по кредитам": 1420991, "Прочие доходы и расходы по финансовой деятельности": 1420991, "Расходы на УК Парус": 1420991, "Остаток по кредиту на начало периода": 1529657, "Остаток по кредиту на конец периода": 1529657, "Движение за период по Д/С": 1420991, "Сформированные резервы (нарастающим итогом)": 1420991, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1420991, "Остаток Д/С на начало периода": 1420991, "Остаток Д/С на конец периода": 1420991, "Д/С на конец периода (с учетом резерва)": 1420991 }
-            }
-          },
-          "КРАС": {
-            type: "warehouse",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 1639606, "Поступления по операционной деятельности": 1639606, "Расходы по основной деятельности": 1639606, "Обеспечительные платежи": 1639606, "Движение Д/С по инвестиционной деятельности": 1639606, "Выплата дохода акционерам (пайщикам)": -1020000, "Расходы на капитальный ремонт": 163960, "Движение Д/С по финансовой деятельности": 1639606, "Расчеты по кредитам": 1639606, "Прочие доходы и расходы по финансовой деятельности": 1639606, "Расходы на УК Парус": 1639606, "Остаток по кредиту на начало периода": 3279213, "Остаток по кредиту на конец периода": 3279213, "Движение за период по Д/С": 1639606, "Сформированные резервы (нарастающим итогом)": 1639606, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1639606, "Остаток Д/С на начало периода": 1639606, "Остаток Д/С на конец периода": 1639606, "Д/С на конец периода (с учетом резерва)": 1639606 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1803567, "Поступления по операционной деятельности": 1803567, "Расходы по основной деятельности": 1803567, "Обеспечительные платежи": 1803567, "Движение Д/С по инвестиционной деятельности": 1803567, "Выплата дохода акционерам (пайщикам)": -1122000, "Расходы на капитальный ремонт": 180356, "Движение Д/С по финансовой деятельности": 1803567, "Расчеты по кредитам": 1803567, "Прочие доходы и расходы по финансовой деятельности": 1803567, "Расходы на УК Парус": 1803567, "Остаток по кредиту на начало периода": 2950970, "Остаток по кредиту на конец периода": 2950970, "Движение за период по Д/С": 1803567, "Сформированные резервы (нарастающим итогом)": 1803567, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1803567, "Остаток Д/С на начало периода": 1803567, "Остаток Д/С на конец периода": 1803567, "Д/С на конец периода (с учетом резерва)": 1803567 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 1967527, "Поступления по операционной деятельности": 1967527, "Расходы по основной деятельности": 1967527, "Обеспечительные платежи": 1967527, "Движение Д/С по инвестиционной деятельности": 1967527, "Выплата дохода акционерам (пайщикам)": -1224000, "Расходы на капитальный ремонт": 196752, "Движение Д/С по финансовой деятельности": 1967527, "Расчеты по кредитам": 1967527, "Прочие доходы и расходы по финансовой деятельности": 1967527, "Расходы на УК Парус": 1967527, "Остаток по кредиту на начало периода": 2622728, "Остаток по кредиту на конец периода": 2622728, "Движение за период по Д/С": 1967527, "Сформированные резервы (нарастающим итогом)": 1967527, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1967527, "Остаток Д/С на начало периода": 1967527, "Остаток Д/С на конец периода": 1967527, "Д/С на конец периода (с учетом резерва)": 1967527 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 2131487, "Поступления по операционной деятельности": 2131487, "Расходы по основной деятельности": 2131487, "Обеспечительные платежи": 2131487, "Движение Д/С по инвестиционной деятельности": 2131487, "Выплата дохода акционерам (пайщикам)": -1326000, "Расходы на капитальный ремонт": 213148, "Движение Д/С по финансовой деятельности": 2131487, "Расчеты по кредитам": 2131487, "Прочие доходы и расходы по финансовой деятельности": 2131487, "Расходы на УК Парус": 2131487, "Остаток по кредиту на начало периода": 2294485, "Остаток по кредиту на конец периода": 2294485, "Движение за период по Д/С": 2131487, "Сформированные резервы (нарастающим итогом)": 2131487, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 2131487, "Остаток Д/С на начало периода": 2131487, "Остаток Д/С на конец периода": 2131487, "Д/С на конец периода (с учетом резерва)": 2131487 }
-            }
-          },
-          "ЛОГ": {
-            type: "warehouse",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 1229705, "Поступления по операционной деятельности": 1229705, "Расходы по основной деятельности": 1229705, "Обеспечительные платежи": 1229705, "Движение Д/С по инвестиционной деятельности": 1229705, "Выплата дохода акционерам (пайщикам)": -765000, "Расходы на капитальный ремонт": 122970, "Движение Д/С по финансовой деятельности": 1229705, "Расчеты по кредитам": 1229705, "Прочие доходы и расходы по финансовой деятельности": 1229705, "Расходы на УК Парус": 1229705, "Остаток по кредиту на начало периода": 2459410, "Остаток по кредиту на конец периода": 2459410, "Движение за период по Д/С": 1229705, "Сформированные резервы (нарастающим итогом)": 1229705, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1229705, "Остаток Д/С на начало периода": 1229705, "Остаток Д/С на конец периода": 1229705, "Д/С на конец периода (с учетом резерва)": 1229705 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1352675, "Поступления по операционной деятельности": 1352675, "Расходы по основной деятельности": 1352675, "Обеспечительные платежи": 1352675, "Движение Д/С по инвестиционной деятельности": 1352675, "Выплата дохода акционерам (пайщикам)": -841500, "Расходы на капитальный ремонт": 135267, "Движение Д/С по финансовой деятельности": 1352675, "Расчеты по кредитам": 1352675, "Прочие доходы и расходы по финансовой деятельности": 1352675, "Расходы на УК Парус": 1352675, "Остаток по кредиту на начало периода": 2213227, "Остаток по кредиту на конец периода": 2213227, "Движение за период по Д/С": 1352675, "Сформированные резервы (нарастающим итогом)": 1352675, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1352675, "Остаток Д/С на начало периода": 1352675, "Остаток Д/С на конец периода": 1352675, "Д/С на конец периода (с учетом резерва)": 1352675 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 1475645, "Поступления по операционной деятельности": 1475645, "Расходы по основной деятельности": 1475645, "Обеспечительные платежи": 1475645, "Движение Д/С по инвестиционной деятельности": 1475645, "Выплата дохода акционерам (пайщикам)": -918000, "Расходы на капитальный ремонт": 147564, "Движение Д/С по финансовой деятельности": 1475645, "Расчеты по кредитам": 1475645, "Прочие доходы и расходы по финансовой деятельности": 1475645, "Расходы на УК Парус": 1475645, "Остаток по кредиту на начало периода": 1967046, "Остаток по кредиту на конец периода": 1967046, "Движение за период по Д/С": 1475645, "Сформированные резервы (нарастающим итогом)": 1475645, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1475645, "Остаток Д/С на начало периода": 1475645, "Остаток Д/С на конец периода": 1475645, "Д/С на конец периода (с учетом резерва)": 1475645 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 1598615, "Поступления по операционной деятельности": 1598615, "Расходы по основной деятельности": 1598615, "Обеспечительные платежи": 1598615, "Движение Д/С по инвестиционной деятельности": 1598615, "Выплата дохода акционерам (пайщикам)": -994500, "Расходы на капитальный ремонт": 159861, "Движение Д/С по финансовой деятельности": 1598615, "Расчеты по кредитам": 1598615, "Прочие доходы и расходы по финансовой деятельности": 1598615, "Расходы на УК Парус": 1598615, "Остаток по кредиту на начало периода": 1720864, "Остаток по кредиту на конец периода": 1720864, "Движение за период по Д/С": 1598615, "Сформированные резервы (нарастающим итогом)": 1598615, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1598615, "Остаток Д/С на начало периода": 1598615, "Остаток Д/С на конец периода": 1598615, "Д/С на конец периода (с учетом резерва)": 1598615 }
-            }
-          },
-          "НОР": {
-            type: "warehouse",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 1502972, "Поступления по операционной деятельности": 1502972, "Расходы по основной деятельности": 1502972, "Обеспечительные платежи": 1502972, "Движение Д/С по инвестиционной деятельности": 1502972, "Выплата дохода акционерам (пайщикам)": -935000, "Расходы на капитальный ремонт": 150297, "Движение Д/С по финансовой деятельности": 1502972, "Расчеты по кредитам": 1502972, "Прочие доходы и расходы по финансовой деятельности": 1502972, "Расходы на УК Парус": 1502972, "Остаток по кредиту на начало периода": 3005945, "Остаток по кредиту на конец периода": 3005945, "Движение за период по Д/С": 1502972, "Сформированные резервы (нарастающим итогом)": 1502972, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1502972, "Остаток Д/С на начало периода": 1502972, "Остаток Д/С на конец периода": 1502972, "Д/С на конец периода (с учетом резерва)": 1502972 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1653270, "Поступления по операционной деятельности": 1653270, "Расходы по основной деятельности": 1653270, "Обеспечительные платежи": 1653270, "Движение Д/С по инвестиционной деятельности": 1653270, "Выплата дохода акционерам (пайщикам)": -1028500, "Расходы на капитальный ремонт": 165327, "Движение Д/С по финансовой деятельности": 1653270, "Расчеты по кредитам": 1653270, "Прочие доходы и расходы по финансовой деятельности": 1653270, "Расходы на УК Парус": 1653270, "Остаток по кредиту на начало периода": 2705056, "Остаток по кредиту на конец периода": 2705056, "Движение за период по Д/С": 1653270, "Сформированные резервы (нарастающим итогом)": 1653270, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1653270, "Остаток Д/С на начало периода": 1653270, "Остаток Д/С на конец периода": 1653270, "Д/С на конец периода (с учетом резерва)": 1653270 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 1803567, "Поступления по операционной деятельности": 1803567, "Расходы по основной деятельности": 1803567, "Обеспечительные платежи": 1803567, "Движение Д/С по инвестиционной деятельности": 1803567, "Выплата дохода акционерам (пайщикам)": -1122000, "Расходы на капитальный ремонт": 180356, "Движение Д/С по финансовой деятельности": 1803567, "Расчеты по кредитам": 1803567, "Прочие доходы и расходы по финансовой деятельности": 1803567, "Расходы на УК Парус": 1803567, "Остаток по кредиту на начало периода": 2404167, "Остаток по кредиту на конец периода": 2404167, "Движение за период по Д/С": 1803567, "Сформированные резервы (нарастающим итогом)": 1803567, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1803567, "Остаток Д/С на начало периода": 1803567, "Остаток Д/С на конец периода": 1803567, "Д/С на конец периода (с учетом резерва)": 1803567 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 1953863, "Поступления по операционной деятельности": 1953863, "Расходы по основной деятельности": 1953863, "Обеспечительные платежи": 1953863, "Движение Д/С по инвестиционной деятельности": 1953863, "Выплата дохода акционерам (пайщикам)": -1215500, "Расходы на капитальный ремонт": 195386, "Движение Д/С по финансовой деятельности": 1953863, "Расчеты по кредитам": 1953863, "Прочие доходы и расходы по финансовой деятельности": 1953863, "Расходы на УК Парус": 1953863, "Остаток по кредиту на начало периода": 2103278, "Остаток по кредиту на конец периода": 2103278, "Движение за период по Д/С": 1953863, "Сформированные резервы (нарастающим итогом)": 1953863, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1953863, "Остаток Д/С на начало периода": 1953863, "Остаток Д/С на конец периода": 1953863, "Д/С на конец периода (с учетом резерва)": 1953863 }
-            }
-          },
-          "ОЗН": {
-            type: "warehouse",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 956437, "Поступления по операционной деятельности": 956437, "Расходы по основной деятельности": 956437, "Обеспечительные платежи": 956437, "Движение Д/С по инвестиционной деятельности": 956437, "Выплата дохода акционерам (пайщикам)": -595000, "Расходы на капитальный ремонт": 95643, "Движение Д/С по финансовой деятельности": 956437, "Расчеты по кредитам": 956437, "Прочие доходы и расходы по финансовой деятельности": 956437, "Расходы на УК Парус": 956437, "Остаток по кредиту на начало периода": 1912874, "Остаток по кредиту на конец периода": 1912874, "Движение за период по Д/С": 956437, "Сформированные резервы (нарастающим итогом)": 956437, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 956437, "Остаток Д/С на начало периода": 956437, "Остаток Д/С на конец периода": 956437, "Д/С на конец периода (с учетом резерва)": 956437 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1052080, "Поступления по операционной деятельности": 1052080, "Расходы по основной деятельности": 1052080, "Обеспечительные платежи": 1052080, "Движение Д/С по инвестиционной деятельности": 1052080, "Выплата дохода акционерам (пайщикам)": -654500, "Расходы на капитальный ремонт": 105208, "Движение Д/С по финансовой деятельности": 1052080, "Расчеты по кредитам": 1052080, "Прочие доходы и расходы по финансовой деятельности": 1052080, "Расходы на УК Парус": 1052080, "Остаток по кредиту на начало периода": 1721399, "Остаток по кредиту на конец периода": 1721399, "Движение за период по Д/С": 1052080, "Сформированные резервы (нарастающим итогом)": 1052080, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1052080, "Остаток Д/С на начало периода": 1052080, "Остаток Д/С на конец периода": 1052080, "Д/С на конец периода (с учетом резерва)": 1052080 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 1147724, "Поступления по операционной деятельности": 1147724, "Расходы по основной деятельности": 1147724, "Обеспечительные платежи": 1147724, "Движение Д/С по инвестиционной деятельности": 1147724, "Выплата дохода акционерам (пайщикам)": -714000, "Расходы на капитальный ремонт": 114772, "Движение Д/С по финансовой деятельности": 1147724, "Расчеты по кредитам": 1147724, "Прочие доходы и расходы по финансовой деятельности": 1147724, "Расходы на УК Парус": 1147724, "Остаток по кредиту на начало периода": 1529924, "Остаток по кредиту на конец периода": 1529924, "Движение за период по Д/С": 1147724, "Сформированные резервы (нарастающим итогом)": 1147724, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1147724, "Остаток Д/С на начало периода": 1147724, "Остаток Д/С на конец периода": 1147724, "Д/С на конец периода (с учетом резерва)": 1147724 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 1243367, "Поступления по операционной деятельности": 1243367, "Расходы по основной деятельности": 1243367, "Обеспечительные платежи": 1243367, "Движение Д/С по инвестиционной деятельности": 1243367, "Выплата дохода акционерам (пайщикам)": -773500, "Расходы на капитальный ремонт": 124336, "Движение Д/С по финансовой деятельности": 1243367, "Расчеты по кредитам": 1243367, "Прочие доходы и расходы по финансовой деятельности": 1243367, "Расходы на УК Парус": 1243367, "Остаток по кредиту на начало периода": 1338449, "Остаток по кредиту на конец периода": 1338449, "Движение за период по Д/С": 1243367, "Сформированные резервы (нарастающим итогом)": 1243367, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1243367, "Остаток Д/С на начало периода": 1243367, "Остаток Д/С на конец периода": 1243367, "Д/С на конец периода (с учетом резерва)": 1243367 }
-            }
-          },
-          "ТРМ": {
-            type: "briefcase",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 1776239, "Поступления по операционной деятельности": 1776239, "Расходы по основной деятельности": 1776239, "Обеспечительные платежи": 1776239, "Движение Д/С по инвестиционной деятельности": 1776239, "Выплата дохода акционерам (пайщикам)": -1105000, "Расходы на капитальный ремонт": 177623, "Движение Д/С по финансовой деятельности": 1776239, "Расчеты по кредитам": 1776239, "Прочие доходы и расходы по финансовой деятельности": 1776239, "Расходы на УК Парус": 1776239, "Остаток по кредиту на начало периода": 3552479, "Остаток по кредиту на конец периода": 3552479, "Движение за период по Д/С": 1776239, "Сформированные резервы (нарастающим итогом)": 1776239, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1776239, "Остаток Д/С на начало периода": 1776239, "Остаток Д/С на конец периода": 1776239, "Д/С на конец периода (с учетом резерва)": 1776239 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1953863, "Поступления по операционной деятельности": 1953863, "Расходы по основной деятельности": 1953863, "Обеспечительные платежи": 1953863, "Движение Д/С по инвестиционной деятельности": 1953863, "Выплата дохода акционерам (пайщикам)": -1215500, "Расходы на капитальный ремонт": 195386, "Движение Д/С по финансовой деятельности": 1953863, "Расчеты по кредитам": 1953863, "Прочие доходы и расходы по финансовой деятельности": 1953863, "Расходы на УК Парус": 1953863, "Остаток по кредиту на начало периода": 3196983, "Остаток по кредиту на конец периода": 3196983, "Движение за период по Д/С": 1953863, "Сформированные резервы (нарастающим итогом)": 1953863, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1953863, "Остаток Д/С на начало периода": 1953863, "Остаток Д/С на конец периода": 1953863, "Д/С на конец периода (с учетом резерва)": 1953863 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 2131487, "Поступления по операционной деятельности": 2131487, "Расходы по основной деятельности": 2131487, "Обеспечительные платежи": 2131487, "Движение Д/С по инвестиционной деятельности": 2131487, "Выплата дохода акционерам (пайщикам)": -1326000, "Расходы на капитальный ремонт": 213148, "Движение Д/С по финансовой деятельности": 2131487, "Расчеты по кредитам": 2131487, "Прочие доходы и расходы по финансовой деятельности": 2131487, "Расходы на УК Парус": 2131487, "Остаток по кредиту на начало периода": 2841487, "Остаток по кредиту на конец периода": 2841487, "Движение за период по Д/С": 2131487, "Сформированные резервы (нарастающим итогом)": 2131487, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 2131487, "Остаток Д/С на начало периода": 2131487, "Остаток Д/С на конец периода": 2131487, "Д/С на конец периода (с учетом резерва)": 2131487 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 2309111, "Поступления по операционной деятельности": 2309111, "Расходы по основной деятельности": 2309111, "Обеспечительные платежи": 2309111, "Движение Д/С по инвестиционной деятельности": 2309111, "Выплата дохода акционерам (пайщикам)": -1436500, "Расходы на капитальный ремонт": 230911, "Движение Д/С по финансовой деятельности": 2309111, "Расчеты по кредитам": 2309111, "Прочие доходы и расходы по финансовой деятельности": 2309111, "Расходы на УК Парус": 2309111, "Остаток по кредиту на начало периода": 2485991, "Остаток по кредиту на конец периода": 2485991, "Движение за период по Д/С": 2309111, "Сформированные резервы (нарастающим итогом)": 2309111, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 2309111, "Остаток Д/С на начало периода": 2309111, "Остаток Д/С на конец периода": 2309111, "Д/С на конец периода (с учетом резерва)": 2309111 }
-            }
-          },
-          "СБЛ": {
-            type: "warehouse",
-            periods: {
-              "Факт '23": { "Движение Д/С по операционной деятельности ООО": 1298022, "Поступления по операционной деятельности": 1298022, "Расходы по основной деятельности": 1298022, "Обеспечительные платежи": 1298022, "Движение Д/С по инвестиционной деятельности": 1298022, "Выплата дохода акционерам (пайщикам)": -807500, "Расходы на капитальный ремонт": 129802, "Движение Д/С по финансовой деятельности": 1298022, "Расчеты по кредитам": 1298022, "Прочие доходы и расходы по финансовой деятельности": 1298022, "Расходы на УК Парус": 1298022, "Остаток по кредиту на начало периода": 2596044, "Остаток по кредиту на конец периода": 2596044, "Движение за период по Д/С": 1298022, "Сформированные резервы (нарастающим итогом)": 1298022, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1298022, "Остаток Д/С на начало периода": 1298022, "Остаток Д/С на конец периода": 1298022, "Д/С на конец периода (с учетом резерва)": 1298022 },
-              "Факт '24": { "Движение Д/С по операционной деятельности ООО": 1427824, "Поступления по операционной деятельности": 1427824, "Расходы по основной деятельности": 1427824, "Обеспечительные платежи": 1427824, "Движение Д/С по инвестиционной деятельности": 1427824, "Выплата дохода акционерам (пайщикам)": -888250, "Расходы на капитальный ремонт": 142782, "Движение Д/С по финансовой деятельности": 1427824, "Расчеты по кредитам": 1427824, "Прочие доходы и расходы по финансовой деятельности": 1427824, "Расходы на УК Парус": 1427824, "Остаток по кредиту на начало периода": 2336839, "Остаток по кредиту на конец периода": 2336839, "Движение за период по Д/С": 1427824, "Сформированные резервы (нарастающим итогом)": 1427824, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1427824, "Остаток Д/С на начало периода": 1427824, "Остаток Д/С на конец периода": 1427824, "Д/С на конец периода (с учетом резерва)": 1427824 },
-              "Факт (I-III кв. '25)\nПлан (IV кв. '25)": { "Движение Д/С по операционной деятельности ООО": 1557626, "Поступления по операционной деятельности": 1557626, "Расходы по основной деятельности": 1557626, "Обеспечительные платежи": 1557626, "Движение Д/С по инвестиционной деятельности": 1557626, "Выплата дохода акционерам (пайщикам)": -969000, "Расходы на капитальный ремонт": 155762, "Движение Д/С по финансовой деятельности": 1557626, "Расчеты по кредитам": 1557626, "Прочие доходы и расходы по финансовой деятельности": 1557626, "Расходы на УК Парус": 1557626, "Остаток по кредиту на начало периода": 2077635, "Остаток по кредиту на конец периода": 2077635, "Движение за период по Д/С": 1557626, "Сформированные резервы (нарастающим итогом)": 1557626, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1557626, "Остаток Д/С на начало периода": 1557626, "Остаток Д/С на конец периода": 1557626, "Д/С на конец периода (с учетом резерва)": 1557626 },
-              "План '26": { "Движение Д/С по операционной деятельности ООО": 1687428, "Поступления по операционной деятельности": 1687428, "Расходы по основной деятельности": 1687428, "Обеспечительные платежи": 1687428, "Движение Д/С по инвестиционной деятельности": 1687428, "Выплата дохода акционерам (пайщикам)": -1049750, "Расходы на капитальный ремонт": 168742, "Движение Д/С по финансовой деятельности": 1687428, "Расчеты по кредитам": 1687428, "Прочие доходы и расходы по финансовой деятельности": 1687428, "Расходы на УК Парус": 1687428, "Остаток по кредиту на начало периода": 1818431, "Остаток по кредиту на конец периода": 1818431, "Движение за период по Д/С": 1687428, "Сформированные резервы (нарастающим итогом)": 1687428, "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 1687428, "Остаток Д/С на начало периода": 1687428, "Остаток Д/С на конец периода": 1687428, "Д/С на конец периода (с учетом резерва)": 1687428 }
-            }
-          }
-        }
-        // periods and chartConfig are defined in script.js
-      };
-    </script>
+          // periods and chartConfig are defined in script.js
+        };
+      </script>
 
-    <!-- Main Script (unified bundle) -->
-    <script src="script.js?v=3"></script>
+      <!-- Main Script (unified bundle) -->
+      <script src="script.js?v=3"></script>
     </div>
   </body>
 </html>
