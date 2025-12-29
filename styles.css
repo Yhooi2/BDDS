@@ -385,7 +385,7 @@ body {
   display: flex;
   gap: 0;
   align-items: flex-end;
-  min-height: 28px; /* Fixed height for 2-line headers to prevent layout shift */
+  min-height: 21px; /* Fixed height for 2-line headers to prevent layout shift */
 }
 
 .table-header__column {
@@ -772,7 +772,7 @@ body {
   }
 
   .table-section__headers .table-header__column {
-    width: 46px;
+    width: 36px;
     font-size: 8px;
     font-weight: 700;
     text-align: center;
@@ -815,7 +815,7 @@ body {
   }
 
   .table-row__value {
-    width: 46px;
+    width: 43px;
     font-size: 8.3px;
     text-align: right;
   }
@@ -880,7 +880,7 @@ body {
   /* Dynamics mode */
   .content__table--dynamics .table-header__column {
     width: auto;
-    min-width: 60px;
+    min-width: 50px;
     white-space: nowrap;
   }
 
