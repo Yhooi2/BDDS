@@ -1764,6 +1764,25 @@
       '<svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="16" height="11" rx="1" fill="#C7A4C0"/><path d="M8 7V5C8 4.44772 8.44772 4 9 4H13C13.5523 4 14 4.44772 14 5V7" stroke="#C7A4C0" stroke-width="2"/><rect x="10" y="10" width="2" height="4" fill="white"/></svg>',
   };
 
+  // Цвета для каждого типа фонда (соответствуют цветам в иконках)
+  var FUND_COLORS = {
+    warehouse: {
+      primary: "#A9DB21",
+      sectionHeader: "rgba(169, 219, 33, 0.41)",
+      chartFact: "#A9DB21",
+    },
+    building: {
+      primary: "#9DBCE0",
+      sectionHeader: "rgba(157, 188, 224, 0.41)",
+      chartFact: "#9DBCE0",
+    },
+    briefcase: {
+      primary: "#C7A4C0",
+      sectionHeader: "rgba(199, 164, 192, 0.41)",
+      chartFact: "#C7A4C0",
+    },
+  };
+
   var DEFAULT_ICON_TYPE = "building";
 
   /**
@@ -1823,6 +1842,16 @@
     getIcon: function (fundName) {
       var type = this.getFundType(fundName);
       return FUND_ICONS[type] || FUND_ICONS[DEFAULT_ICON_TYPE];
+    },
+
+    /**
+     * Получить цвета для фонда
+     * @param {string} fundName
+     * @returns {Object} { primary, sectionHeader, chartFact }
+     */
+    getColors: function (fundName) {
+      var type = this.getFundType(fundName);
+      return FUND_COLORS[type] || FUND_COLORS[DEFAULT_ICON_TYPE];
     },
 
     /**
@@ -2288,6 +2317,7 @@
 
       this.generateData();
       this.initComponents();
+      this.updateThemeColors(this.state.currentFund);
       this.render();
 
       console.log("Dashboard initialized");
@@ -2401,8 +2431,20 @@
 
     handleFundChange: function (fund) {
       this.state.currentFund = fund;
+      this.updateThemeColors(fund);
       this.generateData();
       this.render();
+    },
+
+    /**
+     * Обновить CSS переменные цветов на основе типа фонда
+     * @param {string} fundName
+     */
+    updateThemeColors: function (fundName) {
+      var colors = FundsService.getColors(fundName);
+      var root = document.documentElement;
+      root.style.setProperty("--color-primary-blue", colors.primary);
+      root.style.setProperty("--color-section-header", colors.sectionHeader);
     },
 
     handleViewModeChange: function (mode) {
