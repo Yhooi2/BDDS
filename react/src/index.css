@@ -1,0 +1,873 @@
+@import "tailwindcss";
+
+/* ========================================
+   BDDS Dashboard Styles with Tailwind v4
+   ======================================== */
+
+@theme {
+  /* Colors from Figma */
+  --color-primary-blue: #9dbce0;
+  --color-light-gray: #d9d9d9;
+  --color-highlight-bg: rgba(217, 217, 217, 0.46);
+  --color-border: rgba(0, 0, 0, 0.14);
+  --color-text: #000000;
+  --color-white: #ffffff;
+  --color-line: rgba(0, 0, 0, 0.1);
+  --color-section-header: rgba(157, 188, 224, 0.41);
+
+  /* Typography */
+  --font-family-base: "Montserrat", Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font sizes - Desktop */
+  --font-size-title: 24px;
+  --font-size-chart-title: 20px;
+  --font-size-fund-name: 20px;
+  --font-size-section-title: 14px;
+  --font-size-row-header: 12px;
+  --font-size-row: 12px;
+  --font-size-cell: 11px;
+  --font-size-column-header: 12px;
+  --font-size-link: 12px;
+  --font-size-chart-label: 11px;
+  --font-size-chart-value: 14px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Border radius */
+  --radius-card: 21px;
+  --radius-section: 10px;
+  --radius-highlight: 4px;
+  --radius-bar: 5px;
+
+  /* Shadows */
+  --shadow-card: 0px 4px 21.7px rgba(0, 0, 0, 0.25);
+
+  /* Dimensions */
+  --card-width: 1098px;
+  --card-height: 655px;
+  --table-width: 677px;
+  --chart-width: 350px;
+}
+
+/* ========================================
+   1. RESET & BASE STYLES
+   ======================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-weight: 400;
+  color: var(--color-text);
+  background: #f0f0f0;
+  min-height: 100vh;
+  padding: 0;
+  overflow-x: auto;
+  letter-spacing: -0.5px;
+}
+
+/* ========================================
+   2. DASHBOARD CONTAINER
+   ======================================== */
+.dashboard-viewport {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+  background: #f0f0f0;
+  padding: 16px;
+}
+
+.dashboard {
+  width: 1280px;
+  min-height: 720px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0;
+  background: #f0f0f0;
+  transform-origin: 0 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* ========================================
+   3. CARD CONTAINER
+   ======================================== */
+.card {
+  width: 1098px;
+  height: 655px;
+  background: var(--color-white);
+  border-radius: var(--radius-card);
+  box-shadow: 0px 4px 21.7px rgba(0, 0, 0, 0.25);
+  padding: 31px 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========================================
+   4. HEADER
+   ======================================== */
+.header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.header__left {
+  flex: 1;
+}
+
+.header__right {
+  flex-shrink: 0;
+}
+
+.header__title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.header__title-unit {
+  font-weight: 400;
+}
+
+.header__fund-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ========================================
+   5. FUND SELECTOR
+   ======================================== */
+.fund-selector {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fund-selector__trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.fund-selector__icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary-blue);
+}
+
+.fund-selector__icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.fund-selector__value {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.fund-selector__arrow {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+}
+
+.fund-selector__arrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+.fund-selector--open .fund-selector__arrow {
+  transform: rotate(180deg);
+}
+
+.fund-selector__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background: var(--color-white);
+  border-radius: var(--radius-section);
+  box-shadow: 0px 4px 21.7px rgba(0, 0, 0, 0.25);
+  padding: 16px;
+  min-width: 328px;
+  display: none;
+}
+
+.fund-selector--open .fund-selector__dropdown {
+  display: block;
+}
+
+.fund-selector__grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.fund-selector__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fund-selector__group-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.fund-selector__group-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.fund-selector__group-separator {
+  width: 100%;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.fund-selector__group-funds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 12px;
+  max-width: 180px;
+}
+
+.fund-selector__fund {
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.fund-selector__fund:hover {
+  background: var(--color-highlight-bg);
+}
+
+.fund-selector__fund--active {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* ========================================
+   6. VIEW TOGGLE
+   ======================================== */
+.view-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--color-text);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+}
+
+.view-toggle__arrow {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+  border-left: none;
+  border-bottom: none;
+  transform: rotate(45deg);
+  margin-left: 2px;
+}
+
+.view-toggle--mobile {
+  display: none;
+}
+
+/* ========================================
+   7. MAIN CONTENT LAYOUT
+   ======================================== */
+.content {
+  display: flex;
+  align-items: stretch;
+}
+
+.content__table {
+  width: 677px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.content__chart {
+  width: 350px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   8. TABLE HEADER
+   ======================================== */
+.table-header {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 8px;
+  gap: 0;
+  z-index: 10;
+}
+
+.table-header .view-toggle {
+  position: absolute;
+  top: -26px;
+  right: 8px;
+}
+
+.table-header__columns {
+  display: flex;
+  gap: 0;
+  align-items: flex-end;
+  min-height: 21px;
+}
+
+.table-header__column {
+  width: 71px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.table-header__column--wide {
+  width: 90px;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+/* ========================================
+   9. TABLE SECTIONS
+   ======================================== */
+.table-section {
+  margin-bottom: 16px;
+}
+
+.table-section__title {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 3px 12px 3px 12px;
+  padding-right: 24px;
+  margin-bottom: -1px;
+  border-radius: var(--radius-section) 20px 0 0;
+  position: relative;
+  z-index: 1;
+  background: var(--color-section-header);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+}
+
+.table-section__content {
+  border: 1px solid var(--color-border);
+  border-radius: 0 var(--radius-section) var(--radius-section) var(--radius-section);
+  padding: 0 8px;
+}
+
+.table-section__headers {
+  display: none;
+}
+
+/* ========================================
+   10. TABLE ROWS
+   ======================================== */
+.table-row {
+  display: flex;
+  align-items: center;
+  padding: 2px 0;
+  border-bottom: 1px dashed var(--color-line);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row__label {
+  flex: 1;
+  font-size: 12px;
+  padding-right: 8px;
+  line-height: 1.3;
+}
+
+.table-row--header .table-row__label {
+  font-weight: 600;
+}
+
+.table-row__values {
+  display: flex;
+  gap: 0;
+  justify-content: flex-end;
+}
+
+.table-row__value {
+  width: 74px;
+  text-align: right;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-row__value--wide {
+  width: 90px;
+}
+
+.table-row__delta {
+  display: inline-block;
+  width: 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
+.table-row--header .table-row__value {
+  font-weight: 600;
+}
+
+/* ========================================
+   11. DYNAMICS VIEW MODE
+   ======================================== */
+.content__table--dynamics .table-header__column {
+  width: auto;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.content__table--dynamics .table-header__column--wide {
+  width: auto;
+  min-width: 100px;
+}
+
+.content__table--dynamics .table-row__value {
+  width: auto;
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+.content__table--dynamics .table-row__value--wide {
+  width: auto;
+  min-width: 80px;
+}
+
+/* ========================================
+   12. HIGHLIGHT BLOCKS
+   ======================================== */
+.highlight-block {
+  background: var(--color-highlight-bg);
+  border-radius: var(--radius-highlight);
+}
+
+.highlight-block .table-row {
+  border-bottom: none;
+}
+
+.highlight-block .table-row__label {
+  font-weight: 600;
+}
+
+.highlight-block .table-row__value {
+  font-weight: 600;
+}
+
+/* ========================================
+   13. BAR CHART
+   ======================================== */
+.chart {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart__title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  width: 300px;
+}
+
+.chart__title--mobile {
+  display: none;
+  padding: 0 16px;
+  line-height: 1.3;
+}
+
+#chartContainer {
+  flex: 1;
+  display: flex;
+}
+
+.chart__svg {
+  width: 100%;
+  height: 87%;
+}
+
+.chart__y-axis text {
+  font-family: var(--font-family-base);
+  font-size: 11px;
+  fill: var(--color-text);
+  text-anchor: end;
+}
+
+.chart__grid line {
+  stroke: var(--color-line);
+  stroke-width: 1;
+}
+
+.chart__bar {
+  transition: opacity 0.2s ease;
+}
+
+.chart__bar:hover {
+  opacity: 0.8;
+}
+
+.chart__bar--fact {
+  fill: var(--color-primary-blue);
+}
+
+.chart__bar--plan {
+  fill: var(--color-light-gray);
+}
+
+.chart__values text {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+
+.chart__x-axis text {
+  font-family: var(--font-family-base);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+
+/* ========================================
+   14. RESPONSIVE - MOBILE
+   ======================================== */
+@media (max-width: 767px) {
+  .dashboard-viewport {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .dashboard {
+    width: 320px;
+    min-height: 1360px;
+  }
+
+  .card {
+    width: 100%;
+    height: auto;
+    min-height: 1360px;
+    padding: 13px;
+    padding-top: 31px;
+    border-radius: 0;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 21px;
+  }
+
+  .header__left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .header__right {
+    display: none;
+  }
+
+  .header__title {
+    font-size: 16px;
+  }
+
+  .header__fund-row {
+    gap: 52px;
+  }
+
+  .view-toggle--mobile {
+    display: inline-flex;
+    font-size: 12px;
+  }
+
+  .table-header .view-toggle {
+    display: none;
+  }
+
+  .content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .content__table {
+    width: 100%;
+  }
+
+  .content__chart {
+    width: 100%;
+  }
+
+  .table-section {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .table-section__title {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 24px 3px 8px;
+  }
+
+  .table-section__content {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .table-header__columns {
+    display: none;
+  }
+
+  .table-section__headers {
+    display: flex;
+    justify-content: flex-end;
+    padding: 7px 0 0 0;
+    gap: 0;
+    border-top: 1px solid var(--color-border);
+    min-height: 25px;
+    align-items: flex-end;
+  }
+
+  .table-section__headers .table-header__column {
+    width: 36px;
+    font-size: 8px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.1;
+    align-self: center;
+  }
+
+  .table-section__headers .table-header__column--wide {
+    width: 52px;
+    font-size: 6px;
+    line-height: 1.1;
+    white-space: normal;
+    text-align: center;
+    align-self: center;
+  }
+
+  .table-header__column {
+    width: 46px;
+    font-size: 8px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .table-header__column--wide {
+    width: 52px;
+    font-size: 6px;
+    line-height: 1.1;
+    white-space: normal;
+  }
+
+  .table-row__label {
+    font-size: 8.8px;
+    line-height: 10px;
+  }
+
+  .table-row__value {
+    width: 43px;
+    font-size: 8.3px;
+  }
+
+  .table-row__value--wide {
+    width: 52px;
+  }
+
+  .table-row__delta {
+    width: 28px;
+  }
+
+  .highlight-block {
+    width: 100%;
+    padding: 4px 0;
+    margin: 4px 0;
+  }
+
+  .fund-selector__icon,
+  .fund-selector__arrow {
+    width: 16px;
+    height: 16px;
+  }
+
+  .fund-selector__value {
+    font-size: 15px;
+  }
+
+  .fund-selector__dropdown {
+    min-width: 320px;
+  }
+
+  .fund-selector__grid {
+    gap: var(--spacing-md);
+  }
+
+  .fund-selector__group-funds {
+    max-width: 120px;
+  }
+
+  /* Dynamics mode */
+  .content__table--dynamics .table-header__column {
+    width: auto;
+    min-width: 50px;
+    white-space: nowrap;
+  }
+
+  .content__table--dynamics .table-header__column--wide {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
+  .content__table--dynamics .table-row__value {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
+  .content__table--dynamics .table-row__value--wide {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
+  .chart {
+    margin-top: 8px;
+  }
+
+  .chart__title {
+    font-size: 12px;
+  }
+
+  .chart__title--mobile {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  #chartContainer {
+    height: 340px;
+  }
+
+  .chart__svg {
+    height: 440px;
+  }
+}
+
+/* ========================================
+   15. PRINT STYLES
+   ======================================== */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+  }
+
+  .fund-selector__dropdown {
+    display: none !important;
+  }
+
+  .fund-selector__arrow {
+    display: none;
+  }
+
+  .view-toggle {
+    display: none;
+  }
+
+  .chart__bar:hover {
+    opacity: 1;
+  }
+
+  .table-section__title {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .highlight-block {
+    background: var(--color-highlight-bg) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .chart__bar--fact {
+    fill: var(--color-primary-blue) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .chart__bar--plan {
+    fill: var(--color-light-gray) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
