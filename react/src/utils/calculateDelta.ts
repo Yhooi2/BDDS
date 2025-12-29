@@ -2,7 +2,14 @@ export function calculateDelta(
   currentValue: number | null,
   previousValue: number | null
 ): number | null {
-  if (currentValue === null || previousValue === null) {
+  if (
+    currentValue === null ||
+    previousValue === null ||
+    typeof currentValue !== 'number' ||
+    typeof previousValue !== 'number' ||
+    isNaN(currentValue) ||
+    isNaN(previousValue)
+  ) {
     return null
   }
   if (previousValue === 0) {

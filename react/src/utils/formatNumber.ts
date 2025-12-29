@@ -21,7 +21,7 @@ export function formatWithDelta(
   delta: number | null
 ): { value: string; delta: string | null } {
   const formattedValue = formatNumber(value)
-  if (delta === null) {
+  if (delta === null || isNaN(delta)) {
     return { value: formattedValue, delta: null }
   }
   const deltaStr = `(${Math.round(delta)}%)`
