@@ -8,6 +8,7 @@ export const METRIC_KEYS = {
   // Investment Activity Section
   INVESTMENT_MOVEMENT: 'Движение Д/С по инвестиционной деятельности',
   INVESTMENT_DIVIDENDS: 'Выплата дохода акционерам (пайщикам)',
+  INVESTMENT_ADDITIONAL_SHARES: 'Доходы от доп.выпуска паев',
   INVESTMENT_REPAIRS: 'Расходы на капитальный ремонт',
 
   // Financial Activity Section

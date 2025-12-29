@@ -383,7 +383,7 @@ body {
    9. TABLE SECTIONS
    ======================================== */
 .table-section {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .table-section__title {
@@ -416,7 +416,7 @@ body {
 .table-row {
   display: flex;
   align-items: center;
-  padding: 2px 0;
+  padding: 1px 0;
   border-bottom: 1px dashed var(--color-line);
 }
 

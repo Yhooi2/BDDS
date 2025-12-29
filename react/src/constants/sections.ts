@@ -20,6 +20,7 @@ export const SECTIONS: Record<string, SectionConfig> = {
     rows: [
       { id: 'inv-movement', key: METRIC_KEYS.INVESTMENT_MOVEMENT, label: 'Движение Д/С по инвестиционной деятельности', isHeader: true },
       { id: 'inv-dividends', key: METRIC_KEYS.INVESTMENT_DIVIDENDS, label: 'Выплата дохода акционерам (пайщикам)' },
+      { id: 'inv-additional', key: METRIC_KEYS.INVESTMENT_ADDITIONAL_SHARES, label: 'Доходы от доп.выпуска паев' },
       { id: 'inv-repairs', key: METRIC_KEYS.INVESTMENT_REPAIRS, label: 'Расходы на капитальный ремонт' },
     ],
   },
