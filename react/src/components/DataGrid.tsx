@@ -54,11 +54,11 @@ export function getColumns(periods: Period[], viewMode: ViewMode): Column[] {
 export function getGridTemplateColumns(periods: Period[], viewMode: ViewMode): string {
   const columns = getColumns(periods, viewMode)
   const columnWidths = columns.map(col => {
-    if (col.isDelta) return '100px'
-    if (col.wide) return '90px'
-    return '71px'
+    if (col.isDelta) return 'var(--col-delta, 100px)'
+    if (col.wide) return 'var(--col-wide, 90px)'
+    return 'var(--col-normal, 71px)'
   }).join(' ')
-  return `1fr ${columnWidths}`
+  return `var(--col-label, 1fr) ${columnWidths}`
 }
 
 export function GridHeaders({ periods, viewMode, className = '' }: GridHeadersProps) {

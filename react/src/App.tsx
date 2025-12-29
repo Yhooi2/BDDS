@@ -156,8 +156,9 @@ function App() {
                 section={SECTIONS.investment}
                 periods={periodData}
                 viewMode={viewMode}
+                showHeader={true}
               />
-              <FinanceSection periods={periodData} viewMode={viewMode} />
+              <FinanceSection periods={periodData} viewMode={viewMode} showHeader={true} />
             </section>
 
             {/* Chart */}

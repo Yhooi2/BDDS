@@ -6,9 +6,10 @@ import { SECTIONS, CREDIT_BALANCE_ROWS, CASH_MOVEMENT_ROWS, CASH_BALANCE_ROWS } 
 interface FinanceSectionProps {
   periods: Period[]
   viewMode: ViewMode
+  showHeader?: boolean
 }
 
-export function FinanceSection({ periods, viewMode }: FinanceSectionProps) {
+export function FinanceSection({ periods, viewMode, showHeader = false }: FinanceSectionProps) {
   const section = SECTIONS.finance
 
   return (
@@ -20,7 +21,7 @@ export function FinanceSection({ periods, viewMode }: FinanceSectionProps) {
           periods={periods}
           rows={section.rows}
           viewMode={viewMode}
-          showHeader={false}
+          showHeader={showHeader}
         />
 
         {/* Credit balance highlight block */}
