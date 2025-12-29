@@ -5,12 +5,13 @@ import { DEFAULT_DATA } from './data/defaultData'
 import { SECTIONS, DEFAULT_CHART_CONFIG } from './constants/sections'
 import type { ViewMode, Period, DashboardData } from './types'
 
-// Initialize FundsService with default data
-FundsService.init(DEFAULT_DATA)
+// Initialize FundsService with window.DATA if available, otherwise use default
+const initialData = (window as unknown as { DATA?: DashboardData }).DATA ?? DEFAULT_DATA
+FundsService.init(initialData)
 
 function App() {
   const [currentFund, setCurrentFund] = useState<string>(FundsService.getDefaultFund() || '')
-  const [viewMode, setViewMode] = useState<ViewMode>('details')
+  const [viewMode, setViewMode] = useState<ViewMode>(initialData.viewMode ?? 'dynamics')
 
   const periodData = useMemo<Period[]>(() => {
     return FundsService.getDashboardData(currentFund)

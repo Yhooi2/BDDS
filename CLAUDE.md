@@ -178,10 +178,11 @@ Calculates nice axis scale for bar charts (min, max, step, ticks).
 ### `metricKeys.ts`
 All metric key constants:
 ```typescript
-METRIC_KEYS.OPERATION_MOVEMENT    // 'operationMovement'
-METRIC_KEYS.OPERATION_INCOME      // 'operationIncome'
-METRIC_KEYS.INVESTMENT_DIVIDENDS  // 'investmentDividends'
-METRIC_KEYS.CASH_START            // 'cashStart'
+METRIC_KEYS.OPERATION_MOVEMENT            // 'Движение Д/С по операционной деятельности ООО'
+METRIC_KEYS.OPERATION_INCOME              // 'Поступления по операционной деятельности'
+METRIC_KEYS.INVESTMENT_DIVIDENDS          // 'Выплата дохода акционерам (пайщикам)'
+METRIC_KEYS.INVESTMENT_ADDITIONAL_SHARES  // 'Доходы от доп.выпуска паев'
+METRIC_KEYS.CASH_START                    // 'Остаток Д/С на начало периода'
 // ... etc
 ```
 
