@@ -158,7 +158,8 @@ body {
 .header__fund-row {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  width: 100%;
 }
 
 /* ========================================
@@ -299,6 +300,7 @@ body {
   border: none;
   padding: 0;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .view-toggle__arrow {
@@ -633,9 +635,6 @@ body {
     font-size: 16px;
   }
 
-  .header__fund-row {
-    gap: 52px;
-  }
 
   .view-toggle--mobile {
     display: inline-flex;
@@ -687,6 +686,11 @@ body {
     border-top: 1px solid var(--color-border);
     min-height: 25px;
     align-items: flex-end;
+  }
+
+  .table-section__headers .table-header__columns {
+    display: flex;
+    gap: 0;
   }
 
   .table-section__headers .table-header__column {

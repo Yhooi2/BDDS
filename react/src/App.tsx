@@ -1,17 +1,32 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { FundSelector, ViewToggle, TableSection, FinanceSection, BarChart, TableHeaders } from './components'
 import { FundsService } from './services/FundsService'
+import { DashboardStore } from './services/DashboardStore'
 import { DEFAULT_DATA } from './data/defaultData'
 import { SECTIONS, DEFAULT_CHART_CONFIG } from './constants/sections'
+import { processRawData } from './utils/processRawData'
 import type { ViewMode, Period, DashboardData } from './types'
 
 // Initialize FundsService with window.DATA if available, otherwise use default
 const initialData = (window as unknown as { DATA?: DashboardData }).DATA ?? DEFAULT_DATA
 FundsService.init(initialData)
+DashboardStore.init(initialData)
 
 function App() {
   const [currentFund, setCurrentFund] = useState<string>(FundsService.getDefaultFund() || '')
   const [viewMode, setViewMode] = useState<ViewMode>(initialData.viewMode ?? 'dynamics')
+  const [, forceUpdate] = useState({})
+
+  // Subscribe to store changes for external data loading
+  useEffect(() => {
+    const unsubscribe = DashboardStore.subscribe(() => {
+      const state = DashboardStore.getState()
+      setCurrentFund(state.currentFund)
+      setViewMode(state.viewMode)
+      forceUpdate({})
+    })
+    return unsubscribe
+  }, [])
 
   const periodData = useMemo<Period[]>(() => {
     return FundsService.getDashboardData(currentFund)
@@ -32,13 +47,35 @@ function App() {
     document.documentElement.style.setProperty('--color-primary-blue', colors.primary)
   }, [currentFund])
 
-  const handleFundChange = (fund: string) => {
+  const handleFundChange = useCallback((fund: string) => {
     setCurrentFund(fund)
-  }
+  }, [])
 
-  const handleViewModeChange = (mode: ViewMode) => {
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
     setViewMode(mode)
-  }
+  }, [])
+
+  // Expose BDDS API to window
+  useEffect(() => {
+    window.BDDS = {
+      Dashboard: {
+        loadData: (data: unknown) => DashboardStore.loadData(data),
+        getState: () => ({
+          currentFund,
+          viewMode,
+          periodData,
+        }),
+        handleFundChange: (fund: string) => {
+          setCurrentFund(fund)
+        },
+        handleViewModeChange: (mode: ViewMode) => {
+          setViewMode(mode)
+        },
+      },
+      FundsService,
+      processRawData,
+    }
+  }, [currentFund, viewMode, periodData])
 
   const tableContentClass = `content__table ${viewMode === 'dynamics' ? 'content__table--dynamics' : ''}`
 
@@ -120,10 +157,13 @@ declare global {
   interface Window {
     BDDS: {
       Dashboard: {
-        loadData: (data: DashboardData) => void
+        loadData: (data: unknown) => void
         getState: () => { currentFund: string; viewMode: ViewMode; periodData: Period[] }
+        handleFundChange: (fund: string) => void
+        handleViewModeChange: (mode: ViewMode) => void
       }
       FundsService: typeof FundsService
+      processRawData: typeof processRawData
     }
   }
 }
