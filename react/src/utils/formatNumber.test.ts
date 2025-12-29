@@ -35,13 +35,13 @@ describe('formatWithDelta', () => {
   it('returns formatted value and delta percentage', () => {
     const result = formatWithDelta(1000, 25)
     expect(result.value).toBe('1 000')
-    expect(result.delta).toBe('   25%')
+    expect(result.delta).toBe('(25%)')
   })
 
-  it('pads delta with spaces to 5 characters', () => {
-    expect(formatWithDelta(100, 1)?.delta).toBe('    1%')
-    expect(formatWithDelta(100, 100)?.delta).toBe('  100%')
-    expect(formatWithDelta(100, -50)?.delta).toBe('  -50%')
+  it('wraps delta in parentheses', () => {
+    expect(formatWithDelta(100, 1)?.delta).toBe('(1%)')
+    expect(formatWithDelta(100, 100)?.delta).toBe('(100%)')
+    expect(formatWithDelta(100, -50)?.delta).toBe('(-50%)')
   })
 
   it('returns null delta when delta is null', () => {
@@ -53,7 +53,7 @@ describe('formatWithDelta', () => {
   it('handles null value', () => {
     const result = formatWithDelta(null, 25)
     expect(result.value).toBe('-')
-    expect(result.delta).toBe('   25%')
+    expect(result.delta).toBe('(25%)')
   })
 })
 

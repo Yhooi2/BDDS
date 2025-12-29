@@ -24,7 +24,7 @@ export function formatWithDelta(
   if (delta === null) {
     return { value: formattedValue, delta: null }
   }
-  const deltaStr = `${String(Math.round(delta)).padStart(5)}%`
+  const deltaStr = `(${Math.round(delta)}%)`
   return { value: formattedValue, delta: deltaStr }
 }
 
