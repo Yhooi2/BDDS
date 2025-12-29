@@ -42,11 +42,13 @@ export function getColumns(periods: Period[], viewMode: ViewMode): Column[] {
 
   const firstPeriod = periods[0]
   const nonPlanPeriods = periods.filter(p => p.type !== 'plan')
-  const lastPeriod = nonPlanPeriods[nonPlanPeriods.length - 1]
+  const lastNonPlan = nonPlanPeriods[nonPlanPeriods.length - 1]
+  // If only one non-plan period, second column shows dash (no data)
+  const hasSecondPeriod = nonPlanPeriods.length > 1
 
   return [
     { title: firstPeriod.title, wide: firstPeriod.type === 'mixed', periodIndex: 0 },
-    { title: lastPeriod.title, wide: lastPeriod.type === 'mixed', periodIndex: periods.indexOf(lastPeriod) },
+    { title: hasSecondPeriod ? lastNonPlan.title : '-', wide: hasSecondPeriod && lastNonPlan.type === 'mixed', periodIndex: hasSecondPeriod ? periods.indexOf(lastNonPlan) : -1 },
     { title: 'Дельта', wide: false, isDelta: true },
   ]
 }
@@ -148,11 +150,12 @@ function DynamicsValues({ row, periods, columns }: { row: RowConfig; periods: Pe
 
   const firstPeriod = periods[0]
   const nonPlanPeriods = periods.filter(p => p.type !== 'plan')
-  const lastPeriod = nonPlanPeriods[nonPlanPeriods.length - 1]
+  const hasSecondPeriod = nonPlanPeriods.length > 1
+  const lastNonPlan = hasSecondPeriod ? nonPlanPeriods[nonPlanPeriods.length - 1] : null
 
   const value1 = firstPeriod?.metrics[row.key] ?? null
-  const value2 = lastPeriod?.metrics[row.key] ?? null
-  const delta = calculateDelta(value2, value1)
+  const value2 = lastNonPlan?.metrics[row.key] ?? null
+  const delta = hasSecondPeriod ? calculateDelta(value2, value1) : null
   const formatted = formatWithDelta(value2, delta)
 
   return (
