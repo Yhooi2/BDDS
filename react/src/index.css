@@ -805,6 +805,43 @@ body {
     white-space: nowrap;
   }
 
+  /* Details mode - same flexible layout as dynamics */
+  .content__table:not(.content__table--dynamics):not(.content__table--single) .table-header__column {
+    width: auto;
+    min-width: 50px;
+    white-space: nowrap;
+  }
+
+  .content__table:not(.content__table--dynamics):not(.content__table--single) .table-header__column--wide {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
+  .content__table:not(.content__table--dynamics):not(.content__table--single) .table-section__headers .table-header__column {
+    width: auto;
+    min-width: 50px;
+    white-space: nowrap;
+  }
+
+  .content__table:not(.content__table--dynamics):not(.content__table--single) .table-section__headers .table-header__column--wide {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
+  .content__table:not(.content__table--dynamics):not(.content__table--single) .table-row__value {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
+  .content__table:not(.content__table--dynamics):not(.content__table--single) .table-row__value--wide {
+    width: auto;
+    min-width: 60px;
+    white-space: nowrap;
+  }
+
   /* Single period mode - align single column properly */
   .content__table--single .table-section__headers {
     justify-content: flex-end;
