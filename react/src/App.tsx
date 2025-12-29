@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { FundSelector, ViewToggle, TableSection, FinanceSection, BarChart, TableHeaders } from './components'
 import { FundsService } from './services/FundsService'
 import { DashboardStore } from './services/DashboardStore'
 import { DEFAULT_DATA } from './data/defaultData'
 import { SECTIONS, DEFAULT_CHART_CONFIG } from './constants/sections'
 import { processRawData } from './utils/processRawData'
+import { useContainScale } from './hooks/useContainScale'
 import type { ViewMode, Period, DashboardData } from './types'
 
 // Initialize FundsService with window.DATA if available, otherwise use default
@@ -16,6 +17,13 @@ function App() {
   const [currentFund, setCurrentFund] = useState<string>(FundsService.getDefaultFund() || '')
   const [viewMode, setViewMode] = useState<ViewMode>(initialData.viewMode ?? 'dynamics')
   const [, forceUpdate] = useState({})
+
+  // Refs for contain-scale behavior
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const dashboardRef = useRef<HTMLDivElement>(null)
+
+  // Apply contain-scale behavior (desktop: fit entirely, mobile: scale by width)
+  useContainScale(dashboardRef, viewportRef)
 
   // Subscribe to store changes for external data loading
   useEffect(() => {
@@ -80,8 +88,8 @@ function App() {
   const tableContentClass = `content__table ${viewMode === 'dynamics' ? 'content__table--dynamics' : ''}`
 
   return (
-    <div className="dashboard-viewport">
-      <div className="dashboard">
+    <div className="dashboard-viewport" ref={viewportRef}>
+      <div className="dashboard" ref={dashboardRef}>
         <article className="card" role="region" aria-label="Бюджет по фондам">
           {/* Header */}
           <header className="header">
