@@ -727,6 +727,8 @@ body {
   }
 
   .table-row__label {
+    flex: 0 0 120px;
+    max-width: 120px;
     font-size: 8.8px;
     line-height: 10px;
   }
