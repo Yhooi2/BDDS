@@ -96,8 +96,6 @@ export function BarChart({
 
   return (
     <div className="chart">
-      <h2 className="chart__title">{title}</h2>
-      <h2 className="chart__title chart__title--mobile">{title}</h2>
       <div id="chartContainer">
         <svg
           viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}

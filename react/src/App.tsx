@@ -64,7 +64,9 @@ function App() {
               </div>
             </div>
             <div className="header__right">
-              <ViewToggle mode={viewMode} onModeChange={handleViewModeChange} />
+              <h2 className="chart__title">
+                Выплата дохода<br />акционерам (пайщикам), <span className="header__title-unit">млн ₽</span>
+              </h2>
             </div>
           </header>
 
@@ -93,6 +95,11 @@ function App() {
 
             {/* Chart */}
             <section className="content__chart" aria-label="График дивидендов">
+              {/* Mobile chart title (hidden on desktop) */}
+              <h2 className="chart__title chart__title--mobile">
+                Выплата дохода <br />
+                акционерам (пайщикам), <span className="header__title-unit">млн ₽</span>
+              </h2>
               <BarChart
                 periods={periodData}
                 metric={DEFAULT_CHART_CONFIG.metric}
