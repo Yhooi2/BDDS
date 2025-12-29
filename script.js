@@ -35,7 +35,7 @@
     }).format(absValue);
 
     const withRegularSpace = formatted.replace(/\u00A0/g, " ");
-    return value < 0 ? `(${withRegularSpace})` : withRegularSpace;
+    return value < 0 ? `-${withRegularSpace}` : withRegularSpace;
   }
 
   /**
@@ -1870,17 +1870,73 @@
   };
 
   /**
-   * Получить данные фондов в нормализованном формате
-   * @param {Object} rawData - { funds: { fundName: { type, periods: {...} } } }
-   * @returns {Object} - { fundName: { period: { metric: value } } }
+   * Преобразует сырые данные бэкенда в формат дашборда
+   *
+   * ИНСТРУКЦИЯ: Замените логику внутри этой функции под формат вашего бэкенда.
+   * Функция должна возвращать объект в формате:
+   * {
+   *   funds: {
+   *     "НазваниеФонда": {
+   *       type: "building" | "warehouse" | "briefcase",
+   *       periods: {
+   *         "Факт '24": {
+   *           "Название метрики": числовое_значение
+   *         }
+   *       }
+   *     }
+   *   },
+   *   currentFund: "НазваниеФонда",  // опционально
+   *   viewMode: "details"            // опционально: "details" | "dynamics"
+   * }
+   *
+   * @param {Object} rawData - Сырые данные с бэкенда (любой формат)
+   * @returns {Object} - Данные в формате дашборда
    */
-  function getFundsData(rawData) {
-    if (!rawData || !rawData.funds) return {};
-    var result = {};
-    Object.keys(rawData.funds).forEach(function (fundName) {
-      result[fundName] = rawData.funds[fundName].periods || {};
-    });
-    return result;
+  function processRawData(rawData) {
+    // Если данные уже в формате дашборда — возвращаем как есть
+    if (rawData && rawData.funds) {
+      return rawData;
+    }
+
+    // =========================================================================
+    // TODO: Замените код ниже на вашу логику преобразования
+    // =========================================================================
+
+    // Пример: если бэкенд отдаёт массив объектов
+    // rawData = [
+    //   { name: "ДВН", category: "office", data: { "2024": { income: 100 } } },
+    //   { name: "ЗОЛЯ", category: "warehouse", data: { "2024": { income: 200 } } }
+    // ]
+
+    if (Array.isArray(rawData)) {
+      var funds = {};
+      rawData.forEach(function(item) {
+        var fundName = item.name || item.fund_name || "Unknown";
+        var type = "building";
+        if (item.category === "warehouse" || item.type === "warehouse") {
+          type = "warehouse";
+        } else if (item.category === "briefcase" || item.type === "briefcase") {
+          type = "briefcase";
+        }
+
+        var periods = {};
+        var periodsData = item.periods || item.data || {};
+        Object.keys(periodsData).forEach(function(periodKey) {
+          periods[periodKey] = periodsData[periodKey];
+        });
+
+        funds[fundName] = {
+          type: type,
+          periods: periods
+        };
+      });
+
+      return { funds: funds };
+    }
+
+    // Если формат не распознан — возвращаем пустой объект
+    console.warn("processRawData: неизвестный формат данных", rawData);
+    return { funds: {} };
   }
 
   // Обратная совместимость
@@ -2178,7 +2234,8 @@
     },
 
     init: function () {
-      var config = window.DATA || DEFAULT_DATA;
+      var rawData = window.DATA || DEFAULT_DATA;
+      var config = processRawData(rawData);
 
       // Инициализируем FundsService с данными
       FundsService.init(config);
@@ -2328,9 +2385,12 @@
 
     /**
      * Load data and re-render dashboard
-     * @param {Object} data - Data in format { funds: { fundName: { type, periods: {...} } } }
+     * @param {Object} rawData - Сырые данные (будут преобразованы через processRawData)
      */
-    loadData: function (data) {
+    loadData: function (rawData) {
+      // Преобразуем сырые данные в формат дашборда
+      var data = processRawData(rawData);
+
       // Переинициализируем FundsService с новыми данными
       FundsService.init(data);
 
@@ -2465,7 +2525,7 @@
     ContainScale: ContainScale,
     formatNumber: formatNumber,
     FundsService: FundsService,
-    getFundsData: getFundsData,
+    processRawData: processRawData,
     // Data utilities (from generateData.js)
     METRIC_KEYS: METRIC_KEYS,
     calculateDelta: calculateDelta,

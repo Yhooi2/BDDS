@@ -128,6 +128,7 @@ BDDS.Dashboard        // управление дашбордом
 BDDS.FundsService     // работа с данными фондов
 BDDS.FundSelector     // селектор фондов
 BDDS.ViewToggle       // переключатель режимов
+BDDS.processRawData   // адаптер сырых данных бэкенда
 BDDS.formatNumber     // форматирование чисел
 BDDS.calculateDelta   // расчёт дельты
 BDDS.parsePeriodInfo  // парсинг периодов
@@ -325,6 +326,70 @@ BDDS.FundsService.getDashboardData("ДВН");
 
 ---
 
+### processRawData
+
+Функция-адаптер для преобразования сырых данных бэкенда в формат дашборда.
+
+#### `BDDS.processRawData(rawData)`
+
+Преобразует данные из формата бэкенда в формат дашборда.
+
+```javascript
+// Вызывается автоматически в Dashboard.init() и Dashboard.loadData()
+// Можно вызвать вручную:
+const dashboardData = BDDS.processRawData(myBackendData);
+```
+
+**Как использовать:**
+
+1. Откройте `script.js` и найдите функцию `processRawData`
+2. Замените логику внутри под формат вашего бэкенда
+3. Функция должна вернуть объект:
+
+```javascript
+{
+  funds: {
+    "НазваниеФонда": {
+      type: "building" | "warehouse" | "briefcase",
+      periods: {
+        "Факт '24": {
+          "Название метрики": числовое_значение
+        }
+      }
+    }
+  },
+  currentFund: "НазваниеФонда",  // опционально
+  viewMode: "details"            // опционально
+}
+```
+
+**Пример адаптера:**
+
+```javascript
+function processRawData(rawData) {
+  // Если бэкенд отдаёт массив:
+  // [{ fund: "ДВН", year: 2024, income: 100 }, ...]
+
+  if (Array.isArray(rawData)) {
+    var funds = {};
+    rawData.forEach(function(item) {
+      if (!funds[item.fund]) {
+        funds[item.fund] = { type: "building", periods: {} };
+      }
+      var periodName = "Факт '" + String(item.year).slice(-2);
+      funds[item.fund].periods[periodName] = {
+        "Поступления по операционной деятельности": item.income
+      };
+    });
+    return { funds: funds };
+  }
+
+  return rawData; // если уже в нужном формате
+}
+```
+
+---
+
 ### Утилиты
 
 #### `BDDS.formatNumber(value)`
@@ -333,7 +398,7 @@ BDDS.FundsService.getDashboardData("ДВН");
 
 ```javascript
 BDDS.formatNumber(4567);       // "4 567"
-BDDS.formatNumber(-890);       // "(890)" - в скобках
+BDDS.formatNumber(-890);       // "-890"
 BDDS.formatNumber(null);       // "-"
 BDDS.formatNumber(0);          // "0"
 ```
@@ -394,6 +459,8 @@ BDDS/
 ```
 window.DATA || DEFAULT_DATA
        ↓
+processRawData(rawData)     ← адаптер для данных бэкенда
+       ↓
 FundsService.init(data)
        ↓
    ┌───┴───┐
@@ -413,7 +480,8 @@ FundSelector      periodData[]
 // 1. Загрузка страницы
 DOMContentLoaded
   → Dashboard.init()
-    → config = window.DATA || DEFAULT_DATA
+    → rawData = window.DATA || DEFAULT_DATA
+    → config = processRawData(rawData)  // ← адаптер
     → FundsService.init(config)
     → currentFund = FundsService.getDefaultFund()
     → generateData()
@@ -428,7 +496,8 @@ FundSelector.onClick(fund)
     → render()
 
 // 3. Загрузка новых данных (API)
-fetch('/api/data').then(data => BDDS.Dashboard.loadData(data))
+fetch('/api/data').then(rawData => BDDS.Dashboard.loadData(rawData))
+  → data = processRawData(rawData)  // ← адаптер
   → FundsService.init(data)
   → проверка currentFund
   → generateData()
@@ -494,7 +563,7 @@ BDDS.Dashboard.loadData({
 BDDS.Dashboard.handleFundChange("Фонд2");
 BDDS.Dashboard.state.currentFund  // "Фонд2"
 
-// Визуально: в таблице должно быть "(789)"
+// Визуально: в таблице должно быть "-789"
 ```
 
 ### Проверка форматирования
@@ -504,8 +573,8 @@ BDDS.formatNumber(5)           // "5"
 BDDS.formatNumber(67)          // "67"
 BDDS.formatNumber(890)         // "890"
 BDDS.formatNumber(1234)        // "1 234"
-BDDS.formatNumber(-78)         // "(78)"
-BDDS.formatNumber(-4567)       // "(4 567)"
+BDDS.formatNumber(-78)         // "-78"
+BDDS.formatNumber(-4567)       // "-4 567"
 BDDS.calculateDelta(150, 100)  // 50
 BDDS.parsePeriodInfo("Факт '25") // {type: "fact", year: 2025}
 ```
