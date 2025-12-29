@@ -1,7 +1,8 @@
 /**
- * generateData.js - Data generation utilities for BDDS Dashboard
+ * generateData.js - Data utilities for BDDS Dashboard
  *
- * Generates period data from input array with configurable multipliers
+ * Note: Fund data now comes from window.DATA.funds via FundsService
+ * This file contains only shared utilities (METRIC_KEYS, parsePeriodInfo, etc.)
  */
 
 /**
@@ -42,102 +43,6 @@ const METRIC_KEYS = {
 };
 
 /**
- * Base values for metrics (used with multipliers)
- */
-const BASE_VALUES = {
-  [METRIC_KEYS.OPERATION_MOVEMENT]: 1366339,
-  [METRIC_KEYS.OPERATION_INCOME]: 1366339,
-  [METRIC_KEYS.OPERATION_EXPENSE]: 1366339,
-  [METRIC_KEYS.OPERATION_DEPOSITS]: 1366339,
-
-  [METRIC_KEYS.INVESTMENT_MOVEMENT]: 1366339,
-  [METRIC_KEYS.INVESTMENT_DIVIDENDS]: -850000, // Negative (expense)
-  [METRIC_KEYS.INVESTMENT_REPAIRS]: 136633,
-
-  [METRIC_KEYS.FINANCE_MOVEMENT]: 1366339,
-  [METRIC_KEYS.FINANCE_CREDITS]: 1366339,
-  [METRIC_KEYS.FINANCE_OTHER]: 1366339,
-  [METRIC_KEYS.FINANCE_PARUS]: 1366339,
-
-  [METRIC_KEYS.CREDIT_START]: 1366339,
-  [METRIC_KEYS.CREDIT_END]: 1366339,
-
-  [METRIC_KEYS.CASH_MOVEMENT]: 1366339,
-  [METRIC_KEYS.RESERVES_FORMED]: 1366339,
-  [METRIC_KEYS.RESERVES_ACCUMULATED]: 1366339,
-
-  [METRIC_KEYS.CASH_START]: 1366339,
-  [METRIC_KEYS.CASH_END]: 1366339,
-  [METRIC_KEYS.CASH_WITH_RESERVE]: 1366339,
-};
-
-/**
- * Generate metrics for a single period
- * @param {number} index - Period index (0-based)
- * @param {number} fundMultiplier - Multiplier for fund variation
- * @returns {Object} Metrics object
- */
-function generateMetrics(index, fundMultiplier) {
-  const yearMultiplier = 1 + index * 0.1;
-  const m = fundMultiplier;
-
-  const metrics = {};
-
-  // Apply multipliers to all base values
-  Object.entries(BASE_VALUES).forEach(([key, baseValue]) => {
-    // Credit balances decrease over time
-    if (key === METRIC_KEYS.CREDIT_START || key === METRIC_KEYS.CREDIT_END) {
-      metrics[key] = Math.round(baseValue * m * (2 - index * 0.2));
-    } else {
-      metrics[key] = Math.round(baseValue * m * yearMultiplier);
-    }
-  });
-
-  return metrics;
-}
-
-/**
- * Generate period data from input array
- * @param {Array} periods - Array of period definitions
- * @param {number} fundMultiplier - Multiplier for fund variation (default: 1)
- * @returns {Array} Array of period objects with metrics
- *
- * @example
- * const periods = [
- *   { year: 2023, type: 'fact', label: "Факт '23" },
- *   { year: 2024, type: 'fact', label: "Факт '24" }
- * ];
- * const data = generatePeriodData(periods, 1.2);
- */
-function generatePeriodData(periods, fundMultiplier = 1) {
-  if (!Array.isArray(periods) || periods.length === 0) {
-    return [];
-  }
-
-  return periods.map((period, index) => ({
-    id: `period-${index}`,
-    title: period.label,
-    type: period.type,
-    year: period.year,
-    metrics: generateMetrics(index, fundMultiplier),
-  }));
-}
-
-/**
- * Get metric value from generated data
- * @param {Array} periodData - Generated period data array
- * @param {string} metricKey - Metric key
- * @param {number} periodIndex - Period index
- * @returns {number} Metric value
- */
-function getMetricValue(periodData, metricKey, periodIndex) {
-  if (!periodData || !periodData[periodIndex]) {
-    return 0;
-  }
-  return periodData[periodIndex].metrics[metricKey] || 0;
-}
-
-/**
  * Calculate delta between two periods
  * @param {number} currentValue - Current period value
  * @param {number} previousValue - Previous period value
@@ -153,21 +58,6 @@ function calculateDelta(currentValue, previousValue) {
   return Math.round(
     ((currentValue - previousValue) / Math.abs(previousValue)) * 100
   );
-}
-
-/**
- * Generate chart data for a specific metric
- * @param {Array} periodData - Generated period data
- * @param {string} metricKey - Metric to use for chart
- * @returns {Array} Chart data array
- */
-function generateChartData(periodData, metricKey) {
-  return periodData.map((period, index) => ({
-    label: period.title,
-    value: Math.abs(period.metrics[metricKey] || 0),
-    type: period.type,
-    year: period.year,
-  }));
 }
 
 /**
@@ -202,95 +92,7 @@ function parsePeriodInfo(periodString) {
 }
 
 /**
- * Transform raw data array to Dashboard format
- * @param {Array} rawData - Array of objects with period and metrics
- * @returns {Array} Array of period objects ready for Dashboard
- *
- * @example
- * const rawData = [
- *   { period: "Факт '23", "Выплата дохода акционерам (пайщикам)": -850000, ... },
- *   { period: "Факт '24", "Выплата дохода акционерам (пайщикам)": -920000, ... },
- * ];
- * const periodData = transformRawData(rawData);
- * // Returns:
- * // [
- * //   { id: 'period-0', title: "Факт '23", type: 'fact', year: 2023, metrics: {...} },
- * //   { id: 'period-1', title: "Факт '24", type: 'fact', year: 2024, metrics: {...} },
- * // ]
- */
-function transformRawData(rawData) {
-  if (!Array.isArray(rawData) || rawData.length === 0) {
-    return [];
-  }
-
-  return rawData.map((item, index) => {
-    const { period, ...metrics } = item;
-    const { type, year } = parsePeriodInfo(period);
-
-    return {
-      id: `period-${index}`,
-      title: period,
-      type,
-      year,
-      metrics,
-    };
-  });
-}
-
-/**
- * Transform raw API data to Dashboard format
- * @param {Object} rawData - Raw data from API in format { data: { fundName: { period: { metric: value } } } }
- * @param {string} fundName - Fund name to extract data for
- * @returns {Array} Array of period objects ready for Dashboard
- *
- * @example
- * const rawData = {
- *   data: {
- *     "ДВН": {
- *       "Факт '24": { "Остаток по кредиту на начало периода": 123456, ... },
- *       "План '26": { ... }
- *     }
- *   }
- * };
- * const periodData = transformRawApiData(rawData, "ДВН");
- */
-function transformRawApiData(rawData, fundName) {
-  if (!rawData || !rawData.data || !rawData.data[fundName]) {
-    return [];
-  }
-
-  const fundData = rawData.data[fundName];
-  const periodLabels = Object.keys(fundData);
-
-  // Sort periods by year
-  periodLabels.sort((a, b) => {
-    const yearA = parsePeriodInfo(a).year;
-    const yearB = parsePeriodInfo(b).year;
-    return yearA - yearB;
-  });
-
-  return periodLabels.map((label, index) => {
-    const info = parsePeriodInfo(label);
-    const rawMetrics = fundData[label];
-
-    // Build metrics object, null for missing values (will display as '-')
-    const metrics = {};
-    Object.values(METRIC_KEYS).forEach((metricLabel) => {
-      metrics[metricLabel] = rawMetrics[metricLabel] ?? null;
-    });
-
-    return {
-      id: `period-${index}`,
-      title: label,
-      type: info.type,
-      year: info.year,
-      metrics,
-    };
-  });
-}
-
-/**
- * Default periods configuration
+ * Default periods configuration (for fallback/testing)
  */
 const DEFAULT_PERIODS = [
   { year: 2023, type: "fact", label: "Факт '23" },
@@ -302,29 +104,6 @@ const DEFAULT_PERIODS = [
   },
   { year: 2026, type: "plan", label: "План '26" },
 ];
-
-/**
- * Fund multipliers for different funds
- */
-const FUND_MULTIPLIERS = {
-  ДВН: 1.0,
-  ЗОЛЯ: 0.8,
-  КРАС: 1.2,
-  ЛОГ: 0.9,
-  НОР: 1.1,
-  ОЗН: 0.7,
-  ТРМ: 1.3,
-  СБЛ: 0.95,
-};
-
-/**
- * Get multiplier for a fund
- * @param {string} fundName - Fund name
- * @returns {number} Multiplier value
- */
-function getFundMultiplier(fundName) {
-  return FUND_MULTIPLIERS[fundName] || 1.0;
-}
 
 /**
  * Default chart configuration
@@ -354,17 +133,9 @@ const DEFAULT_CHART_CONFIG = {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     METRIC_KEYS,
-    BASE_VALUES,
-    generatePeriodData,
-    getMetricValue,
     calculateDelta,
-    generateChartData,
     parsePeriodInfo,
-    transformRawData,
-    transformRawApiData,
     DEFAULT_PERIODS,
-    FUND_MULTIPLIERS,
-    getFundMultiplier,
     DEFAULT_CHART_CONFIG,
   };
 }
@@ -373,17 +144,9 @@ if (typeof module !== "undefined" && module.exports) {
 if (typeof window !== "undefined") {
   window.DataModule = {
     METRIC_KEYS,
-    BASE_VALUES,
-    generatePeriodData,
-    getMetricValue,
     calculateDelta,
-    generateChartData,
     parsePeriodInfo,
-    transformRawData,
-    transformRawApiData,
     DEFAULT_PERIODS,
-    FUND_MULTIPLIERS,
-    getFundMultiplier,
     DEFAULT_CHART_CONFIG,
   };
 }

@@ -888,31 +888,168 @@
       '<svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="16" height="11" rx="1" fill="#C7A4C0"/><path d="M8 7V5C8 4.44772 8.44772 4 9 4H13C13.5523 4 14 4.44772 14 5V7" stroke="#C7A4C0" stroke-width="2"/><rect x="10" y="10" width="2" height="4" fill="white"/></svg>',
   };
 
-  var FUND_GROUPS = [
-    { icon: "warehouse", funds: ["ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "СБЛ"] },
-    { icon: "building", funds: ["ДВН"] },
-    { icon: "briefcase", funds: ["ТРМ"] },
-  ];
+  var DEFAULT_ICON_TYPE = "building";
 
+  /**
+   * FundsService - централизованный сервис работы с фондами
+   * Все данные о фондах приходят из window.DATA.funds
+   */
+  var FundsService = {
+    _rawData: null,
+
+    /**
+     * Инициализация с данными
+     * @param {Object} rawData - { funds: { fundName: { type, periods: {...} } }, currentFund?, viewMode? }
+     */
+    init: function (rawData) {
+      this._rawData = rawData;
+      return this;
+    },
+
+    /**
+     * Получить список фондов из данных
+     * @returns {Array<string>}
+     */
+    getFundsList: function () {
+      if (!this._rawData || !this._rawData.funds) return [];
+      return Object.keys(this._rawData.funds);
+    },
+
+    /**
+     * Получить дефолтный фонд
+     * @returns {string|null}
+     */
+    getDefaultFund: function () {
+      if (this._rawData && this._rawData.currentFund) {
+        return this._rawData.currentFund;
+      }
+      var funds = this.getFundsList();
+      return funds.length > 0 ? funds[0] : null;
+    },
+
+    /**
+     * Получить тип иконки фонда из данных
+     * @param {string} fundName
+     * @returns {string}
+     */
+    getFundType: function (fundName) {
+      if (this._rawData && this._rawData.funds && this._rawData.funds[fundName]) {
+        return this._rawData.funds[fundName].type || DEFAULT_ICON_TYPE;
+      }
+      return DEFAULT_ICON_TYPE;
+    },
+
+    /**
+     * Получить SVG иконку для фонда
+     * @param {string} fundName
+     * @returns {string}
+     */
+    getIcon: function (fundName) {
+      var type = this.getFundType(fundName);
+      return FUND_ICONS[type] || FUND_ICONS[DEFAULT_ICON_TYPE];
+    },
+
+    /**
+     * Получить группы фондов для UI (по типу иконки)
+     * @returns {Array<{icon: string, funds: string[]}>}
+     */
+    getGroups: function () {
+      var self = this;
+      var groups = {};
+      this.getFundsList().forEach(function (fund) {
+        var type = self.getFundType(fund);
+        if (!groups[type]) {
+          groups[type] = { icon: type, funds: [] };
+        }
+        groups[type].funds.push(fund);
+      });
+      return Object.keys(groups).map(function (key) {
+        return groups[key];
+      });
+    },
+
+    /**
+     * Получить периоды фонда
+     * @param {string} fundName
+     * @returns {Object}
+     */
+    getPeriods: function (fundName) {
+      if (this._rawData && this._rawData.funds && this._rawData.funds[fundName]) {
+        return this._rawData.funds[fundName].periods || {};
+      }
+      return {};
+    },
+
+    /**
+     * Получить список названий периодов для фонда
+     * @param {string} fundName
+     * @returns {Array<string>} - ["Факт '23", "Факт '24", ...]
+     */
+    getPeriodsList: function (fundName) {
+      return Object.keys(this.getPeriods(fundName));
+    },
+
+    /**
+     * Получить все доступные фонды с их периодами
+     * @returns {Object} - { "ДВН": ["Факт '23", ...], "ЗОЛЯ": [...] }
+     */
+    getAllFundsWithPeriods: function () {
+      var self = this;
+      var result = {};
+      this.getFundsList().forEach(function (fund) {
+        result[fund] = self.getPeriodsList(fund);
+      });
+      return result;
+    },
+
+    /**
+     * Получить данные в формате для Dashboard (массив периодов)
+     * @param {string} fundName
+     * @returns {Array}
+     */
+    getDashboardData: function (fundName) {
+      var periods = this.getPeriods(fundName);
+      var result = Object.keys(periods).map(function (label, index) {
+        var info = parsePeriodInfo(label);
+        return {
+          id: "period-" + index,
+          title: label,
+          type: info.type,
+          year: info.year,
+          metrics: periods[label],
+        };
+      });
+      // Сортировка по году
+      result.sort(function (a, b) {
+        return a.year - b.year;
+      });
+      return result;
+    },
+  };
+
+  /**
+   * Получить данные фондов в нормализованном формате
+   * @param {Object} rawData - { funds: { fundName: { type, periods: {...} } } }
+   * @returns {Object} - { fundName: { period: { metric: value } } }
+   */
+  function getFundsData(rawData) {
+    if (!rawData || !rawData.funds) return {};
+    var result = {};
+    Object.keys(rawData.funds).forEach(function (fundName) {
+      result[fundName] = rawData.funds[fundName].periods || {};
+    });
+    return result;
+  }
+
+  // Обратная совместимость
   function getFundIcon(fundName) {
-    var iconMap = {
-      ДВН: "building",
-      ЗОЛЯ: "warehouse",
-      КРАС: "warehouse",
-      ЛОГ: "warehouse",
-      НОР: "warehouse",
-      ОЗН: "warehouse",
-      СБЛ: "warehouse",
-      ТРМ: "briefcase",
-    };
-    var iconType = iconMap[fundName] || "building";
-    return FUND_ICONS[iconType] || FUND_ICONS.building;
+    return FundsService.getIcon(fundName);
   }
 
   var FundSelector = {
     state: {
       isOpen: false,
-      selected: "ДВН",
+      selected: null,
       funds: [],
       onChange: null,
       initialized: false,
@@ -927,19 +1064,9 @@
 
     init: function (options) {
       options = options || {};
-      this.state.selected =
-        options.selected || (window.DATA && window.DATA.currentFund) || "ДВН";
-      this.state.funds = options.funds ||
-        (window.DATA && window.DATA.funds) || [
-          "ДВН",
-          "ЗОЛЯ",
-          "КРАС",
-          "ЛОГ",
-          "НОР",
-          "ОЗН",
-          "ТРМ",
-          "СБЛ",
-        ];
+      // Используем FundsService для получения списка фондов и дефолтного выбора
+      this.state.selected = options.selected || FundsService.getDefaultFund();
+      this.state.funds = options.funds || FundsService.getFundsList();
       this.state.onChange = options.onChange || function () {};
 
       this.elements.container = $("#fundSelector");
@@ -965,35 +1092,8 @@
     },
 
     buildDynamicGroups: function () {
-      var self = this;
-      var knownFunds = {};
-
-      // Map known funds to their icons
-      FUND_GROUPS.forEach(function (group) {
-        group.funds.forEach(function (fund) {
-          knownFunds[fund] = group.icon;
-        });
-      });
-
-      // Categorize available funds
-      var groups = {};
-      this.state.funds.forEach(function (fund) {
-        var icon = knownFunds[fund] || "building"; // default icon for unknown funds
-        if (!groups[icon]) {
-          groups[icon] = { icon: icon, funds: [] };
-        }
-        groups[icon].funds.push(fund);
-      });
-
-      // Convert to array and sort by icon type for consistent ordering
-      var iconOrder = ["warehouse", "building", "briefcase"];
-      return iconOrder
-        .filter(function (icon) {
-          return groups[icon];
-        })
-        .map(function (icon) {
-          return groups[icon];
-        });
+      // Используем FundsService для получения групп по типам иконок
+      return FundsService.getGroups();
     },
 
     render: function () {
@@ -1220,12 +1320,11 @@
 
   var Dashboard = {
     state: {
-      currentFund: "ДВН",
+      currentFund: null,
       viewMode: "details",
       periods: [],
       periodData: [],
       chartConfig: {},
-      rawApiData: null,
     },
 
     elements: {
@@ -1239,7 +1338,11 @@
     init: function () {
       var config = window.DATA || {};
 
-      this.state.currentFund = config.currentFund || "ДВН";
+      // Инициализируем FundsService с данными
+      FundsService.init(config);
+
+      // Используем FundsService для получения дефолтного фонда
+      this.state.currentFund = FundsService.getDefaultFund();
       this.state.viewMode = config.viewMode || "details";
       this.state.periods = config.periods || DEFAULT_PERIODS;
       this.state.chartConfig = config.chartConfig || DEFAULT_CHART_CONFIG;
@@ -1260,15 +1363,9 @@
     initComponents: function () {
       var self = this;
 
-      // Get funds list from rawApiData or use defaults
-      var funds = ["ДВН", "ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "ТРМ", "СБЛ"];
-      if (this.state.rawApiData && this.state.rawApiData.data) {
-        funds = Object.keys(this.state.rawApiData.data);
-      }
-
+      // FundsService уже инициализирован, FundSelector получит данные из него
       FundSelector.init({
         selected: this.state.currentFund,
-        funds: funds,
         onChange: function (fund) {
           self.handleFundChange(fund);
         },
@@ -1283,20 +1380,8 @@
     },
 
     generateData: function () {
-      if (this.state.rawApiData) {
-        // Use real API data
-        this.state.periodData = transformRawApiData(
-          this.state.rawApiData,
-          this.state.currentFund
-        );
-      } else {
-        // Fallback to generated test data
-        var multiplier = getFundMultiplier(this.state.currentFund);
-        this.state.periodData = generatePeriodData(
-          this.state.periods,
-          multiplier
-        );
-      }
+      // Один путь данных через FundsService
+      this.state.periodData = FundsService.getDashboardData(this.state.currentFund);
     },
 
     render: function () {
@@ -1400,28 +1485,24 @@
     },
 
     /**
-     * Load raw API data and re-render dashboard
-     * @param {Object} rawApiData - Data from API in format { data: { fundName: { period: { metric: value } } } }
+     * Load data and re-render dashboard
+     * @param {Object} data - Data in format { funds: { fundName: { type, periods: {...} } } }
      */
-    loadData: function (rawApiData) {
-      this.state.rawApiData = rawApiData;
+    loadData: function (data) {
+      // Переинициализируем FundsService с новыми данными
+      FundsService.init(data);
 
-      // Update funds list and current fund from new data
-      if (rawApiData && rawApiData.data) {
-        var funds = Object.keys(rawApiData.data);
-        if (funds.length > 0) {
-          // Set first fund as current if current is not in new list
-          if (funds.indexOf(this.state.currentFund) === -1) {
-            this.state.currentFund = funds[0];
-          }
-          // Re-initialize FundSelector with new funds list
-          FundSelector.init({
-            selected: this.state.currentFund,
-            funds: funds,
-            onChange: this.handleFundChange.bind(this),
-          });
-        }
+      // Обновляем текущий фонд если нужно
+      var funds = FundsService.getFundsList();
+      if (funds.length > 0 && funds.indexOf(this.state.currentFund) === -1) {
+        this.state.currentFund = FundsService.getDefaultFund();
       }
+
+      // Переинициализируем FundSelector с новыми данными
+      FundSelector.init({
+        selected: this.state.currentFund,
+        onChange: this.handleFundChange.bind(this),
+      });
 
       this.generateData();
       this.render();
@@ -1541,6 +1622,7 @@
     ViewToggle: ViewToggle,
     ContainScale: ContainScale,
     formatNumber: formatNumber,
-    generatePeriodData: generatePeriodData,
+    FundsService: FundsService,
+    getFundsData: getFundsData,
   };
 })();
