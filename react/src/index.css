@@ -911,10 +911,11 @@ body {
 /* .data-grid__label-header - empty cell for label column header, no styles needed */
 
 .data-grid__column-header {
-  text-align: center;
+  text-align: right;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.15;
+  padding-right: 18px;
 }
 
 .data-grid__column-header--wide {
@@ -953,11 +954,13 @@ body {
 }
 
 .data-grid__header-row {
-  display: grid;
+  display: flex;
+  justify-content: flex-end;
   align-items: flex-end;
   min-height: 21px;
   margin-top: -28px;
   margin-bottom: 4px;
+  gap: 0;
 }
 
 /* Hide headers on desktop for all sections except the first */
@@ -967,6 +970,19 @@ body {
 
 .data-grid__label-header {
   display: none;
+}
+
+.data-grid__column-header {
+  flex: 0 0 71px;
+  box-sizing: border-box;
+}
+
+.data-grid__column-header--wide {
+  flex: 0 0 110px;
+}
+
+.data-grid__column-header--delta {
+  flex: 0 0 100px;
 }
 
 .data-grid__delta {
@@ -1005,14 +1021,21 @@ body {
   }
 
   .data-grid__column-header {
+    flex: none;
     font-size: 8px;
     text-align: center;
     line-height: 1.1;
+    padding-right: 0;
   }
 
   .data-grid__column-header--wide {
+    flex: none;
     font-size: 6px;
     line-height: 1.1;
+  }
+
+  .data-grid__column-header--delta {
+    flex: none;
   }
 
   .data-grid__label {

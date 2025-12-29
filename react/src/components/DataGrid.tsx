@@ -55,7 +55,7 @@ export function getGridTemplateColumns(periods: Period[], viewMode: ViewMode): s
   const columns = getColumns(periods, viewMode)
   const columnWidths = columns.map(col => {
     if (col.isDelta) return 'var(--col-delta, 100px)'
-    if (col.wide) return 'var(--col-wide, 90px)'
+    if (col.wide) return 'var(--col-wide, 110px)'
     return 'var(--col-normal, 71px)'
   }).join(' ')
   return `var(--col-label, 1fr) ${columnWidths}`
@@ -71,7 +71,7 @@ export function GridHeaders({ periods, viewMode, className = '' }: GridHeadersPr
       {columns.map((col, i) => (
         <div
           key={i}
-          className={`data-grid__column-header ${col.wide ? 'data-grid__column-header--wide' : ''}`}
+          className={`data-grid__column-header ${col.wide ? 'data-grid__column-header--wide' : ''} ${col.isDelta ? 'data-grid__column-header--delta' : ''}`}
           dangerouslySetInnerHTML={{ __html: col.title.replace(/\n/g, '<br>') }}
         />
       ))}
