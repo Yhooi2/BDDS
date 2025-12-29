@@ -579,6 +579,32 @@ BDDS/
 ├── styles.css       # Стили
 ├── script.js        # Логика UI, FundsService, компоненты
 ├── generateData.js  # Утилиты (METRIC_KEYS, parsePeriodInfo)
+├── tests.html       # Автотесты FundsService и Dashboard API
 ├── test-api.html    # Тестовая страница для API
 └── README.md        # Документация
 ```
+
+## Тестирование
+
+Откройте `tests.html` в браузере для запуска автотестов:
+
+```bash
+open tests.html
+# или
+npx serve . # затем откройте http://localhost:3000/tests.html
+```
+
+Тесты проверяют:
+- `FundsService.init()` — инициализация с данными
+- `FundsService.getFundsList()` — список фондов
+- `FundsService.getDefaultFund()` — фонд по умолчанию
+- `FundsService.getFundType()` — тип иконки
+- `FundsService.getIcon()` — SVG иконка
+- `FundsService.getGroups()` — группировка по типам
+- `FundsService.getPeriods()` — периоды фонда
+- `FundsService.getPeriodsList()` — список названий периодов
+- `FundsService.getAllFundsWithPeriods()` — все фонды с периодами
+- `FundsService.getDashboardData()` — данные для Dashboard
+- `getFundsData()` — преобразование данных
+- `Dashboard.loadData()` — загрузка данных
+- `parsePeriodInfo()` — парсинг названий периодов
