@@ -1,6 +1,5 @@
 import type { Period, ViewMode } from '../types'
-import { TableRow } from './TableRow'
-import { TableHeaders } from './TableHeaders'
+import { DataGrid } from './DataGrid'
 import { HighlightBlock } from './HighlightBlock'
 import { SECTIONS, CREDIT_BALANCE_ROWS, CASH_MOVEMENT_ROWS, CASH_BALANCE_ROWS } from '../constants/sections'
 
@@ -15,20 +14,25 @@ export function FinanceSection({ periods, viewMode }: FinanceSectionProps) {
   return (
     <section className={`table-section ${section.cssClass}`}>
       <h2 className="table-section__title">{section.title}</h2>
-      <TableHeaders periods={periods} viewMode={viewMode} className="table-section__headers" />
       <div className="table-section__content">
         {/* Finance rows */}
-        {section.rows.map((row) => (
-          <TableRow key={row.id} row={row} periods={periods} viewMode={viewMode} />
-        ))}
+        <DataGrid
+          periods={periods}
+          rows={section.rows}
+          viewMode={viewMode}
+          showHeader={false}
+        />
 
         {/* Credit balance highlight block */}
         <HighlightBlock rows={CREDIT_BALANCE_ROWS} periods={periods} viewMode={viewMode} />
 
         {/* Cash movement rows */}
-        {CASH_MOVEMENT_ROWS.map((row) => (
-          <TableRow key={row.id} row={row} periods={periods} viewMode={viewMode} />
-        ))}
+        <DataGrid
+          periods={periods}
+          rows={CASH_MOVEMENT_ROWS}
+          viewMode={viewMode}
+          showHeader={false}
+        />
 
         {/* Cash balance highlight block */}
         <HighlightBlock rows={CASH_BALANCE_ROWS} periods={periods} viewMode={viewMode} />

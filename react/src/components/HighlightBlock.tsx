@@ -1,5 +1,5 @@
 import type { Period, RowConfig, ViewMode } from '../types'
-import { TableRow } from './TableRow'
+import { DataGrid } from './DataGrid'
 
 interface HighlightBlockProps {
   rows: RowConfig[]
@@ -10,9 +10,12 @@ interface HighlightBlockProps {
 export function HighlightBlock({ rows, periods, viewMode }: HighlightBlockProps) {
   return (
     <div className="highlight-block">
-      {rows.map((row) => (
-        <TableRow key={row.id} row={row} periods={periods} viewMode={viewMode} />
-      ))}
+      <DataGrid
+        periods={periods}
+        rows={rows}
+        viewMode={viewMode}
+        showHeader={false}
+      />
     </div>
   )
 }
