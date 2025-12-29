@@ -1,610 +1,654 @@
 # BDDS Dashboard
 
-Финансовый дашборд для отображения бюджета движения денежных средств.
+Финансовый дашборд для отображения бюджета движения денежных средств (БДДС).
 
 **Demo:** https://yhooi2.github.io/BDDS/
 
+---
+
+## Содержание
+
+1. [Быстрый старт](#быстрый-старт)
+2. [Формат данных](#формат-данных)
+3. [API Reference](#api-reference)
+4. [Архитектура](#архитектура)
+5. [Проверка в консоли](#проверка-в-консоли)
+6. [Примеры использования](#примеры-использования)
+
+---
+
 ## Быстрый старт
 
-### 1. Локальный запуск
+### Запуск
+
 ```bash
-# Откройте index.html в браузере
+# Вариант 1: просто открыть файл
 open index.html
 
-# Или через локальный сервер
+# Вариант 2: через локальный сервер
 npx serve .
 ```
 
-### 2. Загрузка данных
+### Загрузка своих данных
 
 ```javascript
-// Новый формат данных
-const data = {
+BDDS.Dashboard.loadData({
   funds: {
-    "ДВН": {
-      type: "building",  // тип иконки: building | warehouse | briefcase
+    "МойФонд": {
+      type: "building",
       periods: {
         "Факт '24": {
           "Поступления по операционной деятельности": 2200000,
-          "Выплата дохода акционерам (пайщикам)": -920000,
-          // ... остальные метрики
-        },
-        "План '26": { ... }
+          "Выплата дохода акционерам (пайщикам)": -920000
+        }
       }
-    },
-    "ЗОЛЯ": {
-      type: "warehouse",
-      periods: { ... }
     }
-  },
-  currentFund: "ДВН",  // опционально
-  viewMode: "details" // опционально
-};
-
-// Загрузка в дашборд
-window.BDDS.Dashboard.loadData(data);
+  }
+});
 ```
 
-### 3. Загрузка с сервера
-
-```javascript
-fetch('/api/budget-data')
-  .then(res => res.json())
-  .then(data => window.BDDS.Dashboard.loadData(data));
-```
+---
 
 ## Формат данных
 
+### Структура
+
 ```javascript
 {
-  "funds": {
+  funds: {
     "<Название фонда>": {
-      "type": "<building|warehouse|briefcase>",
-      "periods": {
+      type: "<тип иконки>",
+      periods: {
         "<Название периода>": {
-          "<Название метрики>": <число или null>
+          "<Название метрики>": <число>
         }
       }
     }
   },
-  "currentFund": "<Название фонда>",  // опционально
-  "viewMode": "<details|dynamics>"     // опционально
+  currentFund: "<Название фонда>",  // опционально
+  viewMode: "details"               // опционально: "details" | "dynamics"
 }
 ```
 
-### Типы иконок фондов
-- `building` - офисное здание (синяя иконка)
-- `warehouse` - склад (зелёная иконка)
-- `briefcase` - портфель (розовая иконка)
+### Типы иконок
+
+| Тип | Описание |
+|-----|----------|
+| `building` | Офисное здание (по умолчанию) |
+| `warehouse` | Склад |
+| `briefcase` | Портфель |
 
 ### Названия периодов
-- `"Факт '23"` - факт за 2023 год
-- `"Факт '24"` - факт за 2024 год
-- `"План '26"` - план на 2026 год
-- `"Факт (I-III кв. '25)\nПлан (IV кв. '25)"` - смешанный период
+
+| Формат | Тип | Пример |
+|--------|-----|--------|
+| `Факт 'XX` | fact | `"Факт '24"` |
+| `План 'XX` | plan | `"План '26"` |
+| `Факт (...)\nПлан (...)` | mixed | `"Факт (I-III кв. '25)\nПлан (IV кв. '25)"` |
 
 ### Названия метрик
 
-**Операционная деятельность:**
-- Движение Д/С по операционной деятельности ООО
-- Поступления по операционной деятельности
-- Расходы по основной деятельности
-- Обеспечительные платежи
+```javascript
+// Операционная деятельность
+"Движение Д/С по операционной деятельности ООО"
+"Поступления по операционной деятельности"
+"Расходы по основной деятельности"
+"Обеспечительные платежи"
 
-**Инвестиционная деятельность:**
-- Движение Д/С по инвестиционной деятельности
-- Выплата дохода акционерам (пайщикам)
-- Расходы на капитальный ремонт
+// Инвестиционная деятельность
+"Движение Д/С по инвестиционной деятельности"
+"Выплата дохода акционерам (пайщикам)"
+"Расходы на капитальный ремонт"
 
-**Финансовая деятельность:**
-- Движение Д/С по финансовой деятельности
-- Расчеты по кредитам
-- Прочие доходы и расходы по финансовой деятельности
-- Расходы на УК Парус
+// Финансовая деятельность
+"Движение Д/С по финансовой деятельности"
+"Расчеты по кредитам"
+"Прочие доходы и расходы по финансовой деятельности"
+"Расходы на УК Парус"
 
-**Остатки и резервы:**
-- Остаток по кредиту на начало периода
-- Остаток по кредиту на конец периода
-- Движение за период по Д/С
-- Сформированные резервы (нарастающим итогом)
-- Накопленные резервы на ремонт, непредвиденные расходы и вакансию
-- Остаток Д/С на начало периода
-- Остаток Д/С на конец периода
-- Д/С на конец периода (с учетом резерва)
+// Остатки
+"Остаток по кредиту на начало периода"
+"Остаток по кредиту на конец периода"
+"Движение за период по Д/С"
+"Сформированные резервы (нарастающим итогом)"
+"Накопленные резервы на ремонт, непредвиденные расходы и вакансию"
+"Остаток Д/С на начало периода"
+"Остаток Д/С на конец периода"
+"Д/С на конец периода (с учетом резерва)"
+```
+
+---
 
 ## API Reference
 
-> **Доступ из консоли браузера:** все API доступны через `window.BDDS`:
-> - `BDDS.Dashboard` — управление дашбордом
-> - `BDDS.FundsService` — работа с фондами
-> - `BDDS.getFundsData(data)` — утилита для преобразования данных
+Все функции доступны через глобальный объект `window.BDDS`:
+
+```javascript
+BDDS.Dashboard        // управление дашбордом
+BDDS.FundsService     // работа с данными фондов
+BDDS.FundSelector     // селектор фондов
+BDDS.ViewToggle       // переключатель режимов
+BDDS.formatNumber     // форматирование чисел
+BDDS.calculateDelta   // расчёт дельты
+BDDS.parsePeriodInfo  // парсинг периодов
+BDDS.METRIC_KEYS      // константы метрик
+```
+
+---
+
+### Dashboard
+
+Главный компонент управления дашбордом.
+
+#### `BDDS.Dashboard.loadData(data)`
+
+Загружает новые данные и перерисовывает дашборд.
+
+```javascript
+// Параметр: data - объект с полем funds
+BDDS.Dashboard.loadData({
+  funds: {
+    "Фонд1": { type: "building", periods: {...} }
+  },
+  currentFund: "Фонд1"  // опционально
+});
+
+// Что происходит внутри:
+// 1. FundsService.init(data) - инициализация сервиса
+// 2. Проверка currentFund (если нет - берётся первый фонд)
+// 3. generateData() - генерация periodData
+// 4. Переинициализация FundSelector
+// 5. render() - перерисовка UI
+```
+
+#### `BDDS.Dashboard.getState()`
+
+Возвращает текущее состояние дашборда.
+
+```javascript
+const state = BDDS.Dashboard.getState();
+// {
+//   currentFund: "ДВН",
+//   viewMode: "details",
+//   periodData: [...],
+//   chartConfig: {...}
+// }
+```
+
+#### `BDDS.Dashboard.updateData(options)`
+
+Обновляет конфигурацию без полной перезагрузки.
+
+```javascript
+// Сменить фонд
+BDDS.Dashboard.updateData({ currentFund: "ЗОЛЯ" });
+
+// Обновить конфиг графика
+BDDS.Dashboard.updateData({
+  chartConfig: { customValues: [400, 700, 900, 1000] }
+});
+```
+
+#### `BDDS.Dashboard.handleFundChange(fundName)`
+
+Переключает текущий фонд.
+
+```javascript
+BDDS.Dashboard.handleFundChange("ЗОЛЯ");
+// Перегенерирует данные и перерисует UI
+```
+
+#### `BDDS.Dashboard.handleViewModeChange(mode)`
+
+Переключает режим отображения.
+
+```javascript
+BDDS.Dashboard.handleViewModeChange("dynamics"); // или "details"
+```
+
+---
 
 ### FundsService
 
-Централизованный сервис для работы с данными фондов. Все данные берутся из `window.DATA.funds`.
+Централизованный сервис для работы с данными фондов.
 
----
+#### `BDDS.FundsService.init(rawData)`
 
-#### `FundsService.init(rawData)`
-
-Инициализация сервиса с данными.
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `rawData` | `Object` | Объект с полем `funds` (см. формат данных) |
-
-**Возвращает:** `FundsService` (для цепочки вызовов)
-
-**Где вызывается:**
-- `Dashboard.init()` — при загрузке страницы
-- `Dashboard.loadData()` — при загрузке новых данных
+Инициализирует сервис с данными.
 
 ```javascript
-// Ручной вызов
-FundsService.init(window.DATA);
-
-// Или с новыми данными
-FundsService.init({
-  funds: {
-    "МойФонд": { type: "building", periods: {...} }
-  }
+BDDS.FundsService.init({
+  funds: { "Фонд": { type: "building", periods: {...} } }
 });
+// Возвращает: FundsService (для цепочки)
+
+// Вызывается автоматически в Dashboard.loadData()
+```
+
+#### `BDDS.FundsService.getFundsList()`
+
+Список всех фондов.
+
+```javascript
+BDDS.FundsService.getFundsList();
+// ["ДВН", "ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "СБЛ", "ТРМ"]
+```
+
+#### `BDDS.FundsService.getDefaultFund()`
+
+Фонд по умолчанию.
+
+```javascript
+BDDS.FundsService.getDefaultFund();
+// "ДВН" (или currentFund из данных, или первый в списке)
+```
+
+#### `BDDS.FundsService.getFundType(fundName)`
+
+Тип иконки фонда.
+
+```javascript
+BDDS.FundsService.getFundType("ДВН");      // "building"
+BDDS.FundsService.getFundType("ЗОЛЯ");     // "warehouse"
+BDDS.FundsService.getFundType("Неизвестный"); // "building" (по умолчанию)
+```
+
+#### `BDDS.FundsService.getIcon(fundName)`
+
+SVG-иконка фонда.
+
+```javascript
+BDDS.FundsService.getIcon("ДВН");
+// '<svg viewBox="0 0 22 22">...</svg>'
+```
+
+#### `BDDS.FundsService.getGroups()`
+
+Фонды сгруппированные по типам.
+
+```javascript
+BDDS.FundsService.getGroups();
+// [
+//   { icon: "warehouse", funds: ["ЗОЛЯ", "КРАС", "ЛОГ"] },
+//   { icon: "building", funds: ["ДВН"] },
+//   { icon: "briefcase", funds: ["ТРМ"] }
+// ]
+```
+
+#### `BDDS.FundsService.getPeriods(fundName)`
+
+Все периоды фонда с метриками.
+
+```javascript
+BDDS.FundsService.getPeriods("ДВН");
+// {
+//   "Факт '23": { "Движение Д/С...": 1366339, ... },
+//   "Факт '24": { ... },
+//   "План '26": { ... }
+// }
+```
+
+#### `BDDS.FundsService.getPeriodsList(fundName)`
+
+Список названий периодов.
+
+```javascript
+BDDS.FundsService.getPeriodsList("ДВН");
+// ["Факт '23", "Факт '24", "План '26"]
+```
+
+#### `BDDS.FundsService.getAllFundsWithPeriods()`
+
+Все фонды со списками периодов.
+
+```javascript
+BDDS.FundsService.getAllFundsWithPeriods();
+// {
+//   "ДВН": ["Факт '23", "Факт '24", "План '26"],
+//   "ЗОЛЯ": ["Факт '23", "План '26"]
+// }
+```
+
+#### `BDDS.FundsService.getDashboardData(fundName)`
+
+Данные для рендеринга дашборда.
+
+```javascript
+BDDS.FundsService.getDashboardData("ДВН");
+// [
+//   { id: "period-0", title: "Факт '23", type: "fact", year: 2023, metrics: {...} },
+//   { id: "period-1", title: "Факт '24", type: "fact", year: 2024, metrics: {...} },
+//   { id: "period-2", title: "План '26", type: "plan", year: 2026, metrics: {...} }
+// ]
+// Отсортировано по году!
 ```
 
 ---
 
-#### `FundsService.getFundsList()`
+### Утилиты
 
-Получить список всех доступных фондов.
+#### `BDDS.formatNumber(value)`
 
-| Параметры | нет |
-|-----------|-----|
-
-**Возвращает:** `Array<string>` — массив названий фондов
-
-**Где вызывается:**
-- `FundSelector.init()` — для построения выпадающего списка
-- `Dashboard.loadData()` — для проверки текущего фонда
+Форматирует число с разделителями.
 
 ```javascript
-FundsService.getFundsList();
-// → ["ДВН", "ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "СБЛ", "ТРМ"]
+BDDS.formatNumber(1234567);    // "1 234 567"
+BDDS.formatNumber(-1000);      // "(1 000)" - в скобках
+BDDS.formatNumber(null);       // "-"
+BDDS.formatNumber(0);          // "0"
+```
+
+#### `BDDS.calculateDelta(current, previous)`
+
+Вычисляет процент изменения.
+
+```javascript
+BDDS.calculateDelta(110, 100);  // 10 (рост 10%)
+BDDS.calculateDelta(50, 100);   // -50 (падение 50%)
+BDDS.calculateDelta(100, 0);    // 100
+BDDS.calculateDelta(null, 100); // null
+```
+
+#### `BDDS.parsePeriodInfo(periodString)`
+
+Парсит название периода.
+
+```javascript
+BDDS.parsePeriodInfo("Факт '24");
+// { type: "fact", year: 2024 }
+
+BDDS.parsePeriodInfo("План '26");
+// { type: "plan", year: 2026 }
+
+BDDS.parsePeriodInfo("Факт (I-III кв. '25)\nПлан (IV кв. '25)");
+// { type: "mixed", year: 2025 }
+```
+
+#### `BDDS.METRIC_KEYS`
+
+Константы названий метрик.
+
+```javascript
+BDDS.METRIC_KEYS.OPERATION_MOVEMENT  // "Движение Д/С по операционной деятельности ООО"
+BDDS.METRIC_KEYS.INVESTMENT_DIVIDENDS // "Выплата дохода акционерам (пайщикам)"
+BDDS.METRIC_KEYS.CASH_END            // "Остаток Д/С на конец периода"
+// ... и другие
 ```
 
 ---
 
-#### `FundsService.getDefaultFund()`
+## Архитектура
 
-Получить фонд по умолчанию.
+### Структура проекта
 
-| Параметры | нет |
-|-----------|-----|
+```
+BDDS/
+├── index.html    # HTML + встроенные данные window.DATA
+├── styles.css    # Стили (включая print)
+├── script.js     # Вся логика (единый файл)
+└── README.md     # Документация
+```
 
-**Возвращает:** `string | null` — название фонда или `null` если фондов нет
+### Поток данных
 
-**Логика:**
-1. Если в данных есть `currentFund` → возвращает его
-2. Иначе → возвращает первый фонд из списка
+```
+window.DATA.funds
+       ↓
+FundsService.init(data)
+       ↓
+   ┌───┴───┐
+   ↓       ↓
+getFundsList()   getDashboardData(fund)
+getGroups()            ↓
+   ↓            parsePeriodInfo()
+   ↓                   ↓
+FundSelector      periodData[]
+                       ↓
+                Dashboard.render()
+```
 
-**Где вызывается:**
-- `Dashboard.init()` — для установки начального фонда
-- `Dashboard.loadData()` — если текущий фонд не найден в новых данных
+### Жизненный цикл
 
 ```javascript
-FundsService.getDefaultFund();
-// → "ДВН"
-```
+// 1. Загрузка страницы
+DOMContentLoaded
+  → Dashboard.init()
+    → FundsService.init(window.DATA)
+    → currentFund = FundsService.getDefaultFund()
+    → generateData()
+    → initComponents() (FundSelector, ViewToggle)
+    → render()
 
----
+// 2. Смена фонда (клик в dropdown)
+FundSelector.onClick(fund)
+  → Dashboard.handleFundChange(fund)
+    → currentFund = fund
+    → generateData()
+    → render()
 
-#### `FundsService.getFundType(fundName)`
-
-Получить тип иконки для фонда.
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `fundName` | `string` | Название фонда |
-
-**Возвращает:** `string` — тип иконки (`"building"`, `"warehouse"`, `"briefcase"`)
-
-**Где вызывается:**
-- `FundsService.getIcon()` — для получения SVG
-- `FundsService.getGroups()` — для группировки фондов
-
-```javascript
-FundsService.getFundType("ДВН");
-// → "building"
-
-FundsService.getFundType("ЗОЛЯ");
-// → "warehouse"
-```
-
----
-
-#### `FundsService.getIcon(fundName)`
-
-Получить SVG-иконку для фонда.
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `fundName` | `string` | Название фонда |
-
-**Возвращает:** `string` — SVG-код иконки
-
-**Где вызывается:**
-- `FundSelector.render()` — для отображения иконки в селекторе
-
-```javascript
-FundsService.getIcon("ДВН");
-// → '<svg viewBox="0 0 22 22">...</svg>'
-```
-
----
-
-#### `FundsService.getGroups()`
-
-Получить фонды, сгруппированные по типам иконок (для меню).
-
-| Параметры | нет |
-|-----------|-----|
-
-**Возвращает:** `Array<{icon: string, funds: Array<string>}>` — массив групп
-
-**Где вызывается:**
-- `FundSelector.render()` — для построения выпадающего меню с группами
-
-```javascript
-FundsService.getGroups();
-// → [
-//     { icon: "warehouse", funds: ["ЗОЛЯ", "КРАС", "ЛОГ", "НОР", "ОЗН", "СБЛ"] },
-//     { icon: "building", funds: ["ДВН"] },
-//     { icon: "briefcase", funds: ["ТРМ"] }
-//   ]
-```
-
----
-
-#### `FundsService.getPeriods(fundName)`
-
-Получить все периоды фонда с данными метрик.
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `fundName` | `string` | Название фонда |
-
-**Возвращает:** `Object` — объект `{ "название периода": { метрика: значение } }`
-
-```javascript
-FundsService.getPeriods("ДВН");
-// → {
-//     "Факт '23": {
-//       "Движение Д/С по операционной деятельности ООО": 1366339,
-//       "Поступления по операционной деятельности": 1820000,
-//       ...
-//     },
-//     "Факт '24": {...},
-//     "План '26": {...}
-//   }
-```
-
----
-
-#### `FundsService.getPeriodsList(fundName)`
-
-Получить список названий периодов для фонда.
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `fundName` | `string` | Название фонда |
-
-**Возвращает:** `Array<string>` — массив названий периодов
-
-```javascript
-FundsService.getPeriodsList("ДВН");
-// → ["Факт '23", "Факт '24", "Факт (I-III кв. '25)\nПлан (IV кв. '25)", "План '26"]
-```
-
----
-
-#### `FundsService.getAllFundsWithPeriods()`
-
-Получить все фонды с их списками периодов.
-
-| Параметры | нет |
-|-----------|-----|
-
-**Возвращает:** `Object` — объект `{ fundName: [period1, period2, ...] }`
-
-```javascript
-FundsService.getAllFundsWithPeriods();
-// → {
-//     "ДВН": ["Факт '23", "Факт '24", "Факт (I-III кв. '25)\nПлан (IV кв. '25)", "План '26"],
-//     "ЗОЛЯ": ["Факт '23", "Факт '24", "Факт (I-III кв. '25)\nПлан (IV кв. '25)", "План '26"],
-//     "КРАС": [...],
-//     ...
-//   }
-```
-
----
-
-#### `FundsService.getDashboardData(fundName)`
-
-Получить данные в формате для Dashboard (массив периодов).
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `fundName` | `string` | Название фонда |
-
-**Возвращает:** `Array<Object>` — массив объектов периодов, отсортированных по году
-
-**Структура элемента массива:**
-```javascript
-{
-  id: "period-0",           // уникальный ID
-  title: "Факт '23",        // название периода
-  type: "fact",             // тип: "fact" | "plan" | "mixed"
-  year: 2023,               // год (для сортировки)
-  metrics: {                // данные метрик
-    "Движение Д/С по операционной деятельности ООО": 1366339,
-    ...
-  }
-}
-```
-
-**Где вызывается:**
-- `Dashboard.generateData()` — основной метод генерации данных для UI
-
-```javascript
-FundsService.getDashboardData("ДВН");
-// → [
-//     { id: "period-0", title: "Факт '23", type: "fact", year: 2023, metrics: {...} },
-//     { id: "period-1", title: "Факт '24", type: "fact", year: 2024, metrics: {...} },
-//     { id: "period-2", title: "Факт (I-III кв. '25)\nПлан (IV кв. '25)", type: "mixed", year: 2025, metrics: {...} },
-//     { id: "period-3", title: "План '26", type: "plan", year: 2026, metrics: {...} }
-//   ]
-```
-
----
-
-### Функция getFundsData()
-
-Вспомогательная функция для получения данных в упрощённом формате.
-
-```javascript
-getFundsData(rawData)
-```
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `rawData` | `Object` | Объект с полем `funds` |
-
-**Возвращает:** `Object` — `{ fundName: { period: { metric: value } } }`
-
-```javascript
-const fundsData = getFundsData(window.DATA);
-// → {
-//     "ДВН": {
-//       "Факт '23": { "Движение Д/С...": 1366339, ... },
-//       "Факт '24": { ... }
-//     },
-//     "ЗОЛЯ": { ... }
-//   }
-```
-
----
-
-### Data Flow
-
-Полная схема потока данных:
-
-```
-window.DATA.funds → FundsService.init()
-                          ↓
-              ┌───────────┴───────────┐
-              ↓                       ↓
-    getFundsList()           getDashboardData(fund)
-    getDefaultFund()                  ↓
-    getIcon(fund)             parsePeriodInfo()
-    getGroups()                       ↓
-              ↓                 periodData[]
-              ↓                       ↓
-        FundSelector            Dashboard.render()
-```
-
-### Где и когда вызывается генерация данных
-
-```javascript
-// 1. При загрузке страницы (script.js)
-Dashboard.init()
-  → FundsService.init(window.DATA)    // инициализация сервиса
-  → this.state.currentFund = FundsService.getDefaultFund()
-  → Dashboard.generateData()
-    → this.state.periodData = FundsService.getDashboardData(currentFund)
-  → Dashboard.render()
-
-// 2. При смене фонда (выбор в dropdown)
-FundSelector.onChange(fundName)
-  → Dashboard.setFund(fundName)
-    → this.state.currentFund = fundName
-    → Dashboard.generateData()
-      → this.state.periodData = FundsService.getDashboardData(fundName)
-    → Dashboard.render()
-
-// 3. При загрузке новых данных
-Dashboard.loadData(newData)
-  → FundsService.init(newData)        // переинициализация с новыми данными
+// 3. Загрузка новых данных (API)
+fetch('/api/data').then(data => BDDS.Dashboard.loadData(data))
+  → FundsService.init(data)
   → проверка currentFund
-  → Dashboard.generateData()
-    → this.state.periodData = FundsService.getDashboardData(currentFund)
-  → переинициализация FundSelector
-  → Dashboard.render()
+  → generateData()
+  → переинициализация компонентов
+  → render()
 ```
 
-### Ручной вызов генерации данных
+---
+
+## Проверка в консоли
+
+### Базовая проверка
 
 ```javascript
-// Получить данные без обновления UI
-const periodData = FundsService.getDashboardData("ЗОЛЯ");
-console.log(periodData);
+// 1. Проверить что BDDS загружен
+typeof BDDS  // "object"
 
-// Обновить UI с другим фондом
-Dashboard.setFund("ЗОЛЯ"); // вызовет generateData() и render()
+// 2. Проверить текущее состояние
+BDDS.Dashboard.getState()
 
-// Загрузить полностью новые данные
-Dashboard.loadData({
+// 3. Проверить список фондов
+BDDS.FundsService.getFundsList()
+
+// 4. Проверить данные текущего фонда
+BDDS.Dashboard.state.periodData
+```
+
+### Проверка загрузки данных
+
+```javascript
+// Загрузить тестовые данные
+BDDS.Dashboard.loadData({
   funds: {
-    "НовыйФонд": { type: "briefcase", periods: {...} }
+    "Тест1": {
+      type: "building",
+      periods: {
+        "Факт '24": { "Поступления по операционной деятельности": 999999 }
+      }
+    }
   }
 });
+
+// Проверить результат:
+BDDS.FundsService.getFundsList()     // ["Тест1"]
+BDDS.Dashboard.state.currentFund     // "Тест1"
+BDDS.Dashboard.state.periodData[0]   // { metrics: {...} }
+
+// Визуально: в таблице должно появиться "999 999"
 ```
 
-## Пример полных данных
+### Проверка переключения фондов
 
 ```javascript
-window.DATA = {
+// Загрузить несколько фондов
+BDDS.Dashboard.loadData({
+  funds: {
+    "Фонд1": { type: "building", periods: { "Факт '24": { "Поступления по операционной деятельности": 111 } } },
+    "Фонд2": { type: "warehouse", periods: { "Факт '24": { "Поступления по операционной деятельности": 222 } } }
+  }
+});
+
+// Переключить
+BDDS.Dashboard.handleFundChange("Фонд2");
+BDDS.Dashboard.state.currentFund  // "Фонд2"
+
+// Визуально: в таблице должно быть "222"
+```
+
+### Проверка форматирования
+
+```javascript
+BDDS.formatNumber(1234567)     // "1 234 567"
+BDDS.formatNumber(-500)        // "(500)"
+BDDS.calculateDelta(150, 100)  // 50
+BDDS.parsePeriodInfo("Факт '25") // {type: "fact", year: 2025}
+```
+
+---
+
+## Примеры использования
+
+### 1. Загрузка с сервера
+
+```javascript
+async function loadDashboardData() {
+  const response = await fetch('/api/budget-data');
+  const data = await response.json();
+  BDDS.Dashboard.loadData(data);
+}
+
+loadDashboardData();
+```
+
+### 2. Полный пример данных
+
+```javascript
+const data = {
   currentFund: "ДВН",
   viewMode: "details",
   funds: {
     "ДВН": {
       type: "building",
       periods: {
-        "Факт '24": {
-          "Движение Д/С по операционной деятельности ООО": 1650000,
-          "Поступления по операционной деятельности": 2200000,
-          "Расходы по основной деятельности": 1900000,
-          "Обеспечительные платежи": 120000,
-          "Движение Д/С по инвестиционной деятельности": 550000,
-          "Выплата дохода акционерам (пайщикам)": -920000,
-          "Расходы на капитальный ремонт": 180000,
-          "Движение Д/С по финансовой деятельности": 350000,
-          "Расчеты по кредитам": 220000,
-          "Прочие доходы и расходы по финансовой деятельности": 60000,
-          "Расходы на УК Парус": 130000,
-          "Остаток по кредиту на начало периода": 4800000,
-          "Остаток по кредиту на конец периода": 4500000,
-          "Движение за период по Д/С": 300000,
-          "Сформированные резервы (нарастающим итогом)": 350000,
-          "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 320000,
-          "Остаток Д/С на начало периода": 1250000,
-          "Остаток Д/С на конец периода": 1550000,
-          "Д/С на конец периода (с учетом резерва)": 1870000
-        }
+        "Факт '23": {
+          "Движение Д/С по операционной деятельности ООО": 1366339,
+          "Поступления по операционной деятельности": 1820000,
+          "Расходы по основной деятельности": 453661,
+          "Обеспечительные платежи": 0,
+          "Движение Д/С по инвестиционной деятельности": -1299792,
+          "Выплата дохода акционерам (пайщикам)": -1049750,
+          "Расходы на капитальный ремонт": 250042,
+          "Движение Д/С по финансовой деятельности": -86547,
+          "Расчеты по кредитам": 0,
+          "Прочие доходы и расходы по финансовой деятельности": 20000,
+          "Расходы на УК Парус": 106547,
+          "Остаток по кредиту на начало периода": 0,
+          "Остаток по кредиту на конец периода": 0,
+          "Движение за период по Д/С": -20000,
+          "Сформированные резервы (нарастающим итогом)": 0,
+          "Накопленные резервы на ремонт, непредвиденные расходы и вакансию": 0,
+          "Остаток Д/С на начало периода": 97095,
+          "Остаток Д/С на конец периода": 77095,
+          "Д/С на конец периода (с учетом резерва)": 77095
+        },
+        "Факт '24": { /* ... */ },
+        "План '26": { /* ... */ }
       }
     },
     "ЗОЛЯ": {
       type: "warehouse",
-      periods: { ... }
+      periods: { /* ... */ }
+    },
+    "ТРМ": {
+      type: "briefcase",
+      periods: { /* ... */ }
     }
   }
 };
+
+BDDS.Dashboard.loadData(data);
 ```
 
-## Тестирование
-
-### Тестирование в консоли браузера
+### 3. Добавление нового фонда
 
 ```javascript
-// Загрузить данные с новыми фондами
-BDDS.Dashboard.loadData({
-  funds: {
-    "Фонд1": {
-      type: "building",
-      periods: {
-        "Факт '23": { "Движение Д/С по операционной деятельности ООО": 111111 },
-        "План '26": { "Движение Д/С по операционной деятельности ООО": 222222 }
-      }
-    },
-    "Фонд2": {
-      type: "warehouse",
-      periods: {
-        "Факт '23": { "Движение Д/С по операционной деятельности ООО": 333333 },
-        "План '26": { "Движение Д/С по операционной деятельности ООО": 444444 }
-      }
+// Получить текущие данные
+const currentData = { funds: { ...window.DATA.funds } };
+
+// Добавить новый фонд
+currentData.funds["НовыйФонд"] = {
+  type: "briefcase",
+  periods: {
+    "Факт '24": {
+      "Поступления по операционной деятельности": 500000,
+      "Выплата дохода акционерам (пайщикам)": -200000
     }
   }
+};
+
+// Загрузить обновлённые данные
+BDDS.Dashboard.loadData(currentData);
+
+// Фонд появится в выпадающем меню автоматически
+```
+
+### 4. Программное переключение
+
+```javascript
+// Сменить фонд
+BDDS.Dashboard.handleFundChange("ЗОЛЯ");
+
+// Сменить режим отображения
+BDDS.Dashboard.handleViewModeChange("dynamics");
+
+// Обновить конфиг графика
+BDDS.Dashboard.updateData({
+  chartConfig: {
+    customValues: [400, 700, 900, 1000],
+    scale: { min: 100, max: 1200, step: 100 }
+  }
 });
+```
+
+### 5. Получение данных для экспорта
+
+```javascript
+// Все фонды с периодами
+const allData = BDDS.FundsService.getAllFundsWithPeriods();
+console.log(JSON.stringify(allData, null, 2));
+
+// Данные конкретного фонда
+const dvnData = BDDS.FundsService.getPeriods("ДВН");
+
+// Форматированные данные для UI
+const periodData = BDDS.FundsService.getDashboardData("ДВН");
+```
+
+---
+
+## Отладка
+
+### Частые проблемы
+
+| Проблема | Решение |
+|----------|---------|
+| `BDDS is undefined` | script.js не загружен или ошибка в нём |
+| Пустой дашборд | Проверьте `window.DATA` или вызовите `loadData()` |
+| Фонд не появляется | Проверьте структуру `funds` в данных |
+| Неверные числа | Проверьте названия метрик (должны совпадать точно) |
+
+### Диагностика
+
+```javascript
+// Проверить загрузку
+console.log("BDDS:", typeof BDDS);
+console.log("DATA:", typeof window.DATA);
 
 // Проверить состояние
-console.log(BDDS.Dashboard.state.periodData);
-console.log(BDDS.Dashboard.state.currentFund); // "Фонд1"
+console.log("State:", BDDS.Dashboard.state);
+console.log("Funds:", BDDS.FundsService.getFundsList());
 
-// Проверить FundsService (через BDDS namespace)
-console.log(BDDS.FundsService.getFundsList()); // ["Фонд1", "Фонд2"]
-console.log(BDDS.FundsService.getGroups());    // группы по типам
+// Проверить данные
+console.log("periodData:", BDDS.Dashboard.state.periodData);
 ```
-
-Если в таблице появились числа `111 111` и в выпадающем списке "Фонд1", "Фонд2" — данные загружены успешно.
-
-### Добавление нового фонда
-
-```javascript
-// Просто добавьте фонд в данные:
-const newData = {
-  funds: {
-    ...window.DATA.funds,
-    "НовыйФонд": {
-      type: "briefcase",
-      periods: {
-        "Факт '24": { "Движение Д/С по операционной деятельности ООО": 500000 }
-      }
-    }
-  }
-};
-
-BDDS.Dashboard.loadData(newData);
-// Новый фонд появится в меню автоматически!
-```
-
-## API Dashboard
-
-```javascript
-// Загрузить данные
-window.BDDS.Dashboard.loadData(data);
-
-// Получить текущее состояние
-window.BDDS.Dashboard.getState();
-
-// Обновить конфигурацию
-window.BDDS.Dashboard.updateData({
-  currentFund: "ЗОЛЯ",
-  chartConfig: { customValues: [400, 700, 900, 1000] }
-});
-```
-
-## Структура проекта
-
-```
-BDDS/
-├── index.html       # Главная страница дашборда
-├── styles.css       # Стили
-├── script.js        # Логика UI, FundsService, компоненты
-├── generateData.js  # Утилиты (METRIC_KEYS, parsePeriodInfo)
-├── tests.html       # Автотесты FundsService и Dashboard API
-├── test-api.html    # Тестовая страница для API
-└── README.md        # Документация
-```
-
-## Тестирование
-
-Откройте `tests.html` в браузере для запуска автотестов:
-
-```bash
-open tests.html
-# или
-npx serve . # затем откройте http://localhost:3000/tests.html
-```
-
-Тесты проверяют:
-- `FundsService.init()` — инициализация с данными
-- `FundsService.getFundsList()` — список фондов
-- `FundsService.getDefaultFund()` — фонд по умолчанию
-- `FundsService.getFundType()` — тип иконки
-- `FundsService.getIcon()` — SVG иконка
-- `FundsService.getGroups()` — группировка по типам
-- `FundsService.getPeriods()` — периоды фонда
-- `FundsService.getPeriodsList()` — список названий периодов
-- `FundsService.getAllFundsWithPeriods()` — все фонды с периодами
-- `FundsService.getDashboardData()` — данные для Dashboard
-- `getFundsData()` — преобразование данных
-- `Dashboard.loadData()` — загрузка данных
-- `parsePeriodInfo()` — парсинг названий периодов
