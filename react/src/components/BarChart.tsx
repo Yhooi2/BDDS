@@ -31,11 +31,13 @@ export function BarChart({
   colors = { fact: '#9DBCE0', plan: '#D9D9D9' },
 }: BarChartProps) {
   const data = useMemo(() => {
-    return periods.map((p) => ({
-      label: p.title.split('\n')[0].replace(/Факт |План /g, ''),
-      value: Math.abs(p.metrics[metric] ?? 0),
-      type: p.type,
-    }))
+    return periods
+      .filter((p) => !p.title.includes('\n')) // Exclude combined quarterly periods
+      .map((p) => ({
+        label: p.title,
+        value: Math.abs(p.metrics[metric] ?? 0),
+        type: p.type,
+      }))
   }, [periods, metric])
 
   const maxValue = Math.max(...data.map((d) => d.value), 0)
