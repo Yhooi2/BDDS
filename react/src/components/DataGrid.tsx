@@ -24,14 +24,20 @@ interface Column {
 
 export function getColumns(periods: Period[], viewMode: ViewMode): Column[] {
   if (viewMode === 'details') {
-    return periods.map((p, i) => ({
-      title: p.title,
-      wide: p.type === 'mixed',
-      periodIndex: i,
-    }))
+    // Find mixed period year to exclude plan of the same year
+    const mixedPeriod = periods.find(p => p.type === 'mixed')
+    const mixedYear = mixedPeriod?.year
+
+    return periods
+      .filter(p => !(p.type === 'plan' && p.year === mixedYear))
+      .map((p) => ({
+        title: p.title,
+        wide: p.type === 'mixed',
+        periodIndex: periods.indexOf(p),
+      }))
   }
 
-  // Dynamics mode
+  // Dynamics mode: show plan vs fact/mixed for the same year
   if (periods.length === 1) {
     return [{
       title: periods[0].title,
@@ -40,15 +46,29 @@ export function getColumns(periods: Period[], viewMode: ViewMode): Column[] {
     }]
   }
 
-  const firstPeriod = periods[0]
-  const nonPlanPeriods = periods.filter(p => p.type !== 'plan')
-  const lastNonPlan = nonPlanPeriods[nonPlanPeriods.length - 1]
-  // If only one non-plan period, second column shows dash (no data)
-  const hasSecondPeriod = nonPlanPeriods.length > 1
+  // Find mixed period (Факт+План текущего года) or last fact period
+  const mixedPeriod = periods.find(p => p.type === 'mixed')
+  const targetPeriod = mixedPeriod || periods.filter(p => p.type === 'fact').pop()
+
+  if (!targetPeriod) {
+    // Fallback: just show first and last
+    return [
+      { title: periods[0].title, wide: periods[0].type === 'mixed', periodIndex: 0 },
+      { title: periods[periods.length - 1].title, wide: periods[periods.length - 1].type === 'mixed', periodIndex: periods.length - 1 },
+      { title: 'Дельта', wide: false, isDelta: true },
+    ]
+  }
+
+  // Find plan period for the same year as target
+  const planPeriod = periods.find(p => p.type === 'plan' && p.year === targetPeriod.year)
+
+  // First column: plan of target year, second column: mixed/fact of target year
+  const firstCol = planPeriod || targetPeriod
+  const secondCol = targetPeriod
 
   return [
-    { title: firstPeriod.title, wide: firstPeriod.type === 'mixed', periodIndex: 0 },
-    { title: hasSecondPeriod ? lastNonPlan.title : '-', wide: hasSecondPeriod && lastNonPlan.type === 'mixed', periodIndex: hasSecondPeriod ? periods.indexOf(lastNonPlan) : -1 },
+    { title: firstCol.title, wide: firstCol.type === 'mixed', periodIndex: periods.indexOf(firstCol) },
+    { title: secondCol.title, wide: secondCol.type === 'mixed', periodIndex: periods.indexOf(secondCol) },
     { title: 'Дельта', wide: false, isDelta: true },
   ]
 }
@@ -148,14 +168,15 @@ function DynamicsValues({ row, periods, columns }: { row: RowConfig; periods: Pe
     )
   }
 
-  const firstPeriod = periods[0]
-  const nonPlanPeriods = periods.filter(p => p.type !== 'plan')
-  const hasSecondPeriod = nonPlanPeriods.length > 1
-  const lastNonPlan = hasSecondPeriod ? nonPlanPeriods[nonPlanPeriods.length - 1] : null
+  // Use column periodIndex to get the correct periods (matching getColumns logic)
+  const period1 = columns[0].periodIndex !== undefined && columns[0].periodIndex >= 0
+    ? periods[columns[0].periodIndex] : null
+  const period2 = columns[1].periodIndex !== undefined && columns[1].periodIndex >= 0
+    ? periods[columns[1].periodIndex] : null
 
-  const value1 = firstPeriod?.metrics[row.key] ?? null
-  const value2 = lastNonPlan?.metrics[row.key] ?? null
-  const delta = hasSecondPeriod ? calculateDelta(value2, value1) : null
+  const value1 = period1?.metrics[row.key] ?? null
+  const value2 = period2?.metrics[row.key] ?? null
+  const delta = (period1 && period2) ? calculateDelta(value2, value1) : null
   const formatted = formatWithDelta(value2, delta)
 
   return (
