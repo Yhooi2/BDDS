@@ -159,6 +159,11 @@ function App() {
                 showHeader={true}
               />
               <FinanceSection periods={periodData} viewMode={viewMode} showHeader={true} />
+
+              {/* Footnote */}
+              <p className="table-footnote">
+                Для плана 2026 приведены данные на ноябрь 2025.
+              </p>
             </section>
 
             {/* Chart */}

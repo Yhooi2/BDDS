@@ -519,6 +519,17 @@ body {
 }
 
 /* ========================================
+   12.1 TABLE FOOTNOTE
+   ======================================== */
+.table-footnote {
+  font-size: 10px;
+  color: #888;
+  line-height: 1.3;
+  text-align: right;
+  margin-top: 6px;
+}
+
+/* ========================================
    13. BAR CHART
    ======================================== */
 .chart {
@@ -867,6 +878,11 @@ body {
   .content__table--single .table-row__value {
     width: 60px;
     text-align: right;
+  }
+
+  .table-footnote {
+    font-size: 8px;
+    margin-top: 8px;
   }
 
   .chart {
